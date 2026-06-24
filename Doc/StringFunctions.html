@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — String Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>String Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>String Functions</h2>
+<h3 id="sfstrfind">sfStrFind</h3>
+<p>Finds the first occurrence of a substring within a string,</p>
+<p> starting from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrFind( str, substr, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to search in</td>
+</tr>
+<tr>
+<td align="left">substr</td>
+<td align="left">string</td>
+<td align="left">The substring to find</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Negative values count from the end of the string. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The 0-based position of the first occurrence,</p>
+<p> or -1 if not found.</p>
+<p><strong>Note:</strong> Positions are 0-based character indices,</p>
+<p> unlike the built-in <code>StrFind()</code> which is 1-based byte offsets.</p>
+<hr>
+<h3 id="sfstrfindlast">sfStrFindLast</h3>
+<p>Finds the last occurrence of a substring, searching backwards from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrFindLast( str, substr, start = -1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to search in</td>
+</tr>
+<tr>
+<td align="left">substr</td>
+<td align="left">string</td>
+<td align="left">The substring to find</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Negative values count from the end. Default: -1 (start from last character)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The 0-based position of the last occurrence, or -1 if not found.</p>
+<hr>
+<h3 id="sfstrextractfrom">sfStrExtractFrom</h3>
+<p>Extracts a delimited field from a string, starting from a given position.</p>
+<p>Separators inside nested brackets <code>()</code>, <code>[]</code>, <code>{}</code> are <strong>not</strong> preserved</p>
+<p>— use <code>sfStrNextField</code> if you need nested expression support.</p>
+<p><strong>Syntax:</strong> <code>sfStrExtractFrom( str, start, field, separator = &apos;,&apos; )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">Position to begin searching (0-based). Negative values count from the end</td>
+</tr>
+<tr>
+<td align="left">field</td>
+<td align="left">float</td>
+<td align="left">The field index to extract (0-based)</td>
+</tr>
+<tr>
+<td align="left">separator</td>
+<td align="left">float</td>
+<td align="left">(optional) ASCII code of the separator character. Default: 44 (comma)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The extracted field, or an empty string if not found.</p>
+<p><strong>Note:</strong> This is a simple scan — see <code>sfStrNextField</code> for bracket-aware extraction.</p>
+<hr>
+<h3 id="sfstrtrimextractfrom">sfStrTrimExtractFrom</h3>
+<p>Same as <code>sfStrExtractFrom</code> but trims leading and trailing whitespace</p>
+<p> from the extracted field. Does <strong>not</strong> handle nested brackets</p>
+<p> — use <code>sfStrNextField</code> if you need nested expression support.</p>
+<p><strong>Syntax:</strong> <code>sfStrTrimExtractFrom( str, start, field, separator = &apos;,&apos; )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">Position to begin searching</td>
+</tr>
+<tr>
+<td align="left">field</td>
+<td align="left">float</td>
+<td align="left">The field index to extract (0-based)</td>
+</tr>
+<tr>
+<td align="left">separator</td>
+<td align="left">float</td>
+<td align="left">(optional) ASCII code of the separator character. Default: 44 (comma)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The trimmed field, or an empty string if not found.</p>
+<hr>
+<h3 id="sfstrfindnested">sfStrFindNested</h3>
+<p>Finds the position of the closing parenthesis matching the opening parenthesis</p>
+<p> at the given position.</p>
+<p><strong>Syntax:</strong> <code>sfStrFindNested( str, close, start )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">close</td>
+<td align="left">float</td>
+<td align="left">ASCII code of the closing parenthesis to match: <code>)</code> <code>]</code> or <code>}</code></td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">Position of the opening parenthesis (0-based). Negative values count from the end</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The 0-based position of the matching closing parenthesis, or -1 if not found.</p>
+<hr>
+<h3 id="sfstrnextfield">sfStrNextField</h3>
+<p>Returns the next delimited field from a string, starting from a given position</p>
+<p>and optionally limited by an end position. Unlike <code>sfStrExtractFrom</code>, this</p>
+<p>function understands and preserves nested bracketed expressions (parentheses,</p>
+<p>square and curly brackets), so separators inside such nested expressions are</p>
+<p>ignored.</p>
+<p><strong>Syntax:</strong> <code>sfStrNextField( str, separator, start = 0, to = -1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">separator</td>
+<td align="left">float</td>
+<td align="left">ASCII code of the separator character (e.g. 44 for comma)</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Negative values count from the end. Default: 0</td>
+</tr>
+<tr>
+<td align="left">to</td>
+<td align="left">float</td>
+<td align="left">(optional) End position (0-based) that limits the search. Negative values count from the end. Default: -1 → end of string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The extracted field trimmed of leading and trailing whitespace. If no field is found the function returns an empty string.</p>
+<p><strong>Notes:</strong></p>
+<li>Positions are 0-based character indices.</li>
+<li>Nested brackets `()`, `[]`, and `{}` are respected: separators inside these</li>
+<p>  constructs are not treated as delimiters for the returned field.</p>
+<li>For simple field extraction without nesting support, see `sfStrExtractFrom`.</li>
+<h3 id="sfstrfromchar">sfStrFromChar</h3>
+<p>Returns a string consisting of a single character with the given ASCII code.</p>
+<p><strong>Syntax:</strong> <code>sfStrFromChar( code )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">code</td>
+<td align="left">float</td>
+<td align="left">ASCII code of the character</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A single-character string.</p>
+<hr>
+<h3 id="sfstrtochar">sfStrToChar</h3>
+<p>Returns the ASCII code of the character at a given position in a string.</p>
+<p><strong>Syntax:</strong> <code>sfStrToChar( str, pos )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">pos</td>
+<td align="left">float</td>
+<td align="left">Position of the character (0-based). Negative values count from the end</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The ASCII code, or 0 if the position is out of range.</p>
+<hr>
+<h3 id="sfstrquote">sfStrQuote</h3>
+<p>Wraps a string in double quotes, escaping any embedded double quotes or backslashes.</p>
+<p><strong>Syntax:</strong> <code>sfStrQuote( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to quote</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The quoted string.</p>
+<hr>
+<h3 id="sfstrunquote">sfStrUnquote</h3>
+<p>Removes surrounding double quotes from a string</p>
+<p>and un-escapes embedded quotes and backslashes.</p>
+<p><strong>Syntax:</strong> <code>sfStrUnquote( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to unquote</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The unquoted string.</p>
+<hr>
+<h3 id="sfstrdisclose">sfStrDisclose</h3>
+<p>Removes leading/trailing whitespace and enclosing brackets from a string.</p>
+<p> Supports <code>{}</code>, <code>[]</code>, <code>()</code>, <code>&quot;&quot;</code>, and <code>&apos;&apos;</code> pairs.</p>
+<p><strong>Syntax:</strong> <code>sfStrDisclose( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to process</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The trimmed and de-bracketed string.</p>
+<hr>
+<h3 id="sfstrenclose">sfStrEnclose</h3>
+<p>Wraps a string with the specified opening and closing characters.</p>
+<p><strong>Syntax:</strong> <code>sfStrEnclose( open_close, str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">open_close</td>
+<td align="left">string</td>
+<td align="left">The first character is the opening delimiter; the second character (if present) is the closing delimiter. If only one character is given, it is used for both</td>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to enclose</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The enclosed string.</p>
+<hr>
+<h3 id="sfstrtoquote">sfStrToQuote</h3>
+<p>Converts a string to a floating-point number.  When the string contains a</p>
+<p>bond‑quote separator (<code>^</code>, <code>&apos;</code>, <code>/</code>, <code>-</code>), the fractional part is parsed as</p>
+<p>32nds (with an optional trailing digit for 256ths, or <code>+</code> for a half‑32nd =</p>
+<p>4/256).  If no separator is provided, the function auto‑detects it from the</p>
+<p>string.</p>
+<p><strong>Syntax:</strong> <code>sfStrToQuote( str [, sep ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to convert (e.g. <code>"101'04"</code>, <code>"99^16+"</code>)</td>
+</tr>
+<tr>
+<td align="left">sep</td>
+<td align="left">float / string</td>
+<td align="left">(optional) Separator character; default is auto‑detected</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The numeric value.  Examples: <code>&quot;101&apos;04&quot;</code> → 101.125,</p>
+<p><code>&quot;99^16+&quot;</code> → 99.515625, <code>&quot;100^02&quot;</code> → 100.0625.</p>
+<hr>
+<h3 id="sfstrfromquote">sfStrFromQuote</h3>
+<p>Converts a floating-point number to its string representation,</p>
+<p> preserving decimal precision appropriate for financial quotations</p>
+<p>  (handles tick sizes that are powers of 2, e.g. 0.5, 0.25, 0.125…).</p>
+<p><strong>Syntax:</strong> <code>sfStrFromQuote( val )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">val</td>
+<td align="left">float</td>
+<td align="left">The numeric value to convert</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The formatted quotation string.</p>
+<hr>
+<h3 id="sfstrcolumnsizes">sfStrColumnSizes</h3>
+<p>Analyzes a delimited table string and returns the maximum width of each column, with an optional margin.</p>
+<p><strong>Syntax:</strong> <code>sfStrColumnSizes( table, separators, margin = 2 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">table</td>
+<td align="left">string</td>
+<td align="left">The input table string</td>
+</tr>
+<tr>
+<td align="left">separators</td>
+<td align="left">string</td>
+<td align="left">First character = column separator, second character = row separator (default: <code>,\n</code>)</td>
+</tr>
+<tr>
+<td align="left">margin</td>
+<td align="left">float</td>
+<td align="left">(optional) Extra padding to add to each column width. Default: 2</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A comma-separated list of column widths,</p>
+<p>or an empty string if the table has more than 255 columns.</p>
+<hr>
+<h3 id="sfstrformatheaders">sfStrFormatHeaders</h3>
+<p>Formats a header/title line with each header centered in its column,</p>
+<p> using a format string of column widths and a headers string.</p>
+<p><strong>Syntax:</strong> <code>sfStrFormatHeaders( format, headers, separator = 44 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">format</td>
+<td align="left">string</td>
+<td align="left">Comma-separated column widths (e.g. <code>"10,15,20"</code>). Must be comma-separated regardless of <code>separator</code></td>
+</tr>
+<tr>
+<td align="left">headers</td>
+<td align="left">string</td>
+<td align="left">Header texts separated by the <code>separator</code> character</td>
+</tr>
+<tr>
+<td align="left">separator</td>
+<td align="left">float</td>
+<td align="left">(optional) ASCII code of the separator character used in <code>headers</code>. Default: 44 (comma)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The formatted header line with each header centered</p>
+<p> in its column, padded with spaces, fields separated by <code>separator</code>.</p>
+<p><strong>Note:</strong> If a header text is longer than its column width, it is</p>
+<p> truncated on the right to fit.</p>
+<hr>
+<h3 id="sfstrformattable">sfStrFormatTable</h3>
+<p>Formats a delimited table string according to a format string specifying column widths.</p>
+<p><strong>Syntax:</strong> <code>sfStrFormatTable( format, table, separators )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">format</td>
+<td align="left">string</td>
+<td align="left">Comma-separated column widths (e.g. <code>"10,5,8"</code>)</td>
+</tr>
+<tr>
+<td align="left">table</td>
+<td align="left">string</td>
+<td align="left">The input table string</td>
+</tr>
+<tr>
+<td align="left">separators</td>
+<td align="left">string</td>
+<td align="left">First char = column separator, second char = row separator (default: <code>,\n</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The formatted table. Numeric fields are right-aligned,</p>
+<p>text fields are left-aligned.</p>
+<hr>
+<h3 id="sfstrformatalignedtable">sfStrFormatAlignedTable</h3>
+<p>Formats a delimited table string like <code>sfStrFormatTable</code>, but supports</p>
+<p>decimal-aligned columns. When a column format uses <code>x.y</code> notation</p>
+<p>(e.g. <code>7.2</code>), numbers in that column are aligned on their decimal point:</p>
+<li>`x` = width reserved for the integer part (including sign)</li>
+<li>`y` = width reserved for the fractional part</li>
+<li>Total column width = `x` + 1 (decimal point) + `y`</li>
+<p>A plain format like <code>10</code> behaves identically to <code>sfStrFormatTable</code></p>
+<p>(right-aligned for numbers, left-aligned for text).</p>
+<p><strong>Syntax:</strong> <code>sfStrFormatAlignedTable( format, table, separators )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">format</td>
+<td align="left">string</td>
+<td align="left">Comma-separated column formats, e.g. <code>"10,7.2,8"</code>. Mixing plain and decimal-aligned columns is allowed</td>
+</tr>
+<tr>
+<td align="left">table</td>
+<td align="left">string</td>
+<td align="left">The input table string</td>
+</tr>
+<tr>
+<td align="left">separators</td>
+<td align="left">string</td>
+<td align="left">First char = column separator, second char = row separator (default: <code>,\n</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The formatted table with decimal-aligned columns.</p>
+<p><strong>Examples:</strong></p>
+<p>Format <code>&quot;8,7.2,6&quot;</code> with data <code>Name,Price,Change</code>:</p>
+<li>Column 0: plain width 8</li>
+<li>Column 1: decimal-aligned, integer part 7 + point + fraction 2 = 10 total</li>
+<li>Column 2: plain width 6</li>
+<p>In a decimal column, a value like <code>-123.456</code> is displayed as &quot;   -123.46&quot; </p>
+<p>(right-aligned integer, decimal point, 2 fractional digits).</p>
+<hr>
+<h3 id="sfstrtrimin">sfStrTrimIn</h3>
+<p>Removes all whitespace characters from a string, except whitespace inside</p>
+<p> single-quoted or double-quoted substrings.</p>
+<p><strong>Syntax:</strong> <code>sfStrTrimIn( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to process</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The string with whitespace removed outside quotes.</p>
+<hr>
+<h3 id="sfstrfrom">sfStrFrom</h3>
+<p>Returns a substring of the given string starting from the specified position.</p>
+<p><strong>Syntax:</strong> <code>sfStrFrom( str, from )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">float</td>
+<td align="left">Starting position (0-based). If negative, counts from the end of the string (e.g. -1 = last character)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A pointer into the original string starting at position <code>from</code>. This function does not allocate a new buffer; the returned string points into the original plugin-managed string. Do NOT store the result in a static AFL variable. If you need to modify or persist the substring, copy it first (for example with <code>StrMid()</code> or similar).</p>
+<hr>
+<h3 id="sfroundquotes">sfRoundQuotes</h3>
+<p>Rounds the numeric values in an AFL array in-place to the nearest multiple of the specified tick size.</p>
+<p><strong>Syntax:</strong> <code>sfRoundQuotes( array, tickSize )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">array</td>
+<td align="left">array</td>
+<td align="left">The numeric array to be modified in-place (passed by reference)</td>
+</tr>
+<tr>
+<td align="left">tickSize</td>
+<td align="left">float</td>
+<td align="left">The tick size to round to. Supports fractional tick sizes (e.g. 0.5, 0.25, 0.125). For sub-1 tick sizes the function computes the appropriate reciprocal internally</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None — The function returns nothing and updates the provided array in-place. Empty values (<code>EMPTY_VAL</code>) are preserved.</p>
+<hr>
+<h3 id="sfstrfindregex">sfStrFindRegEx</h3>
+<p>Finds the position of the first substring matching a regular expression,</p>
+<p> starting from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrFindRegEx( str, regex, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to search in</td>
+</tr>
+<tr>
+<td align="left">regex</td>
+<td align="left">string</td>
+<td align="left">The regular expression pattern (ECMAScript syntax)</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Negative values count from the end of the string. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The 0-based position of the first match,</p>
+<p> or -1 if the pattern is not found or if the regex is invalid.</p>
+<p><strong>Note:</strong> The regex engine uses ECMAScript syntax (C++ <code>std::regex</code>).</p>
+<p> If the regex is malformed, the function returns -1 without error.</p>
+<hr>
+<h3 id="sfstrextractregex">sfStrExtractRegEx</h3>
+<p>Extracts the first substring matching a regular expression,</p>
+<p> starting from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrExtractRegEx( str, regex, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to search in</td>
+</tr>
+<tr>
+<td align="left">regex</td>
+<td align="left">string</td>
+<td align="left">The regular expression pattern (ECMAScript syntax)</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Negative values count from the end of the string. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The matched substring,</p>
+<p> or an empty string if not found or if the regex is invalid.</p>
+<hr>
+<h3 id="sfstrreplaceregex">sfStrReplaceRegEx</h3>
+<p>Replaces the <strong>first</strong> substring matching a regular expression</p>
+<p> with a replacement string, starting from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrReplaceRegEx( str, regex, subst, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">regex</td>
+<td align="left">string</td>
+<td align="left">The regular expression pattern (ECMAScript syntax)</td>
+</tr>
+<tr>
+<td align="left">subst</td>
+<td align="left">string</td>
+<td align="left">The replacement string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Only occurrences at or after this position are replaced. Negative values count from the end. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The input string with the first match replaced,</p>
+<p> or the original string if the pattern is not found or invalid.</p>
+<hr>
+<h3 id="sfstrreplaceallregex">sfStrReplaceAllRegEx</h3>
+<p>Replaces <strong>all</strong> substrings matching a regular expression</p>
+<p> with a replacement string, starting from an optional position.</p>
+<p><strong>Syntax:</strong> <code>sfStrReplaceAllRegEx( str, regex, subst, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The input string</td>
+</tr>
+<tr>
+<td align="left">regex</td>
+<td align="left">string</td>
+<td align="left">The regular expression pattern (ECMAScript syntax)</td>
+</tr>
+<tr>
+<td align="left">subst</td>
+<td align="left">string</td>
+<td align="left">The replacement string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting position (0-based). Only occurrences at or after this position are replaced. Negative values count from the end. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The input string with all matches replaced,</p>
+<p> or the original string if the pattern is not found or invalid.</p>
+<hr>
+</body>
+</html>

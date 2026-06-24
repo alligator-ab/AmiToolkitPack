@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — JSON Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>JSON Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>JSON Functions</h2>
+<p>JSON objects are created and manipulated via a numeric ID, using RapidJSON internally.</p>
+<h3 id="sfjsonparse">sfJSONParse</h3>
+<p>Parses a JSON string and returns a JSON object ID.</p>
+<p><strong>Syntax:</strong> <code>sfJSONParse( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The JSON string to parse</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The JSON object ID.</p>
+<hr>
+<h3 id="sfjsonload">sfJSONLoad</h3>
+<p>Loads a JSON file from disk and returns a JSON object ID.</p>
+<p><strong>Syntax:</strong> <code>sfJSONLoad( filename )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the JSON file</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The JSON object ID, or nothing if loading/parsing fails.</p>
+<hr>
+<h3 id="sfjsonsave">sfJSONSave</h3>
+<p>Saves a JSON object to a file.</p>
+<p><strong>Syntax:</strong> <code>sfJSONSave( id, filename, mode = &quot;w&quot; )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the output file</td>
+</tr>
+<tr>
+<td align="left">mode</td>
+<td align="left">string</td>
+<td align="left">(optional) File mode. Default: <code>"w"</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — 1.0 on success, nothing on failure.</p>
+<hr>
+<h3 id="sfjsonget">sfJSONGet</h3>
+<p>Retrieves a value from the JSON object by dot-separated path.</p>
+<p><strong>Syntax:</strong> <code>sfJSONGet( path, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path to the value (e.g. <code>"data.items.0.name"</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The value (string, float, or none).</p>
+<p><strong>Note:</strong> Supports array index access using numeric keys in the path</p>
+<p> (e.g. <code>&quot;0&quot;</code> for the first element).</p>
+<hr>
+<h3 id="sfjsonset">sfJSONSet</h3>
+<p>Sets a value in the JSON object by dot-separated path.</p>
+<p> Can optionally create missing path segments.</p>
+<p><strong>Syntax:</strong> <code>sfJSONSet( path, value, id, create_missing = 1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">AmiVar</td>
+<td align="left">The value to set (string or float)</td>
+</tr>
+<tr>
+<td align="left">create_missing</td>
+<td align="left">float</td>
+<td align="left">(optional) If non-zero, create missing objects/arrays along the path. Default: 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The set value, or nothing on failure.</p>
+<hr>
+<h3 id="sfjsonsetstring">sfJSONSetString</h3>
+<p>Sets a string value in the JSON object by dot-separated path.</p>
+<p> Can optionally create missing path segments.</p>
+<p><strong>Syntax:</strong> <code>sfJSONSetString( path, value, id, create_missing = 1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">The value to set (string or float)</td>
+</tr>
+<tr>
+<td align="left">create_missing</td>
+<td align="left">float</td>
+<td align="left">(optional) If non-zero, create missing objects/arrays along the path. Default: 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The set value, or nothing on failure.</p>
+<hr>
+<h3 id="sfjsonsetfloat">sfJSONSetFloat</h3>
+<p>Sets a value in the JSON object by dot-separated path.</p>
+<p> Can optionally create missing path segments.</p>
+<p><strong>Syntax:</strong> <code>sfJSONSetFloat( path, value, id, create_missing = 1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The value to set (string or float)</td>
+</tr>
+<tr>
+<td align="left">create_missing</td>
+<td align="left">float</td>
+<td align="left">(optional) If non-zero, create missing objects/arrays along the path. Default: 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The set value, or nothing on failure.</p>
+<hr>
+<h3 id="sfjsondestroy">sfJSONDestroy</h3>
+<p>Destroys a JSON object and frees its memory.</p>
+<p><strong>Syntax:</strong> <code>sfJSONDestroy( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — 1.0 on success, nothing on failure.</p>
+<hr>
+<h3 id="sfjsoncreate">sfJSONCreate</h3>
+<p>Creates a new empty JSON object.</p>
+<p><strong>Syntax:</strong> <code>sfJSONCreate()</code></p>
+<p><strong>Returns:</strong> float — The JSON object ID.</p>
+<hr>
+<h3 id="sfjsonfix">sfJSONFix</h3>
+<p>Attempts to fix common issues in a malformed JSON string (removes comments,</p>
+<p> quotes unquoted keys, replaces single quotes with double quotes, etc.).</p>
+<p><strong>Syntax:</strong> <code>sfJSONFix( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The malformed JSON string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The fixed JSON string.</p>
+<hr>
+<h3 id="sfjsonpretty">sfJSONPretty</h3>
+<p>Pretty-prints a JSON string with 2-space indentation and line breaks.</p>
+<p>If the input is not valid JSON, it attempts to fix it first via</p>
+<p><code>sfJSONFix</code>&apos;s internal logic.</p>
+<p><strong>Syntax:</strong> <code>sfJSONPretty( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The JSON string to pretty-print</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The formatted JSON string. If both parsing and</p>
+<p>fixing fail, returns the original (or fixed) string as-is.</p>
+<p><strong>Example (AFL):</strong></p>
+<pre><code>
+formatted = sfJSONPretty(&quot;{\&quot;a\&quot;:1,\&quot;b\&quot;:[2,3]}&quot;);
+
+// Result:
+
+// {
+
+//   &quot;a&quot;: 1,
+
+//   &quot;b&quot;: [
+
+//     2,
+
+//     3
+
+//   ]
+
+// }
+
+</code></pre>
+<hr>
+<h3 id="sfjsontostring">sfJSONToString</h3>
+<p>Serializes a JSON object back to a string.</p>
+<p><strong>Syntax:</strong> <code>sfJSONToString( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">JSON object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The JSON string representation.</p>
+<hr>
+</body>
+</html>

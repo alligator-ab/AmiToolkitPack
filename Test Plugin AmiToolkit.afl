@@ -1,0 +1,611 @@
+_SECTION_BEGIN("Test Plugin AmiToolkit");
+
+Results = "";
+errors = 0;
+testCount = 0;
+
+procedure AppendResult(s) {
+	global Results;
+	Results = Results + s;
+}
+// EXPECT(StrFind(...), 8, "strfind ...");
+function Expect(result, expected, func) {
+    global errors, testCount;
+    
+    testCount++;
+    if (expected == result) {
+        res = "OK";
+    } else {
+        res = "Failed";
+        errors++;
+    }
+    if (res == "Failed")
+		AppendResult(StrFormat("%-30s %-6s | expected=%-20s | got=%-20s\n", func, res, ""+expected, ""+result));
+    return expected == result;
+}
+
+function Test(func, expected, result) {
+    return Expect(result, expected, func);
+}
+
+function TestStr(func, expected, result) {
+    global Results, errors, testCount;
+    testCount++;
+    expected = ""+expected; result = ""+result;
+    if (expected == result) {
+        res = "OK";
+    } else {
+        res = "Failed";
+        errors++;
+    }
+    //expected = ""+expected; result = ""+result;
+    if (res == "Failed")
+		Results = Results + StrFormat("%-30s %-6s | expected=%-20s | got=%-20s\n", func, res, expected, result);
+    return expected == result;
+}
+
+// -- String Functions --
+
+procedure TestStringFind() {
+    s1 = "012345((abcdef((found((notfound";
+    pos = sfStrFind(s1, "((", 10);
+    Test("sfStrFind", 14, pos);
+
+    pos = sfStrFind(s1, "012", 0);
+    Test("sfStrFind start", 0, pos);
+
+    pos = sfStrFind(s1, "nope", 0);
+    Test("sfStrFind missing", -1, pos);
+
+    // sfStrFindLast
+    s2 = "hello world hello d";
+    pos = sfStrFindLast(s2, "hello", -1);
+    Test("sfStrFindLast", 12, pos);
+
+    pos = sfStrFindLast(s2, "d", -1);
+    Test("sfStrFindLast d", 18, pos);
+
+    pos = sfStrFindLast(s2, "nope", -1);
+    Test("sfStrFindLast missing", -1, pos);
+}
+
+procedure TestStringExtract() {
+    csv = "abc,def,ghi";
+    f0 = sfStrExtractFrom(csv, 0, 0, 44);
+    TestStr("sfStrExtractFrom f0", "abc", f0);
+
+    f1 = sfStrExtractFrom(csv, 0, 1, 44);
+    TestStr("sfStrExtractFrom f1", "def", f1);
+
+    f2 = sfStrExtractFrom(csv, 0, 2, 44);
+    TestStr("sfStrExtractFrom f2", "ghi", f2);
+
+    // sfStrTrimExtractFrom
+    csv2 = "  abc ,  def , ghi  ";
+    tf0 = sfStrTrimExtractFrom(csv2, 0, 0, 44);
+    TestStr("sfStrTrimExtractFrom f0", "abc", tf0);
+
+    tf1 = sfStrTrimExtractFrom(csv2, 0, 1, 44);
+    TestStr("sfStrTrimExtractFrom f1", "def", tf1);
+}
+
+procedure TestStringNested() {
+    s = "abc(def(ghi)jkl)mno";
+    // Find matching ) for opening ( at position 3
+    pos = sfStrFindNested(s, ')', 3); // 41 = ASCII ')'
+    Test("sfStrFindNested", 15, pos);
+
+    // No match for }
+    pos = sfStrFindNested(s, '}', 3); // 125 = ASCII '}'
+    Test("sfStrFindNested no match", -1, pos);
+}
+
+procedure TestNextField() {
+	s = " abc , \"de,fg \"  ,hij,klm";
+	f1 = sfStrNextField(s, ',', 0);
+	f2 = sfStrNextField(s, ',', 6);
+	Test("sfStrNextField (1)", "abc", f1);
+	Test("sfStrNextField (2)", "\"de,fg \"", f2);
+}
+
+procedure TestStringCharQuote() {
+    // sfStrFromChar
+    c1 = sfStrFromChar(65);
+    TestStr("sfStrFromChar 65", "A", c1);
+
+    c2 = sfStrFromChar(48);
+    TestStr("sfStrFromChar 48", "0", c2);
+
+    // sfStrToChar
+    s = "ABC";
+    ch = sfStrToChar(s, 0);
+    Test("sfStrToChar pos0", 65, ch);
+
+    ch2 = sfStrToChar(s, 2);
+    Test("sfStrToChar pos2", 67, ch2);
+
+    ch3 = sfStrToChar(s, 10);
+    Test("sfStrToChar out-of-range", 0, ch3);
+
+    // sfStrQuote
+    q = sfStrQuote("hello");
+    //TestStr("sfStrQuote", "\"hello\"", q);
+
+    q2 = sfStrQuote("he\"llo");
+    //TestStr("sfStrQuote embedded quote", "\"he\\\"llo\"", q2);
+
+    // sfStrUnquote
+    uq = sfStrUnquote("\"hello\"");
+    TestStr("sfStrUnquote", "hello", uq);
+
+    uq2 = sfStrUnquote("hello");
+    TestStr("sfStrUnquote no quotes", "hello", uq2);
+
+    // sfStrDisclose
+    ds = sfStrDisclose("(hello)");
+    TestStr("sfStrDisclose parens", "hello", ds);
+
+    ds2 = sfStrDisclose("[world]");
+    TestStr("sfStrDisclose brackets", "world", ds2);
+
+    ds3 = sfStrDisclose("  \"hello\"  ");
+    TestStr("sfStrDisclose spaced", "hello", ds3);
+
+    // sfStrEnclose
+    en = sfStrEnclose("()", "hello");
+    TestStr("sfStrEnclose parens", "(hello)", en);
+
+    en2 = sfStrEnclose("\"", "x");
+    TestStr("sfStrEnclose quotes", "\"x\"", en2);
+
+    // sfStrToQuote
+    n = sfStrToQuote("123.5");
+    Test("sfStrToQuote", 123.5, n);
+
+    n2 = sfStrToQuote("notanumber");
+    Test("sfStrToQuote invalid", 0, n2);
+
+    // sfStrFromQuote
+    fq = sfStrFromQuote(100.25);
+    Test("sfStrFromQuote", 1, StrLen(fq) > 0);
+}
+
+procedure TestStringTable() {
+    // sfStrColumnSizes
+    tbl = "aa,bbbb,cc\n1,222,3";
+    cols = sfStrColumnSizes(tbl, ",\n", 0);
+    Test("sfStrColumnSizes", 1, StrLen(cols) > 0);
+
+    // sfStrFormatTable
+    fmt = sfStrFormatTable("5,5,5", tbl, ",\n");
+    Test("sfStrFormatTable", 1, StrLen(fmt) > 0);
+
+    // sfStrTrimIn
+    ti = sfStrTrimIn("  a  b  c  ");
+    TestStr("sfStrTrimIn", "abc", ti);
+
+    ti2 = sfStrTrimIn("  a 'b c' d  ");
+    TestStr("sfStrTrimIn quoted", "a'b c'd", StrTrim(ti2, ""));
+}
+
+// -- String Builder Functions --
+procedure StrBuilderAppend(builder, str) {
+	sfStrBuilderAppend(str, builder);
+}
+
+procedure StrBuilderAppend2(builder, str1, str2) {
+	sfStrBuilderAppend2(str1, str2, builder);
+}
+
+procedure StrBuilderPrepend(builder, str) {
+	sfStrBuilderPrepend(str, builder);
+}
+
+procedure TestStringBuilder() {
+    bid = sfStrBuilder();
+    Test("sfStrBuilder", 1, bid > 0);
+
+    StrBuilderAppend(bid, "Hello ");
+    StrBuilderAppend(bid, "World");
+    res = sfStrBuild(bid, 0);
+    TestStr("sfStrBuilder result", "Hello World", res);
+
+    // Prepend
+    bid2 = sfStrBuilder();
+    StrBuilderAppend(bid2, "World");
+    StrBuilderPrepend(bid2, "Hello ");
+    res2 = sfStrBuild(bid2, 0);
+    TestStr("sfStrBuilderPrepend", "Hello World", res2);
+
+    // Append2
+    bid3 = sfStrBuilder();
+    StrBuilderAppend2(bid3, "A", "B");
+    res3 = sfStrBuild(bid3, 0);
+    TestStr("sfStrBuilderAppend2", "AB", res3);
+
+    // Clear
+    StrBuilderAppend(bid, "extra");
+    sfStrBuilderClear(bid);
+    res4 = sfStrBuild(bid);
+    TestStr("sfStrBuilderClear", "", res4);
+
+    // Remove
+    bid5 = sfStrBuilder();
+    StrBuilderAppend(bid5, "A");
+    StrBuilderAppend(bid5, "B");
+    StrBuilderAppend(bid5, "C");
+    sfStrBuilderRemove(2, bid5);
+    res5 = sfStrBuild(bid5);
+    TestStr("sfStrBuilderRemove", "A", res5);
+
+    // Destroy
+    sfStrBuilderDestroy(bid);
+    sfStrBuilderDestroy(bid2);
+    sfStrBuilderDestroy(bid3);
+    sfStrBuilderDestroy(bid5);
+}
+
+// -- Record Functions --
+function RecordSetString(sid, index, str) {
+	return sfRecordSetString(str, sid, index);
+}
+
+procedure TestRecord() {
+    sid = sfRecordCreate(3);
+    Test("sfRecordCreate - empty string representation", "", sid);
+//*
+    // Set float
+    old = sfRecordSetFloat(sid, 2, 42.5);
+    e = IsEmpty(old);
+    Test("sfVectorSetFloat returns Empty", 1, e); // none ? -1 in float context
+//*
+    // Get float
+    f = sfRecordGet(sid, 2);
+    Test("sfRecordGet float", 42.5, f);
+//*
+    // Set string
+    oldStr = sfRecordSetString(sid, "hello", 1);
+    Test("sfRecordSetString", 1, 1);
+//*
+    // Get string
+    s = sfRecordGet(sid, 1);
+    TestStr("sfRecordGet string", "hello", s);
+//*
+    // Get empty slot
+    v3 = sfRecordGet(sid, 0);
+    Test("sfRecordGet empty", 1, IsNull(v3)); // returns Null
+//*/
+    // Destroy
+    sfRecordDestroy(sid);
+}
+
+procedure TestVector() {
+    sid = sfVectorCreate(3);
+    Test("sfVectorCreate", 1, sid > 0);
+//*
+    sz = sfVectorSize(sid);
+    Test("sfVectorSize", 3, sz);
+//*/
+//*
+    // Set float
+    old = sfVectorSetFloat(42.5, 0, sid);
+    //Test("sfVectorSetFloat returns none", -1, old); // none ? -1 in float context
+//*
+    // Get float
+    v1 = sfVectorGet(0, sid);
+    Test("sfVectorGet float", 42.5, v1);
+    
+    v1 = sfVectorGet(0, sid);
+    Test("sfVectorGet float", 42.5, v1);
+
+//*
+    // Set string
+    oldStr = sfVectorSetString("hello", 1, sid);
+    Test("sfVectorSetString", 1, 1);
+//*
+    // Get string
+    v2 = sfVectorGet(1, sid);
+    TestStr("sfVectorGet string", "hello", v2);
+//*
+    // Get empty slot
+    v3 = sfVectorGet(sid, 2);
+    //Test("sfVectorGet empty", -1, v3); // none ? -1 in float context
+//*
+    // ToString
+    str = sfVectorToString(sid);
+    Test("sfVectorToString", 1, StrLen(str) > 0);
+//*
+    // FromString round-trip
+    sid2 = sfVectorFromString(str);
+    Test("sfVectorFromString", 1, sid2 > 0);
+    str2 = sfVectorToString(sid2);
+    TestStr("sfVectorFromString round-trip", str, str2);
+//*
+    // Resize
+    newsize = 5;
+    sfVectorResize(newsize, sid);
+    sz2 = sfVectorSize(sid);
+    Test("sfVectorResize", newsize, sz2);
+//*
+    // Clear
+    sfVectorClear(sid);
+    v4 = sfVectorGet(1, sid);
+    //if (IsNan(""+v4)) v4 = "Not A Number";
+    Test("sfVectorClear"+v4, 1, IsEmpty(v4));
+//*/
+    // Destroy
+    sfVectorDestroy(sid);
+    v5 = sfVectorGet(sid, 0);
+    Test("sfVectorGet after destroy", 1, IsEmpty(v5));
+}
+
+// -- JSON Functions --
+
+procedure TestJSON() {
+    // Create empty JSON object
+    jid = sfJSONCreate();
+    Test("sfJSONCreate", 1, jid > 0);
+
+    // Set a value
+    r = sfJSONSetString("name", "test", jid);
+    Test("sfJSONSet", 1, 1);
+
+    // Get it back
+    Name_ = sfJSONGet("name", jid);
+    TestStr("sfJSONGet name", "test", Name_);
+
+    // Set numeric value
+    sfJSONSetFloat("value", 123, jid);
+    val = sfJSONGet("value", jid);
+    //PopupWindow(""+val+" "+jid, "TEST "+0);
+    //TestStr("sfJSONGet value", "123", ""+val);
+	Test("sfJSONGet value", 123, val);
+
+    // Nested path
+    sfJSONSetString("nested.key", "deep", jid);
+    deep = sfJSONGet("nested.key", jid);
+    TestStr("sfJSONGet nested", "deep", deep);
+
+    // Missing key returns nothing
+    //miss = Null;
+    miss = sfJSONGet("nonexistent", jid); //miss = Null;
+    Test("sfJSONGet missing", 1, IsNull(miss));
+	//TestStr("sfJSONGet missing", "", ""+miss);
+	
+    // ToString
+    str = sfJSONToString(jid);
+    Test("sfJSONToString", 1, StrLen(str) > 0);
+
+    // Parse
+    pjid = sfJSONParse("{\"a\":42,\"b\":\"hello\"}");
+    Test("sfJSONParse", 1, pjid > 0);
+    pa = sfJSONGet("a", pjid);
+    Test("sfJSONParse get a", 42, pa);
+    pb = sfJSONGet("b", pjid);
+    TestStr("sfJSONParse get b", "hello", pb);
+
+    // Fix
+    fixed = sfJSONFix("{key: 'value'}");
+    Test("sfJSONFix", 1, StrLen(fixed) > 0);
+
+    // Destroy
+    r = sfJSONDestroy(jid);
+    Test("sfJSONDestroy", 1, r);
+    sfJSONDestroy(pjid);
+}
+
+procedure TestJSONFile() {
+    // sfJSONLoad and sfJSONSave require a file
+    jid = sfJSONCreate();
+    sfJSONSetString("testKey", "testValue", jid, 1);
+
+    // Save to file
+    ok_ = sfJSONSave("sfStr_test.json", jid);
+    Test("sfJSONSave", 1, ok_);
+
+    sfJSONDestroy(jid);
+
+    // Load back
+    lid = sfJSONLoad("sfStr_test.json");
+    Test("sfJSONLoad", 1, lid > 0);
+    //Test("sfJSONLoad", 1, IsNull(lid));
+    if (lid > 0) {
+        key = sfJSONGet("testKey", lid);
+        TestStr("sfJSONLoad get", "testValue", key);
+        sfJSONDestroy(lid);
+    }
+}
+
+// -- Text File Functions --
+
+procedure TestTextFiles() {
+	s = "Hello from sfStr plugin!";
+    // sfTextSave
+    ok = sfTextSave("AmiToolkit_test.txt", "Hello from sfStr plugin!");
+    Test("sfTextSave", 1, ok);
+
+    // sfTextLoad
+    txt = sfTextLoad("AmiToolkit_test.txt");
+    TestStr("sfTextLoad", "Hello from sfStr plugin!", txt);
+
+    // sfTextFree (no crash)
+    sfTextFree(txt);
+
+    // Load non-existent
+    txt2 = sfTextLoad("AmiToolkit_nonexistent.txt");
+    Test("sfTextLoad missing", 1, IsNull(txt2)); // none returns -1 in float context
+}
+
+// -- Indicator Functions --
+function IsArray(A) {
+	return (!IsNull(A[BarCount-1]));
+}
+
+procedure TestIndicators() {
+    global Avg, V;
+    // Generate synthetic daily price data
+    /*
+    P = Cum(1) + 100;
+    V = 1000000 + Cum(1) * 100;
+    //*/
+    P = Avg;
+    
+    period = 10;
+    //tick = 0.25;
+	tick = TickSize;
+	if (tick == 0) tick = 0.01;
+	
+    // sfSMA
+    MA_ = sfSMA(P, period);
+    cmp = LastValue(Cum((MA_ - MA(P, period))/MA(P, period)));
+    Test("sfSMA", 0, cmp);
+
+    // sfRoundPrice
+    rp = sfRoundPrice(P, tick);
+    Test("sfRoundPrice", 1, IsArray(rp));
+
+    // Create bands for direction / trailing stop
+    upper = MA(P, 20) * 1.05;
+    lower = MA(P, 20) * 0.95;
+
+    // sfDirection
+    dir = sfDirection(P, upper, lower);
+    Test("sfDirection", 1, IsArray(dir));
+
+    // sfTrailingStop
+    ts = sfTrailingStop(dir, upper, lower);
+    Test("sfTrailingStop", 1, IsArray(ts));
+
+    // sfKAMA needs Volume
+    n1 = 10; n2 = 100; k = 100; 
+    W = log(1+V); W = V*V+1; W = V+1; // W = 1;
+    kama = sfKAMA(P, W, n1, n2, k); Plot(kama, "kama", colorYellow, styleThick); Plot(C, "", colorDefault, styleCandle);
+    kama = sfKAMA(P, W, n2, n1, k); Plot(kama, "kama", colorAqua, styleLine); Plot(C, "", colorDefault, styleCandle);
+    Test("sfKAMA", 1, IsArray(kama));
+
+    // sfHeikinAshi modifies arrays in-place
+    HO = Open;
+    HH = High;
+    HL = Low;
+    HC = Close;
+    sfHeikinAshi(HO, HH, HL, HC, 1);
+    Test("sfHeikinAshi", 1, 1);
+}
+
+procedure TestSlippage() {
+    global V, Avg;
+    //P = Cum(1) + 100;
+    //V = 1000000 + Cum(1) * 100;
+    P = Avg;
+    tv = V / 10;
+
+    // sfIntradaySlippageEstimate
+    slippage = sfIntradaySlippageEstimate(P, P*1.01, P*0.99, P, V, tv, 0.25, 50, 0.1, 0);
+    Test("sfIntradaySlippageEstimate", 1, IsArray(slippage));
+
+    // sfSlippageEstimate
+    slip_eod = sfSlippageEstimate(P, P*1.01, P*0.99, P, V, tv, 0.25, 50, 0.1, 0);
+    Test("sfSlippageEstimate", 1, IsArray(slip_eod));
+}
+
+// -- Utility Functions --
+
+procedure TestUtilities() {
+    // sfGetChrono
+    t = sfGetChrono();
+    Test("sfGetChrono", 1, t > 0);
+
+    // sfResetChrono + sfGetChrono
+    sfResetChrono();
+    t2 = sfGetChrono();
+    Test("sfGetChrono after reset", 1, t2 >= 0);
+    
+    // sfMA vs MA
+    n = 1000;
+    sfResetChrono();
+    for(i = 0; i < n; ++i)    X = sfSMA(Avg, 50);
+    t = sfGetChrono();
+	
+	sfResetChrono();
+    for(i = 0; i < n; ++i)    X = MA(Avg, 50);
+    t2 = sfGetChrono();
+    
+    AppendResult(StrFormat("sfChrono sfMA vs MA (in sec * %g) : %.5f vs %.5f", n, t, t2));
+}
+
+procedure TestUnicodeToAscii() {
+	res = sfUnicodeToAscii("Élève naïf déjà mûr — voilà l’été où l’âme s’éveille");
+	expected = "Eleve naif deja mur - voila l'ete ou l'ame s'eveille";
+	diff = "";
+	for(i = 0, n = StrLen(res); i < n-1; ++i) {
+		a = StrMid(res, i, 1); b = StrMid(expected, i, 1);
+		if (a != b) diff = diff + " " + a + "/" + b;
+	}
+	TestStr("UnicodeToAscii", expected, res);
+	//TestStr("UnicodeToAscii"+diff, expected, res);
+}
+
+// -- Main --
+
+procedure TestAll() {
+    TestStringFind();
+    TestStringExtract();
+    TestStringNested();
+    TestNextField();
+    TestStringCharQuote();
+    TestStringTable();
+    TestStringBuilder();
+    TestVector();
+	TestRecord();
+    TestJSON();
+    TestJSONFile();
+    TestTextFiles();
+    TestSlippage();
+    TestUtilities();
+    TestUnicodeToAscii();
+    //
+    TestIndicators();
+    //*/ 
+}
+
+procedure SaveResults() {
+    global Results, errors, testCount;
+
+    printf("\n==============================\n");
+    printf("Plugin AmiToolkit - AFL Tests\n");
+    printf("==============================\n\n");
+
+    printf(Results);
+
+    printf("\n==============================\n");
+    printf("Tests: %g passed, %g failed\n", testCount - errors, errors);
+    printf("==============================\n");
+
+    for(i = 0; (s = StrExtract(Results, i, '\n')) != ""; ++i)
+		GfxTextOut(s, 0, 20*i + 20);
+    //GfxTextOut(Results, 5, 20);
+}
+
+//GfxSetBkMode(1); // transparent
+GfxSelectFont("Consolas", 10);
+GfxSetTextColor(colorBlack); GfxSetBkColor(colorWhite);
+
+TestAll();
+
+if (errors > 0) {
+    _TRACE("=== AmiToolkit AFL TESTS: FAILED (" + WriteVal(errors) + " errors) ===");
+    Results = "=== AmiToolkit AFL TESTS: FAILED (" + errors + " errors) ===\n"+Results;
+} else {
+    _TRACE("=== AmiToolkit AFL TESTS: ALL PASSED ===");
+    Results = "=== AmiToolkit AFL TESTS: ALL PASSED ===\n"+Results;
+}
+
+SaveResults();
+
+if (errors > 0) {
+    _TRACE("=== AmiToolkit AFL TESTS: FAILED (" + WriteVal(errors) + " errors) ===");
+} else {
+    _TRACE("=== AmiToolkit AFL TESTS: ALL PASSED ===");
+}
+
+_SECTION_END();

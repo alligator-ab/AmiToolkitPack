@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Utility Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Utility Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Utility Functions</h2>
+<h3 id="sfresetchrono">sfResetChrono</h3>
+<p>Reset the chrono.</p>
+<p><strong>Syntax:</strong> <code>sfResetChrono()</code></p>
+<p><strong>Returns:</strong> float — Elapsed time in seconds (with sub-millisecond precision).</p>
+<h3 id="sfgetchrono">sfGetChrono</h3>
+<p>Returns the number of seconds elapsed since the plug-in was loaded</p>
+<p>or since the chrono was resetted. Precision is between 1 millisecond and 1 microsecond,</p>
+<p>about a few dozen microseconds on modern systems.</p>
+<p>Due to floating number storage capacity,</p>
+<p>it&apos;s recommended to reset the chrono first when one needs to measure</p>
+<p>an elapsed time during long sessions (a long time after software start).</p>
+<p><strong>Syntax:</strong> <code>sfGetChrono()</code></p>
+<p><strong>Returns:</strong> float — Elapsed time in seconds (with sub-millisecond precision).</p>
+<h3 id="sfutf16toascii">sfUTF16ToAscii</h3>
+<p>This function converts a UTF‑16LE encoded string (stored in a char* buffer)</p>
+<p> into an ASCII string by removing diacritics and mapping Latin, Latin‑1,</p>
+<p> and Latin Extended‑A/B characters to their closest ASCII equivalents.</p>
+<p> It also handles UTF‑16 surrogate pairs and ignores combining marks,</p>
+<p> producing a clean, accent‑stripped ASCII output.</p>
+<p><strong>Syntax:</strong> <code>sfUTF16ToAscii(UTF16String)</code></p>
+<p><strong>Returns:</strong> char * — Converted string in ASCII Extended.</p>
+<h3 id="sfunicodetoascii">sfUnicodeToAscii</h3>
+<p>Converts a UTF‑8 or ANSI string into an ASCII string by removing diacritics</p>
+<p> and mapping accented Latin characters and typographic punctuation</p>
+<p>  to their closest ASCII equivalents.</p>
+<p>  Auto-detects UTF‑8 (via <code>MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS)</code>)</p>
+<p>   and falls back to ANSI (CP_ACP) if UTF‑8 fails.</p>
+<p><strong>Syntax:</strong> <code>sfUnicodeToAscii(str)</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">UTF‑8 or ANSI encoded string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The ASCII-converted string.</p>
+<hr>
+<h3 id="sfremovegaps">sfRemoveGaps</h3>
+<p>Removes overnight price gaps from OHLC arrays in place, producing a</p>
+<p>continuous price series. Detects new trading days via <code>TimeNum()</code> and</p>
+<p>adjusts all five arrays so that <code>Open[i]</code> follows <code>Close[i-1]</code> without</p>
+<p>a jump.</p>
+<p><strong>Syntax:</strong> <code>sfRemoveGaps( O, H, L, C, Avg )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">O</td>
+<td align="left">array</td>
+<td align="left">Open prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">array</td>
+<td align="left">High prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">L</td>
+<td align="left">array</td>
+<td align="left">Low prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">array</td>
+<td align="left">Close prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">Avg</td>
+<td align="left">array</td>
+<td align="left">Average price, recalculated as <code>(H+L+C)/3</code> (modified in place)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing — all arrays are modified in place.</p>
+<p><strong>RemoveGaps Example:</strong></p>
+<pre><code>
+sfRemoveGaps(O, H, L, C, Avg);
+
+// O, H, L, C, Avg are now gap-adjusted
+
+</code></pre>
+<hr>
+<h3 id="sflimitjumps">sfLimitJumps</h3>
+<p>Limits close-to-close jumps so that no jump exceeds the <code>BaseJump</code></p>
+<p>threshold. Works like <code>sfRemoveGaps</code> but instead of removing overnight</p>
+<p>gaps, it caps any price jump (positive or negative) to a per-bar limit.</p>
+<p>The excess is accumulated and subtracted from all subsequent bars,</p>
+<p>keeping the series continuous.</p>
+<p><strong>Syntax:</strong> <code>sfLimitJumps( O, H, L, C, Avg, BaseJump )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">O</td>
+<td align="left">array</td>
+<td align="left">Open prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">array</td>
+<td align="left">High prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">L</td>
+<td align="left">array</td>
+<td align="left">Low prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">array</td>
+<td align="left">Close prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">Avg</td>
+<td align="left">array</td>
+<td align="left">Average price, recalculated as <code>(H+L+C)/3</code> (modified in place)</td>
+</tr>
+<tr>
+<td align="left">BaseJump</td>
+<td align="left">array</td>
+<td align="left">Per-bar threshold</td>
+</tr>
+</table>
+<p>if <code>|C[i] - C[i-1]|</code> exceeds <code>BaseJump[i]</code>, the excess is removed from this bar and all subsequent bars</p>
+<p><strong>Returns:</strong> Nothing — all arrays are modified in place.</p>
+<p><strong>LimitJumps Example:</strong></p>
+<pre><code>
+// Limit any close-to-close jump to at most 2.0 points
+
+base = 2.0 * Ones(C);
+
+sfLimitJumps(O, H, L, C, Avg, base);
+
+// O, H, L, C, Avg are now jump-limited
+
+</code></pre>
+<hr>
+<h3 id="sffixspikes">sfFixSpikes</h3>
+<p>Caps High and Low so they never deviate more than <code>A</code> from the Open-Close</p>
+<p>range. Useful for filtering momentary price spikes that exceed a</p>
+<p>reasonable amplitude.</p>
+<p><strong>Syntax:</strong> <code>sfFixSpikes( O, H, L, C, A )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">O</td>
+<td align="left">array</td>
+<td align="left">Open prices (read)</td>
+</tr>
+<tr>
+<td align="left">H</td>
+<td align="left">array</td>
+<td align="left">High prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">L</td>
+<td align="left">array</td>
+<td align="left">Low prices (modified in place)</td>
+</tr>
+<tr>
+<td align="left">C</td>
+<td align="left">array</td>
+<td align="left">Close prices (read)</td>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">array</td>
+<td align="left">Per-bar maximum amplitude: <code>H</code> ≤ <code>Max(O,C) + A</code> and <code>L</code> ≥ <code>Min(O,C) − A</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing — H and L are modified in place.</p>
+<p><strong>FixSpikes Example:</strong></p>
+<pre><code>
+// Spike threshold: 0.5 % of the Close
+
+amp = 0.005 * C;
+
+sfFixSpikes(O, H, L, C, amp);
+
+</code></pre>
+<hr>
+<h3 id="sffixquotes">sfFixQuotes</h3>
+<p>Detects anomalous values in a time series and replaces them. A value is</p>
+<p>considered anomalous when it deviates from the rolling mean by more than</p>
+<p><code>stdev</code> standard deviations over the preceding <code>window</code> bars.</p>
+<p><strong>Syntax:</strong> <code>sfFixQuotes( A, window, stdev, opt )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">array</td>
+<td align="left">Input time series</td>
+</tr>
+<tr>
+<td align="left">window</td>
+<td align="left">float</td>
+<td align="left">Rolling window for mean/standard‑deviation calculation</td>
+</tr>
+<tr>
+<td align="left">stdev</td>
+<td align="left">float</td>
+<td align="left">Number of standard deviations forming the threshold</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Filling method. Default: 0</td>
+</tr>
+</table>
+<table class="doc-table">
+<tr>
+<th align="left">opt</th>
+<th align="left">Behavior</th>
+</tr>
+<tr>
+<td align="left"><code>0</code></td>
+<td align="left">**Forward‑fill** — copy the last non‑anomalous value</td>
+</tr>
+<tr>
+<td align="left"><code>≥ 1</code></td>
+<td align="left">**EMA** — fill with an exponential moving average of the last <code>opt</code> valid values</td>
+</tr>
+<tr>
+<td align="left"><code>< 0</code></td>
+<td align="left">**Linear regression** — fill by extrapolating a line fitted to the last <code>−opt</code> valid values</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — The cleaned series with anomalies replaced.</p>
+<hr>
+<h3 id="sfmxsparsematrix">sfMxSparseMatrix</h3>
+<p>Creates a <code>rows × cols</code> matrix where each cell has <code>density</code> probability</p>
+<p>of being non‑zero.  Non‑zero values are drawn from a uniform distribution</p>
+<p>on <code>[‑1, 1]</code>.  Internally builds a string and passes it to <code>MxFromString</code>.</p>
+<p><strong>Syntax:</strong> <code>sfMxSparseMatrix( rows, cols, density )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">rows</td>
+<td align="left">float</td>
+<td align="left">Number of rows</td>
+</tr>
+<tr>
+<td align="left">cols</td>
+<td align="left">float</td>
+<td align="left">Number of columns</td>
+</tr>
+<tr>
+<td align="left">density</td>
+<td align="left">float</td>
+<td align="left">Fraction of non‑zero cells (0.0 – 1.0)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> matrix — A 2‑D array of floats.</p>
+<hr>
+<h3 id="sfbondquotetostr">sfBondQuoteToStr</h3>
+<p>Converts a floating‑point price to a US Treasury bond‑quote string in</p>
+<p>32nds (with optional 256ths or <code>+</code> for a half‑32nd).</p>
+<p><strong>Syntax:</strong> <code>sfBondQuoteToStr( price [, sep ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Numeric price (e.g. <code>101.125</code>)</td>
+</tr>
+<tr>
+<td align="left">sep</td>
+<td align="left">float / string</td>
+<td align="left">(optional) Separator character; default <code>'</code> (apostrophe)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Bond‑quote representation.  Examples:</p>
+<p><code>101.125</code> → <code>&quot;101&apos;04&quot;</code>, <code>99.515625</code> → <code>&quot;99&apos;16+&quot;</code>, <code>100.0625</code> → <code>&quot;100&apos;02&quot;</code>.</p>
+<hr>
+</body>
+</html>

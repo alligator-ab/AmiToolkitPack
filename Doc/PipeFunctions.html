@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Pipe Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Pipe Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Pipe Functions</h2>
+<p>Functions for creating and communicating with a child process via an anonymous pipe.</p>
+<h3 id="sfpipecreate">sfPipeCreate</h3>
+<p>Launches a child process and creates a pipe pair for communicating with it.</p>
+<p><strong>Syntax:</strong> <code>sfPipeCreate( command )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">command</td>
+<td align="left">string</td>
+<td align="left">Command line to execute (child process)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — A pipe ID to use with other <code>sfPipe*</code> functions, or <code>Null()</code> on failure.</p>
+<hr>
+<h3 id="sfpipesend">sfPipeSend</h3>
+<p>Writes data to the child process standard input.</p>
+<p><strong>Syntax:</strong> <code>sfPipeSend( data, pipeId )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">string</td>
+<td align="left">Data to write to child's stdin</td>
+</tr>
+<tr>
+<td align="left">pipeId</td>
+<td align="left">float</td>
+<td align="left">Pipe ID returned by <code>sfPipeCreate</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Note:</strong> <code>WriteFile</code> is used without overlapped I/O. The call may block if the pipe buffer is full or if the child does not read.</p>
+<hr>
+<h3 id="sfpiperequest">sfPipeRequest</h3>
+<p>Send data to the child and wait (up to an optional timeout) for output.</p>
+<p><strong>Syntax:</strong> <code>sfPipeRequest( data, pipeId, timeout_ms = 500 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">string</td>
+<td align="left">Data to write to child's stdin</td>
+</tr>
+<tr>
+<td align="left">pipeId</td>
+<td align="left">float</td>
+<td align="left">Pipe ID</td>
+</tr>
+<tr>
+<td align="left">timeout_ms</td>
+<td align="left">float</td>
+<td align="left">(optional) Maximum wait time in milliseconds. Default: 500</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The collected output as a string, or <code>Null()</code> if allocation failed or no output was produced within the timeout.</p>
+<p><strong>Behavior:</strong> The function writes <code>data</code> then polls the pipe (using <code>PeekNamedPipe</code>/<code>ReadFile</code>) until data is available or the timeout expires. It may block for short periods while waiting but will return when the timeout is reached.</p>
+<hr>
+<h3 id="sfpiperead">sfPipeRead</h3>
+<p>Non-blocking read that returns any output currently available from the child process.</p>
+<p><strong>Syntax:</strong> <code>sfPipeRead( pipeId )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">pipeId</td>
+<td align="left">float</td>
+<td align="left">Pipe ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A string containing currently-available output, or <code>Null()</code> if no data is available.</p>
+<p><strong>Note:</strong> Use this to poll for additional output after a previous <code>sfPipeRequest</code> returned early, or to periodically collect output without blocking.</p>
+<hr>
+<h3 id="sfpipeisclosed">sfPipeIsClosed</h3>
+<p>Check whether the child process has exited.</p>
+<p><strong>Syntax:</strong> <code>sfPipeIsClosed( pipeId )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">pipeId</td>
+<td align="left">float</td>
+<td align="left">Pipe ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> if the process has exited (or the pipe does not exist), <code>0</code> otherwise.</p>
+<hr>
+<h3 id="sfpipeclose">sfPipeClose</h3>
+<p>Closes pipe handles and terminates the child process.</p>
+<p><strong>Syntax:</strong> <code>sfPipeClose( pipeId )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">pipeId</td>
+<td align="left">float</td>
+<td align="left">Pipe ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Warning:</strong> <code>sfPipeClose</code> calls <code>TerminateProcess</code> to force the child to exit and closes the handles. Prefer a graceful shutdown by signalling the child if possible before calling this.</p>
+<hr>
+</body>
+</html>

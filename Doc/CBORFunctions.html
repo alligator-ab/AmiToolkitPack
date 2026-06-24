@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — CBOR Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>CBOR Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>CBOR Functions</h2>
+<p>[CBOR (RFC 8949)](https://cbor.io) is a binary data format like MessagePack,</p>
+<p>designed for small code size and compact messages. This module uses</p>
+<p>[nlohmann/json](https://github.com/nlohmann/json) internally and provides</p>
+<p>both a simple codec interface (<code>sfCBOREncode</code>/<code>sfCBORDecode</code>) and a</p>
+<p>full DOM-based API (analogous to the JSON module) for random access,</p>
+<p>modification, and serialization.</p>
+<p><strong>Note:</strong> CBOR binary data is base64-encoded when passed as AFL strings</p>
+<p>to avoid null-byte truncation issues. Use <code>sfBase64Encode</code>/<code>sfBase64Decode</code></p>
+<p>to convert to/from raw CBOR bytes for external communication.</p>
+<h3 id="sfcborencode">sfCBOREncode</h3>
+<p>Encodes an AFL value to CBOR format, returned as a base64 string.</p>
+<p><strong>Syntax:</strong> <code>sfCBOREncode( value )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">AmiVar</td>
+<td align="left">The value to encode (nil, float, string, or array)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Base64-encoded CBOR data.</p>
+<hr>
+<h3 id="sfcbordecode">sfCBORDecode</h3>
+<p>Decodes a base64-encoded CBOR string back to an AFL value.</p>
+<p><strong>Syntax:</strong> <code>sfCBORDecode( b64_str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">b64_str</td>
+<td align="left">string</td>
+<td align="left">Base64-encoded CBOR data</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — Decoded value (nil → <code>Nothing</code>, bool → <code>Float</code>, number → <code>Float</code>, string → <code>String</code>, array → <code>VarArray</code>).</p>
+<hr>
+<h3 id="sfcborparse">sfCBORParse</h3>
+<p>Parses a base64-encoded CBOR document and returns a store ID for subsequent</p>
+<p>read/modify operations.</p>
+<p><strong>Syntax:</strong> <code>sfCBORParse( b64_str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">b64_str</td>
+<td align="left">string</td>
+<td align="left">Base64-encoded CBOR document</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The store ID, or <code>Null</code> if parsing failed.</p>
+<hr>
+<h3 id="sfcborcreate">sfCBORCreate</h3>
+<p>Creates a new empty CBOR document store.</p>
+<p><strong>Syntax:</strong> <code>sfCBORCreate()</code></p>
+<p><strong>Returns:</strong> float — The store ID.</p>
+<hr>
+<h3 id="sfcborget">sfCBORGet</h3>
+<p>Retrieves a value from a CBOR document by dot-separated path.</p>
+<p><strong>Syntax:</strong> <code>sfCBORGet( path, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path (e.g. <code>"data.items.0.name"</code>)</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID returned by <code>sfCBORParse</code> or <code>sfCBORCreate</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The value, or <code>Null</code> if not found.</p>
+<hr>
+<h3 id="sfcborsetstring">sfCBORSetString</h3>
+<p>Sets a string value in a CBOR document by dot-separated path.</p>
+<p>Creates missing intermediate path segments by default.</p>
+<p><strong>Syntax:</strong> <code>sfCBORSetString( path, value, id, create_missing = 1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">The string value to set</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+<tr>
+<td align="left">create_missing</td>
+<td align="left">float</td>
+<td align="left">(optional) If non-zero, create missing objects along the path. Default: 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The set value, or <code>Null</code> on failure.</p>
+<hr>
+<h3 id="sfcborsetfloat">sfCBORSetFloat</h3>
+<p>Sets a float value in a CBOR document by dot-separated path.</p>
+<p>Creates missing intermediate path segments by default.</p>
+<p><strong>Syntax:</strong> <code>sfCBORSetFloat( path, value, id, create_missing = 1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The float value to set</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+<tr>
+<td align="left">create_missing</td>
+<td align="left">float</td>
+<td align="left">(optional) If non-zero, create missing objects along the path. Default: 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The set value, or <code>Null</code> on failure.</p>
+<hr>
+<h3 id="sfcbordestroy">sfCBORDestroy</h3>
+<p>Destroys a CBOR document store and frees its memory.</p>
+<p><strong>Syntax:</strong> <code>sfCBORDestroy( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID to destroy</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — 1.0 on success, <code>Null</code> on failure.</p>
+<hr>
+<h3 id="sfcbortostring">sfCBORToString</h3>
+<p>Serializes a CBOR document store to a JSON string for inspection.</p>
+<p><strong>Syntax:</strong> <code>sfCBORToString( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The JSON representation.</p>
+<hr>
+<h3 id="sfcborload">sfCBORLoad</h3>
+<p>Loads a CBOR file from disk and returns a store ID.</p>
+<p><strong>Syntax:</strong> <code>sfCBORLoad( filename )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the CBOR file</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The store ID, or <code>Null</code> if loading/parsing fails.</p>
+<hr>
+<h3 id="sfcborsave">sfCBORSave</h3>
+<p>Saves a CBOR document store to a binary CBOR file.</p>
+<p><strong>Syntax:</strong> <code>sfCBORSave( id, filename )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the output file</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — 1.0 on success, <code>Null</code> on failure.</p>
+<hr>
+<h3>Example (encode/decode)</h3>
+<pre><code>
+// Encode AFL value to CBOR (base64 string)
+
+cbor = sfCBOREncode(42.0);
+
+val = sfCBORDecode(cbor);        // val == 42.0
+
+
+
+cbor = sfCBOREncode(&quot;Hello&quot;);
+
+val = sfCBORDecode(cbor);        // val == &quot;Hello&quot;
+
+
+
+// Convert to/from raw CBOR for server communication
+
+raw_cbor = sfBase64Decode(cbor); // raw CBOR bytes
+
+sfWSSend(raw_cbor, ws_id);
+
+</code></pre>
+<h3>Example (DOM API)</h3>
+<pre><code>
+// Create and build a document
+
+id = sfCBORCreate();
+
+sfCBORSetString(&quot;name&quot;, &quot;Alice&quot;, id);
+
+sfCBORSetFloat(&quot;age&quot;, 30, id);
+
+sfCBORSetString(&quot;address.city&quot;, &quot;Paris&quot;, id);
+
+
+
+// Read values
+
+name = sfCBORGet(&quot;name&quot;, id);          // &quot;Alice&quot;
+
+age = sfCBORGet(&quot;age&quot;, id);            // 30.0
+
+city = sfCBORGet(&quot;address.city&quot;, id);  // &quot;Paris&quot;
+
+
+
+sfCBORDestroy(id);
+
+</code></pre>
+<hr>
+<h3 id="sfwssendcbor">sfWSSendCBOR</h3>
+<p>Sends a CBOR document store as a binary WebSocket frame (opcode <code>0x2</code>).</p>
+<p>Use this instead of <code>sfCBOREncode</code> + <code>sfWSSend</code> to avoid the <code>VAR_STRING</code></p>
+<p>null-byte limitation: the CBOR is serialized directly to raw bytes in C++</p>
+<p>and sent as a binary frame.</p>
+<p><strong>Syntax:</strong> <code>sfWSSendCBOR( cbor_id, ws_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">cbor_id</td>
+<td align="left">float</td>
+<td align="left">CBOR store ID (from <code>sfCBORCreate</code> or <code>sfCBORParse</code>)</td>
+</tr>
+<tr>
+<td align="left">ws_id</td>
+<td align="left">float</td>
+<td align="left">WebSocket client ID (from <code>sfWSConnect</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — <code>Nothing</code> on success, <code>Null</code> if invalid ID or</p>
+<p>serialization fails.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+cbor_id = sfCBORCreate();
+
+sfCBORSetString(&quot;action&quot;, &quot;ping&quot;, cbor_id);
+
+sfWSSendCBOR(cbor_id, ws_id);
+
+sfCBORDestroy(cbor_id);
+
+</code></pre>
+<hr>
+</body>
+</html>

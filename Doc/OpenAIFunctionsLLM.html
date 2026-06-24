@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — OpenAI Functions (LLM)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>OpenAI Functions (LLM)</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>OpenAI Functions (LLM)</h2>
+<p>Asynchronous LLM API calls via OpenAI‑compatible endpoints (e.g. OpenAI, Mistral).</p>
+<p>Uses <code>libcurl</code> internally. All calls are non‑blocking — the HTTP request runs on a</p>
+<p>background thread and the result is polled via <code>sfOpenAIGetAnswer</code>.</p>
+<h3 id="sfopenaiconfigure">sfOpenAIConfigure</h3>
+<p>Sets the API base URL, API key, and model for subsequent requests.</p>
+<p><strong>Syntax:</strong> <code>sfOpenAIConfigure( base_url, api_key, model )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">base_url</td>
+<td align="left">string</td>
+<td align="left">API endpoint URL (e.g. <code>https://api.openai.com/v1/</code> or <code>https://api.mistral.ai/v1/</code>)</td>
+</tr>
+<tr>
+<td align="left">api_key</td>
+<td align="left">string</td>
+<td align="left">API authentication key</td>
+</tr>
+<tr>
+<td align="left">model</td>
+<td align="left">string</td>
+<td align="left">Model identifier (e.g. <code>gpt-4o</code>, <code>mistral-small-latest</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<p><strong>Note:</strong> Must be called at least once before <code>sfOpenAIRequest</code>.</p>
+<hr>
+<h3 id="sfopenairequest">sfOpenAIRequest</h3>
+<p>Sends a chat completion request with a single message on a background thread.</p>
+<p><strong>Syntax:</strong> <code>sfOpenAIRequest( role, content )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">role</td>
+<td align="left">string</td>
+<td align="left">Message role (e.g. <code>"user"</code>, <code>"system"</code>, <code>"assistant"</code>)</td>
+</tr>
+<tr>
+<td align="left">content</td>
+<td align="left">string</td>
+<td align="left">The message content / prompt</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — A request ID (to be used with <code>sfOpenAIGetAnswer</code> / <code>sfOpenAIForget</code>),</p>
+<p>or <code>Null</code> if no configuration was set.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+id = sfOpenAIRequest(&quot;user&quot;, &quot;What is the capital of France?&quot;);
+
+</code></pre>
+<hr>
+<h3 id="sfopenaigetanswer">sfOpenAIGetAnswer</h3>
+<p>Checks whether the async request has completed and retrieves the response.</p>
+<p><strong>Syntax:</strong> <code>sfOpenAIGetAnswer( request_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">request_id</td>
+<td align="left">float</td>
+<td align="left">Request ID returned by <code>sfOpenAIRequest</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The assistant&apos;s reply text, or <code>&quot;&quot;</code> (empty string) if the request</p>
+<p>is still pending. Returns <code>Null</code> if the request ID is invalid or if an error occurred.</p>
+<p><strong>Polling pattern:</strong></p>
+<pre><code>
+id = sfOpenAIRequest(&quot;user&quot;, &quot;Explain AI in one sentence.&quot;);
+
+for (i = 0; i &lt; 100; i++) {
+
+    answer = sfOpenAIGetAnswer(id);
+
+    if (answer != &quot;&quot;) {
+
+        // process answer
+
+        break;
+
+    }
+
+    Sleep(100);
+
+}
+
+</code></pre>
+<hr>
+<h3 id="sfopenaiforget">sfOpenAIForget</h3>
+<p>Frees the resources associated with a completed (or abandoned) request.</p>
+<p><strong>Syntax:</strong> <code>sfOpenAIForget( request_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">request_id</td>
+<td align="left">float</td>
+<td align="left">Request ID to release</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3>Complete AFL example</h3>
+<pre><code>
+// Configure (call once)
+
+sfOpenAIConfigure(&quot;https://api.mistral.ai/v1/&quot;, &quot;your-key&quot;, &quot;mistral-small-latest&quot;);
+
+
+
+// Send request
+
+reqId = sfOpenAIRequest(&quot;user&quot;, &quot;What is the capital of France?&quot;);
+
+
+
+// Poll for answer
+
+answer = &quot;&quot;;
+
+for (i = 0; i &lt; 50; i++) {
+
+    answer = sfOpenAIGetAnswer(reqId);
+
+    if (answer != &quot;&quot;) break;
+
+    Sleep(100);
+
+}
+
+
+
+// Print result
+
+if (answer != &quot;&quot;) {
+
+    printf(&quot;Answer: %s\n&quot;, answer);
+
+}
+
+
+
+// Cleanup
+
+sfOpenAIForget(reqId);
+
+</code></pre>
+<hr>
+</body>
+</html>

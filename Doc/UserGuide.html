@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — User Guide</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.glossary{margin-top:2rem}
+.glossary h2{border-bottom:2px solid #3498db;padding-bottom:.25rem}
+.glossary .doc-table{font-size:.85rem}
+.glossary .doc-table td:first-child{font-family:'JetBrains Mono','Fira Code',Consolas,monospace;font-size:.85rem}
+</style>
+</head>
+<body>
+<h1>AmiToolkit AmiBroker Plugin — User Guide</h1>
+
+<h2>Overview</h2>
+<p>AmiToolkit is an AmiBroker plug-in that provides string processing,
+JSON/CBOR manipulation, Vector and Record data structures, technical indicators,
+quantitative functions and many other useful functions for AFL formulas.</p>
+
+<hr>
+
+<h2>Function Categories</h2>
+<ul>
+<li><a href="StringFunctions.html">String Functions</a> (25 functions)</li>
+<li><a href="StringBuilderFunctions.html">String Builder Functions</a> (8 functions)</li>
+<li><a href="PipeFunctions.html">Pipe Functions</a> (6 functions)</li>
+<li><a href="VectorFunctions.html">Vector Functions</a> (10 functions)</li>
+<li><a href="JSONFunctions.html">JSON Functions</a> (12 functions)</li>
+<li><a href="TextFileFunctions.html">Text File Functions</a> (3 functions)</li>
+<li><a href="IndicatorFunctions.html">Indicator Functions</a> (65 functions)</li>
+<li><a href="SlippageEstimationFunctions.html">Slippage Estimation Functions</a> (2 functions)</li>
+<li><a href="UtilityFunctions.html">Utility Functions</a> (10 functions)</li>
+<li><a href="DialogFunctions.html">Dialog Functions</a> (5 functions)</li>
+<li><a href="WebSocketFunctions.html">WebSocket Functions</a> (5 functions)</li>
+<li><a href="NamedPipeFunctionsIPC.html">Named Pipe Functions (IPC)</a> (6 functions)</li>
+<li><a href="OpenAIFunctionsLLM.html">OpenAI Functions (LLM)</a> (4 functions)</li>
+<li><a href="CodecFunctions.html">Codec Functions</a> (4 functions)</li>
+<li><a href="CBORFunctions.html">CBOR Functions</a> (12 functions)</li>
+<li><a href="CSVFunctions.html">CSV Functions</a> (22 functions)</li>
+<li><a href="RecordFunctions.html">Record Functions</a> (7 functions)</li>
+<li><a href="StatisticsFunctions.html">Statistics Functions</a> (8 functions)</li>
+<li><a href="TableFunctions.html">Table Functions</a> (20 functions)</li>
+<li><a href="PositionFunctions.html">Position Functions</a> (12 functions)</li>
+<li><a href="DetectFunctions.html">Detect Functions</a> (2 functions)</li>
+<li><a href="ESNFunctions.html">ESN Functions</a> (7 functions)</li>
+</ul>
+
+<hr>
+
+<div class="glossary">
+<h2>Glossary — All Functions</h2>
+<table class="doc-table"><tr><th>Function</th><th>Category</th></tr>
+<tr><td><a href="IndicatorFunctions.html#sfarima">sfARIMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfaveragesince">sfAverageSince</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfbarssincepeak">sfBarsSincePeak</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfbarssincetrough">sfBarsSinceTrough</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="CodecFunctions.html#sfbase64decode">sfBase64Decode</a></td><td>Codec Functions</td></tr>
+<tr><td><a href="CodecFunctions.html#sfbase64encode">sfBase64Encode</a></td><td>Codec Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfbondquotetostr">sfBondQuoteToStr</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborcreate">sfCBORCreate</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcbordecode">sfCBORDecode</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcbordestroy">sfCBORDestroy</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborencode">sfCBOREncode</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborget">sfCBORGet</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborload">sfCBORLoad</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborparse">sfCBORParse</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborsave">sfCBORSave</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborsetfloat">sfCBORSetFloat</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcborsetstring">sfCBORSetString</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfcbortostring">sfCBORToString</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfchaikinmoneyflow">sfChaikinMoneyFlow</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvappendcol">sfCSVAppendCol</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvappendcolarray">sfCSVAppendColArray</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvappendcolstr">sfCSVAppendColStr</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvappendrow">sfCSVAppendRow</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvappendtofile">sfCSVAppendToFile</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvdestroy">sfCSVDestroy</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvextractcol">sfCSVExtractCol</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvextractcols">sfCSVExtractCols</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvextractsubtable">sfCSVExtractSubtable</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvextractsubtablewithmask">sfCSVExtractSubtableWithMask</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvgetcell">sfCSVGetCell</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvgetdelimiter">sfCSVGetDelimiter</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvgetnumcols">sfCSVGetNumCols</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvgetnumrows">sfCSVGetNumRows</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvload">sfCSVLoad</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvloadandappend">sfCSVLoadAndAppend</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvparse">sfCSVParse</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvremovecol">sfCSVRemoveCol</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvremoverow">sfCSVRemoveRow</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvsave">sfCSVSave</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvsetcell">sfCSVSetCell</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="CSVFunctions.html#sfcsvsetdelimiter">sfCSVSetDelimiter</a></td><td>CSV Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdemandindex">sfDemandIndex</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdemarker">sfDeMarker</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="DetectFunctions.html#sfdetectdirchange">sfDetectDirChange</a></td><td>Detect Functions</td></tr>
+<tr><td><a href="DetectFunctions.html#sfdetectfilechange">sfDetectFileChange</a></td><td>Detect Functions</td></tr>
+<tr><td><a href="DialogFunctions.html#sfdialogok">sfDialogOK</a></td><td>Dialog Functions</td></tr>
+<tr><td><a href="DialogFunctions.html#sfdialogokcancel">sfDialogOkCancel</a></td><td>Dialog Functions</td></tr>
+<tr><td><a href="DialogFunctions.html#sfdialogyesno">sfDialogYesNo</a></td><td>Dialog Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfdiff">sfDiff</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdirection">sfDirection</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdownalpha">sfDownAlpha</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdownbeta">sfDownBeta</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfdrawdowncurve">sfDrawdownCurve</a></td><td>Position Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfdynamiccycles">sfDynamicCycles</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfequitycurve">sfEquityCurve</a></td><td>Position Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesncreate">sfESNCreate</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesndestroy">sfESNDestroy</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesnpredict">sfESNPredict</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesnstep">sfESNStep</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesntrain">sfESNTrain</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesntrainbg">sfESNTrainBg</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="ESNFunctions.html#sfesntrainingstatus">sfESNTrainingStatus</a></td><td>ESN Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfexpectancy">sfExpectancy</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sffama">sfFAMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sffftdenoising">sfFFTDenoising</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sffftspectrum">sfFFTSpectrum</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sffirstvalue">sfFirstValue</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sffixquotes">sfFixQuotes</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sffixspikes">sfFixSpikes</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfframa">sfFRAMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sffuturemarginestimate">sfFutureMarginEstimate</a></td><td>Position Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfgarch">sfGARCH</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfgetchrono">sfGetChrono</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfgoertzel">sfGoertzel</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfgoertzeldftspectrum">sfGoertzelDFTSpectrum</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfheikinashi">sfHeikinAshi</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfhhv">sfHHV</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfhilbertosc">sfHilbertOsc</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfhodrickprescott">sfHodrickPrescott</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfhurstdfa">sfHurstDFA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfhurstdfa2">sfHurstDFA2</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="SlippageEstimationFunctions.html#sfintradayslippageestimate">sfIntradaySlippageEstimate</a></td><td>Slippage Estimation Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfinvfisher">sfInvFisher</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfitl">sfITL</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfitlx">sfITLX</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsoncreate">sfJSONCreate</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsondestroy">sfJSONDestroy</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonfix">sfJSONFix</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonget">sfJSONGet</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonload">sfJSONLoad</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonparse">sfJSONParse</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonpretty">sfJSONPretty</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonsave">sfJSONSave</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonset">sfJSONSet</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonsetfloat">sfJSONSetFloat</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsonsetstring">sfJSONSetString</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JSONFunctions.html#sfjsontostring">sfJSONToString</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfkama">sfKAMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sflaguerrersi">sfLaguerreRSI</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sflakeratio">sfLakeRatio</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sflimitjumps">sfLimitJumps</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sflimitpositionsize">sfLimitPositionSize</a></td><td>Position Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfllv">sfLLV</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfma">sfMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfmama">sfMAMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfmaxdrawdown">sfMaxDrawdown</a></td><td>Position Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfmedianarray2">sfMedianArray2</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfmedianarray4">sfMedianArray4</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfmedianarray6">sfMedianArray6</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfmedianarrays">sfMedianArrays</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfmost">sfMOST</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="CodecFunctions.html#sfmpdecode">sfMPDecode</a></td><td>Codec Functions</td></tr>
+<tr><td><a href="CodecFunctions.html#sfmpencode">sfMPEncode</a></td><td>Codec Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfmutualinfo">sfMutualInfo</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfmxsparsematrix">sfMxSparseMatrix</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfnet">sfNET</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpclose">sfNPClose</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpconnect">sfNPConnect</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpcreate">sfNPCreate</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpgetstatus">sfNPGetStatus</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpreceive">sfNPReceive</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="NamedPipeFunctionsIPC.html#sfnpsend">sfNPSend</a></td><td>Named Pipe Functions (IPC)</td></tr>
+<tr><td><a href="OpenAIFunctionsLLM.html#sfopenaiconfigure">sfOpenAIConfigure</a></td><td>OpenAI Functions (LLM)</td></tr>
+<tr><td><a href="OpenAIFunctionsLLM.html#sfopenaiforget">sfOpenAIForget</a></td><td>OpenAI Functions (LLM)</td></tr>
+<tr><td><a href="OpenAIFunctionsLLM.html#sfopenaigetanswer">sfOpenAIGetAnswer</a></td><td>OpenAI Functions (LLM)</td></tr>
+<tr><td><a href="OpenAIFunctionsLLM.html#sfopenairequest">sfOpenAIRequest</a></td><td>OpenAI Functions (LLM)</td></tr>
+<tr><td><a href="PositionFunctions.html#sfpercentize">sfPercentize</a></td><td>Position Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfperiodicstat">sfPeriodicStat</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpipeclose">sfPipeClose</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpipecreate">sfPipeCreate</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpipeisclosed">sfPipeIsClosed</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpiperead">sfPipeRead</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpiperequest">sfPipeRequest</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="PipeFunctions.html#sfpipesend">sfPipeSend</a></td><td>Pipe Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfpmax">sfPMAX</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfpolyreg">sfPolyReg</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfpositionfromsignals">sfPositionFromSignals</a></td><td>Position Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfpromaxi">sfPROMAXI</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordclear">sfRecordClear</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordcreate">sfRecordCreate</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecorddestroy">sfRecordDestroy</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordget">sfRecordGet</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordsetarray">sfRecordSetArray</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordsetfloat">sfRecordSetFloat</a></td><td>Record Functions</td></tr>
+<tr><td><a href="RecordFunctions.html#sfrecordsetstring">sfRecordSetString</a></td><td>Record Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfreflex">sfReflex</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="StatisticsFunctions.html#sfregularize">sfRegularize</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfremoveexcesssignals">sfRemoveExcessSignals</a></td><td>Position Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfremovegaps">sfRemoveGaps</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfrequiredmargin">sfRequiredMargin</a></td><td>Position Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfresetchrono">sfResetChrono</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfrestrictposition">sfRestrictPosition</a></td><td>Position Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfrestrictsignals">sfRestrictSignals</a></td><td>Position Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfrobustscaler">sfRobustScaler</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfrocketrsi">sfRocketRSI</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfroundprice">sfRoundPrice</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfroundquotes">sfRoundQuotes</a></td><td>String Functions</td></tr>
+<tr><td><a href="DialogFunctions.html#sfsavefile">sfSaveFile</a></td><td>Dialog Functions</td></tr>
+<tr><td><a href="DialogFunctions.html#sfselectfile">sfSelectFile</a></td><td>Dialog Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfsinewave">sfSinewave</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="SlippageEstimationFunctions.html#sfslippageestimate">sfSlippageEstimate</a></td><td>Slippage Estimation Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfsma">sfSMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfsortinoratio">sfSortinoRatio</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuild">sfStrBuild</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilder">sfStrBuilder</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderappend">sfStrBuilderAppend</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderappend2">sfStrBuilderAppend2</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderclear">sfStrBuilderClear</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderdestroy">sfStrBuilderDestroy</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderprepend">sfStrBuilderPrepend</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringBuilderFunctions.html#sfstrbuilderremove">sfStrBuilderRemove</a></td><td>String Builder Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrcolumnsizes">sfStrColumnSizes</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrdisclose">sfStrDisclose</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrenclose">sfStrEnclose</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrextractfrom">sfStrExtractFrom</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrextractregex">sfStrExtractRegEx</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfind">sfStrFind</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfindlast">sfStrFindLast</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfindnested">sfStrFindNested</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfindregex">sfStrFindRegEx</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrformatalignedtable">sfStrFormatAlignedTable</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrformatheaders">sfStrFormatHeaders</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrformattable">sfStrFormatTable</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfrom">sfStrFrom</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfromchar">sfStrFromChar</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrfromquote">sfStrFromQuote</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrnextfield">sfStrNextField</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrquote">sfStrQuote</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrreplaceallregex">sfStrReplaceAllRegEx</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrreplaceregex">sfStrReplaceRegEx</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrtochar">sfStrToChar</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrtoquote">sfStrToQuote</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrtrimextractfrom">sfStrTrimExtractFrom</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrtrimin">sfStrTrimIn</a></td><td>String Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfstrunquote">sfStrUnquote</a></td><td>String Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfsupersmoother">sfSuperSmoother</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfsupertrend">sfSuperTrend</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="PositionFunctions.html#sfswitchequitycurves">sfSwitchEquityCurves</a></td><td>Position Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableappendrowstr">sfTableAppendRowStr</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableavgcolumn">sfTableAvgColumn</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableclearrow">sfTableClearRow</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablecolumnfromstring">sfTableColumnFromString</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablecolumntoarray">sfTableColumnToArray</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablecolumntostring">sfTableColumnToString</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablecreate">sfTableCreate</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablecumcolumn">sfTableCumColumn</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftabledestroy">sfTableDestroy</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablefindrow">sfTableFindRow</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableget">sfTableGet</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableinsertrowstr">sfTableInsertRowStr</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablelength">sfTableLength</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftableremoverow">sfTableRemoveRow</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablerowtostring">sfTableRowToString</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablesetfloat">sfTableSetFloat</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablesetstring">sfTableSetString</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablesort">sfTableSort</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftabletomatrix">sfTableToMatrix</a></td><td>Table Functions</td></tr>
+<tr><td><a href="TableFunctions.html#sftablewidth">sfTableWidth</a></td><td>Table Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sftdcountdown">sfTDCountdown</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sftdsetup">sfTDSetup</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="TextFileFunctions.html#sftextfree">sfTextFree</a></td><td>Text File Functions</td></tr>
+<tr><td><a href="TextFileFunctions.html#sftextload">sfTextLoad</a></td><td>Text File Functions</td></tr>
+<tr><td><a href="TextFileFunctions.html#sftextsave">sfTextSave</a></td><td>Text File Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sftrailingstop">sfTrailingStop</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sftwiggsmoneyflow">sfTwiggsMoneyFlow</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfulcerindex">sfUlcerIndex</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfunicodetoascii">sfUnicodeToAscii</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfupalpha">sfUpAlpha</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfupalpha">sfUpAlpha</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfupbeta">sfUpBeta</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfupbeta">sfUpBeta</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfutf16toascii">sfUTF16ToAscii</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorclear">sfVectorClear</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorcreate">sfVectorCreate</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectordestroy">sfVectorDestroy</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorfromstring">sfVectorFromString</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorget">sfVectorGet</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorresize">sfVectorResize</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorsetfloat">sfVectorSetFloat</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorsetstring">sfVectorSetString</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorsize">sfVectorSize</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectortostring">sfVectorToString</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfvixfix">sfVixFix</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfvwap">sfVWAP</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfwaveletd4">sfWaveletD4</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfwavelethaar">sfWaveletHaar</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfwaveletmorlet">sfWaveletMorlet</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfwilliamspercentrange">sfWilliamsPercentRange</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="WebSocketFunctions.html#sfwsclose">sfWSClose</a></td><td>WebSocket Functions</td></tr>
+<tr><td><a href="WebSocketFunctions.html#sfwsconnect">sfWSConnect</a></td><td>WebSocket Functions</td></tr>
+<tr><td><a href="WebSocketFunctions.html#sfwsgetstatus">sfWSGetStatus</a></td><td>WebSocket Functions</td></tr>
+<tr><td><a href="WebSocketFunctions.html#sfwsreceive">sfWSReceive</a></td><td>WebSocket Functions</td></tr>
+<tr><td><a href="WebSocketFunctions.html#sfwssend">sfWSSend</a></td><td>WebSocket Functions</td></tr>
+<tr><td><a href="CBORFunctions.html#sfwssendcbor">sfWSSendCBOR</a></td><td>CBOR Functions</td></tr>
+<tr><td><a href="IndicatorFunctions.html#sfzscore">sfZScore</a></td><td>Indicator Functions</td></tr>
+</table></div>
+</body>
+</html>

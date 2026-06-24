@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — CSV Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>CSV Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>CSV Functions</h2>
+<p>DOM-based CSV parsing and manipulation. Load or parse a CSV string into an</p>
+<p>object identified by a numeric ID, then read/write cells, append rows/columns,</p>
+<p>extract subtables, and save back to disk. Uses comma as the default delimiter.</p>
+<p>All functions return <code>Null</code> on error (invalid ID, out of bounds, I/O failure).</p>
+<h3 id="sfcsvparse">sfCSVParse</h3>
+<p>Parses a raw CSV string and returns a CSV object ID.</p>
+<p><strong>Syntax:</strong> <code>sfCSVParse( csv_data )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">csv_data</td>
+<td align="left">string</td>
+<td align="left">The raw CSV string to parse</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The CSV object ID.</p>
+<hr>
+<h3 id="sfcsvload">sfCSVLoad</h3>
+<p>Loads a CSV file from disk and returns a CSV object ID.</p>
+<p><strong>Syntax:</strong> <code>sfCSVLoad( filename )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the CSV file</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The CSV object ID.</p>
+<hr>
+<h3 id="sfcsvdestroy">sfCSVDestroy</h3>
+<p>Destroys a CSV object and frees its memory.</p>
+<p><strong>Syntax:</strong> <code>sfCSVDestroy( csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID to destroy</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3 id="sfcsvgetcell">sfCSVGetCell</h3>
+<p>Retrieves the value of a cell at the given row and column.</p>
+<p><strong>Syntax:</strong> <code>sfCSVGetCell( row, col, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">row</td>
+<td align="left">float</td>
+<td align="left">Row index (0-based)</td>
+</tr>
+<tr>
+<td align="left">col</td>
+<td align="left">float</td>
+<td align="left">Column index (0-based)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The cell value.</p>
+<hr>
+<h3 id="sfcsvsetcell">sfCSVSetCell</h3>
+<p>Sets the value of a cell at the given row and column.</p>
+<p><strong>Syntax:</strong> <code>sfCSVSetCell( value, row, col, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">New cell value</td>
+</tr>
+<tr>
+<td align="left">row</td>
+<td align="left">float</td>
+<td align="left">Row index (0-based)</td>
+</tr>
+<tr>
+<td align="left">col</td>
+<td align="left">float</td>
+<td align="left">Column index (0-based)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3 id="sfcsvgetnumrows">sfCSVGetNumRows</h3>
+<p>Returns the number of rows in the CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVGetNumRows( csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Row count.</p>
+<hr>
+<h3 id="sfcsvgetnumcols">sfCSVGetNumCols</h3>
+<p>Returns the number of columns in the CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVGetNumCols( csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Column count.</p>
+<hr>
+<h3 id="sfcsvappendrow">sfCSVAppendRow</h3>
+<p>Appends a new row by parsing a delimiter-separated string.</p>
+<p><strong>Syntax:</strong> <code>sfCSVAppendRow( row_str, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">row_str</td>
+<td align="left">string</td>
+<td align="left">Delimiter-separated cell values (e.g. <code>"a,b,c"</code>)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of rows.</p>
+<hr>
+<h3 id="sfcsvappendcol">sfCSVAppendCol</h3>
+<p>Appends a new column from a newline-separated string or a float array.</p>
+<p>Duplicate of <code>sfCSVAppendColStr</code> / <code>sfCSVAppendColArray</code> but auto-detects</p>
+<p>the input type.</p>
+<p><strong>Syntax:</strong> <code>sfCSVAppendCol( data, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">data</td>
+<td align="left">string or array</td>
+<td align="left">Newline-separated string of cell values, or float array</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of columns.</p>
+<hr>
+<h3 id="sfcsvappendcolstr">sfCSVAppendColStr</h3>
+<p>Appends a new column from a newline-separated string.</p>
+<p><strong>Syntax:</strong> <code>sfCSVAppendColStr( col_str, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">col_str</td>
+<td align="left">string</td>
+<td align="left">Newline-separated column values</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of columns.</p>
+<hr>
+<h3 id="sfcsvappendcolarray">sfCSVAppendColArray</h3>
+<p>Appends a new column from a float array.</p>
+<p><strong>Syntax:</strong> <code>sfCSVAppendColArray( col_array, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">col_array</td>
+<td align="left">array</td>
+<td align="left">Float array to convert and append as a new column</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of columns.</p>
+<hr>
+<h3 id="sfcsvremoverow">sfCSVRemoveRow</h3>
+<p>Removes a row by index.</p>
+<p><strong>Syntax:</strong> <code>sfCSVRemoveRow( row, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">row</td>
+<td align="left">float</td>
+<td align="left">Row index to remove (0-based)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of rows.</p>
+<hr>
+<h3 id="sfcsvremovecol">sfCSVRemoveCol</h3>
+<p>Removes a column by index.</p>
+<p><strong>Syntax:</strong> <code>sfCSVRemoveCol( col, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">col</td>
+<td align="left">float</td>
+<td align="left">Column index to remove (0-based)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of columns.</p>
+<hr>
+<h3 id="sfcsvextractsubtable">sfCSVExtractSubtable</h3>
+<p>Extracts a rectangular region of the CSV as a new CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVExtractSubtable( start_row, end_row, start_col, end_col, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">start_row</td>
+<td align="left">float</td>
+<td align="left">Starting row index (0-based)</td>
+</tr>
+<tr>
+<td align="left">end_row</td>
+<td align="left">float</td>
+<td align="left">Ending row index (inclusive, -1 for last)</td>
+</tr>
+<tr>
+<td align="left">start_col</td>
+<td align="left">float</td>
+<td align="left">Starting column index (0-based)</td>
+</tr>
+<tr>
+<td align="left">end_col</td>
+<td align="left">float</td>
+<td align="left">Ending column index (inclusive, -1 for last)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">Source CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new CSV subtable ID.</p>
+<hr>
+<h3 id="sfcsvextractsubtablewithmask">sfCSVExtractSubtableWithMask</h3>
+<p>Extracts rows and selected columns (by mask) as a new CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVExtractSubtableWithMask( start_row, end_row, col_mask, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">start_row</td>
+<td align="left">float</td>
+<td align="left">Starting row index (0-based)</td>
+</tr>
+<tr>
+<td align="left">end_row</td>
+<td align="left">float</td>
+<td align="left">Ending row index (inclusive, -1 for last)</td>
+</tr>
+<tr>
+<td align="left">col_mask</td>
+<td align="left">string</td>
+<td align="left">Comma-separated list of column indices (e.g. <code>"0,2,4"</code>)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">Source CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new CSV subtable ID.</p>
+<hr>
+<h3 id="sfcsvextractcol">sfCSVExtractCol</h3>
+<p>Extracts a single column as a float array.</p>
+<p><strong>Syntax:</strong> <code>sfCSVExtractCol( col, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">col</td>
+<td align="left">float</td>
+<td align="left">Column index (0-based)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Float array of column values.</p>
+<hr>
+<h3 id="sfcsvextractcols">sfCSVExtractCols</h3>
+<p>Extracts selected columns (by mask, all rows) as a new CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVExtractCols( col_mask, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">col_mask</td>
+<td align="left">string</td>
+<td align="left">Comma-separated list of column indices (e.g. <code>"0,2,4"</code>)</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">Source CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new CSV subtable ID.</p>
+<hr>
+<h3 id="sfcsvsetdelimiter">sfCSVSetDelimiter</h3>
+<p>Changes the delimiter character used for parsing row strings and saving.</p>
+<p><strong>Syntax:</strong> <code>sfCSVSetDelimiter( delim, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">delim</td>
+<td align="left">string</td>
+<td align="left">First character is used as the new delimiter</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3 id="sfcsvgetdelimiter">sfCSVGetDelimiter</h3>
+<p>Returns the current delimiter character.</p>
+<p><strong>Syntax:</strong> <code>sfCSVGetDelimiter( csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The delimiter character.</p>
+<hr>
+<h3 id="sfcsvsave">sfCSVSave</h3>
+<p>Saves the CSV object to a file on disk.</p>
+<p><strong>Syntax:</strong> <code>sfCSVSave( filename, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the output file</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3 id="sfcsvloadandappend">sfCSVLoadAndAppend</h3>
+<p>Loads a CSV file and appends its rows to an existing CSV object.</p>
+<p><strong>Syntax:</strong> <code>sfCSVLoadAndAppend( filename, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the CSV file to load</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">Target CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new total number of rows.</p>
+<hr>
+<h3 id="sfcsvappendtofile">sfCSVAppendToFile</h3>
+<p>Appends the CSV object&apos;s content to an existing file.</p>
+<p><strong>Syntax:</strong> <code>sfCSVAppendToFile( filename, csv_id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the file to append to</td>
+</tr>
+<tr>
+<td align="left">csv_id</td>
+<td align="left">float</td>
+<td align="left">CSV object ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3>Example</h3>
+<pre><code>
+// Parse a CSV string
+
+csv = sfCSVParse(&quot;name,age,city\nAlice,30,Paris\nBob,25,Lyon&quot;);
+
+
+
+// Read values
+
+name = sfCSVGetCell(0, 0, csv);   // &quot;Alice&quot;
+
+age  = sfCSVGetCell(0, 1, csv);   // &quot;30&quot;
+
+
+
+// Modify a cell
+
+sfCSVSetCell(&quot;31&quot;, 0, 1, csv);
+
+
+
+// Append a row
+
+sfCSVAppendRow(&quot;Charlie,35,Nice&quot;, csv);
+
+
+
+// Get dimensions
+
+rows = sfCSVGetNumRows(csv);      // 3
+
+cols = sfCSVGetNumCols(csv);      // 3
+
+
+
+// Extract a subtable (rows 1-2, cols 0-1)
+
+sub = sfCSVExtractSubtable(1, 2, 0, 1, csv);
+
+
+
+// Extract column as array
+
+ages = sfCSVExtractCol(1, csv);   // [31, 25, 35]
+
+
+
+// Save to disk
+
+sfCSVSave(&quot;output.csv&quot;, csv);
+
+
+
+// Cleanup
+
+sfCSVDestroy(csv);
+
+sfCSVDestroy(sub);
+
+</code></pre>
+<hr>
+</body>
+</html>

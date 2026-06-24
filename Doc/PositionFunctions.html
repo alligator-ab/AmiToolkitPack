@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Position Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Position Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Position Functions</h2>
+<p>Backtesting‑oriented functions for signal management, position sizing, equity‑curve computation, and margin estimation.</p>
+<h3 id="sfremoveexcesssignals">sfRemoveExcessSignals</h3>
+<p>Limits the number of simultaneous BUY, SELL, SHORT and COVER signals so that</p>
+<p>the cumulative position never exceeds <code>max</code> lots.  Modifies the input arrays</p>
+<p>in place.</p>
+<p><strong>Syntax:</strong> <code>sfRemoveExcessSignals( Buy, Sell, Short, Cover, max )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Buy</td>
+<td align="left">array</td>
+<td align="left">BUY signals (modified in place)</td>
+</tr>
+<tr>
+<td align="left">Sell</td>
+<td align="left">array</td>
+<td align="left">SELL signals (modified in place)</td>
+</tr>
+<tr>
+<td align="left">Short</td>
+<td align="left">array</td>
+<td align="left">SHORT signals (modified in place)</td>
+</tr>
+<tr>
+<td align="left">Cover</td>
+<td align="left">array</td>
+<td align="left">COVER signals (modified in place)</td>
+</tr>
+<tr>
+<td align="left">max</td>
+<td align="left">float</td>
+<td align="left">Maximum number of simultaneous positions</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing.</p>
+<hr>
+<h3 id="sfrestrictsignals">sfRestrictSignals</h3>
+<p>Removes or modifies signals based on a <code>Restriction</code> array. Values:</p>
+<p><code>1</code> = everything allowed, <code>0</code> = close any open positions,</p>
+<p><code>2</code> = hold existing but prevent new entries.  Modifies original arrays.</p>
+<p><strong>Syntax:</strong> <code>sfRestrictSignals( Buy, Sell, Short, Cover, Size, Restriction )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Buy</td>
+<td align="left">array</td>
+<td align="left">BUY signals (modified)</td>
+</tr>
+<tr>
+<td align="left">Sell</td>
+<td align="left">array</td>
+<td align="left">SELL signals (modified)</td>
+</tr>
+<tr>
+<td align="left">Short</td>
+<td align="left">array</td>
+<td align="left">SHORT signals (modified)</td>
+</tr>
+<tr>
+<td align="left">Cover</td>
+<td align="left">array</td>
+<td align="left">COVER signals (modified)</td>
+</tr>
+<tr>
+<td align="left">Size</td>
+<td align="left">array</td>
+<td align="left">Position size at signal time (modified)</td>
+</tr>
+<tr>
+<td align="left">Restriction</td>
+<td align="left">array</td>
+<td align="left">Per‑bar restriction (1 / 0 / 2)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing.</p>
+<hr>
+<h3 id="sfrestrictposition">sfRestrictPosition</h3>
+<p>Returns a new position array with positions restricted per a <code>Restriction</code></p>
+<p>array.  Values: <code>1</code> = pass through, <code>0</code> = close to zero,</p>
+<p><code>2</code> = hold current size, no new entries.</p>
+<p><strong>Syntax:</strong> <code>sfRestrictPosition( Position, Restriction )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Position sizes (input)</td>
+</tr>
+<tr>
+<td align="left">Restriction</td>
+<td align="left">array</td>
+<td align="left">Per‑bar restriction (1 / 0 / 2)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Restricted position sizes.</p>
+<hr>
+<h3 id="sfpositionfromsignals">sfPositionFromSignals</h3>
+<p>Computes the theoretical position size from BUY, SELL, SHORT, COVER signals</p>
+<p>and a lot‑size array.  Assumes excess signals have already been removed.</p>
+<p><code>opt = 1</code> shifts the size by one bar (buy/sell next bar at open);</p>
+<p><code>opt = 0</code> applies same bar (buy/sell at close).</p>
+<p><strong>Syntax:</strong> <code>sfPositionFromSignals( Buy, Sell, Short, Cover, Size, opt )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Buy</td>
+<td align="left">array</td>
+<td align="left">BUY signals</td>
+</tr>
+<tr>
+<td align="left">Sell</td>
+<td align="left">array</td>
+<td align="left">SELL signals</td>
+</tr>
+<tr>
+<td align="left">Short</td>
+<td align="left">array</td>
+<td align="left">SHORT signals</td>
+</tr>
+<tr>
+<td align="left">Cover</td>
+<td align="left">array</td>
+<td align="left">COVER signals</td>
+</tr>
+<tr>
+<td align="left">Size</td>
+<td align="left">array</td>
+<td align="left">Lot size at signal time</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">Shift size by 1 bar if non‑zero (default <code>0</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Accumulated position sizes (positive = long, negative = short).</p>
+<hr>
+<h3 id="sfequitycurve">sfEquityCurve</h3>
+<p>Computes an equity curve from a position array and a price array.  A cost</p>
+<p>array (absolute cost per lot) can be provided in the third argument; set to</p>
+<p><code>0</code> for no transaction costs.</p>
+<p><strong>Syntax:</strong> <code>sfEquityCurve( Price, Position, Cost )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Per‑bar price</td>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Position size (> 0 long, < 0 short, 0 flat)</td>
+</tr>
+<tr>
+<td align="left">Cost</td>
+<td align="left">array</td>
+<td align="left">Absolute transaction cost per lot</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Equity curve starting from 0.</p>
+<hr>
+<h3 id="sffuturemarginestimate">sfFutureMarginEstimate</h3>
+<p>Estimates margin requirements for futures based on price and volatility.</p>
+<p><strong>Syntax:</strong> <code>sfFutureMarginEstimate( Price, fraction [, window ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Per‑bar price</td>
+</tr>
+<tr>
+<td align="left">fraction</td>
+<td align="left">array</td>
+<td align="left">Fraction of notional value (e.g. 0.1 for 10 %)</td>
+</tr>
+<tr>
+<td align="left">window</td>
+<td align="left">float</td>
+<td align="left">Rolling window for volatility estimate (default <code>20</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Margin estimate per bar.</p>
+<hr>
+<h3 id="sfrequiredmargin">sfRequiredMargin</h3>
+<p>Computes required margin as <code>abs(position) × margin_per_lot</code>.</p>
+<p><strong>Syntax:</strong> <code>sfRequiredMargin( Position, MarginPerLot )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Position size</td>
+</tr>
+<tr>
+<td align="left">MarginPerLot</td>
+<td align="left">array</td>
+<td align="left">Margin required per lot</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Required margin values.</p>
+<hr>
+<h3 id="sflimitpositionsize">sfLimitPositionSize</h3>
+<p>Reduces position size proportionally when required margin exceeds available</p>
+<p>margin.</p>
+<p><strong>Syntax:</strong> <code>sfLimitPositionSize( Position, RequiredMargin, AvailableMargin )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Unrestricted position size</td>
+</tr>
+<tr>
+<td align="left">RequiredMargin</td>
+<td align="left">array</td>
+<td align="left">Margin per lot (from <code>sfRequiredMargin</code>)</td>
+</tr>
+<tr>
+<td align="left">AvailableMargin</td>
+<td align="left">array</td>
+<td align="left">Available account margin</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Limited position sizes.</p>
+<hr>
+<h3 id="sfdrawdowncurve">sfDrawdownCurve</h3>
+<p>Returns the drawdown curve from peak equity.  <code>opt = 0</code> (default) returns</p>
+<p>absolute drawdown; <code>opt ≠ 0</code> returns drawdown as a fraction of peak.</p>
+<p><strong>Syntax:</strong> <code>sfDrawdownCurve( Equity [, opt ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Equity</td>
+<td align="left">array</td>
+<td align="left">Equity curve</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left"><code>0</code> = absolute (default), non‑zero = percent of peak</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Drawdown values.</p>
+<hr>
+<h3 id="sfmaxdrawdown">sfMaxDrawdown</h3>
+<p>Returns the running maximum drawdown from peak equity.  <code>opt = 0</code> (default)</p>
+<p>returns absolute max drawdown; <code>opt ≠ 0</code> returns it as a fraction of peak.</p>
+<p><strong>Syntax:</strong> <code>sfMaxDrawdown( Equity [, opt ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Equity</td>
+<td align="left">array</td>
+<td align="left">Equity curve</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left"><code>0</code> = absolute (default), non‑zero = percent of peak</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Running maximum drawdown.</p>
+<hr>
+<h3 id="sfpercentize">sfPercentize</h3>
+<p>Converts an array to percentage change from its first non‑empty value.</p>
+<p><strong>Syntax:</strong> <code>sfPercentize( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Input time series</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — <code>(value − start) / start</code>.</p>
+<hr>
+<h3 id="sfswitchequitycurves">sfSwitchEquityCurves</h3>
+<p>Selects the best strategy every <code>step</code> bars based on recent relative</p>
+<p>performance over <code>lookback</code> bars.  The decision at bar <code>i</code> uses equity</p>
+<p>values up to bar <code>i‑1</code> (no look‑ahead).  Returns the position array of the</p>
+<p>chosen strategy.</p>
+<p>Strategies are referenced by two variable prefixes with indices from 1 to</p>
+<p><code>count</code> (e.g. <code>EqPrefix1 … EqPrefixN</code> and <code>PosPrefix1 … PosPrefixN</code>).</p>
+<p><strong>Syntax:</strong> <code>sfSwitchEquityCurves( EqPrefix, PosPrefix, count [, step [, lookback ]] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">EqPrefix</td>
+<td align="left">string</td>
+<td align="left">Variable‑name prefix for equity curves</td>
+</tr>
+<tr>
+<td align="left">PosPrefix</td>
+<td align="left">string</td>
+<td align="left">Variable‑name prefix for position arrays</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">float</td>
+<td align="left">Number of strategies</td>
+</tr>
+<tr>
+<td align="left">step</td>
+<td align="left">float</td>
+<td align="left">Re‑evaluation period in bars (default <code>1</code>)</td>
+</tr>
+<tr>
+<td align="left">lookback</td>
+<td align="left">float</td>
+<td align="left">Window for recent return (default = <code>step</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Position sizes of the selected strategy.</p>
+<hr>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Table Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Table Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Table Functions</h2>
+<p>Functions for creating and manipulating 2D tables (rows and columns of</p>
+<p>mixed-type values), identified by a unique numeric ID.</p>
+<h3 id="sftablecreate">sfTableCreate</h3>
+<p>Creates a new table.</p>
+<p><strong>Syntax:</strong> <code>sfTableCreate( index_col, order, width )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">index_col</td>
+<td align="left">float</td>
+<td align="left">(optional) Column index to use as key for sorted inserts. Default: −1 (no index)</td>
+</tr>
+<tr>
+<td align="left">order</td>
+<td align="left">float</td>
+<td align="left">(optional) 1 = maintain rows in sorted order by <code>index_col</code>. Default: 0</td>
+</tr>
+<tr>
+<td align="left">width</td>
+<td align="left">float</td>
+<td align="left">(optional) Initial column count. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The table ID.</p>
+<h3 id="sftabledestroy">sfTableDestroy</h3>
+<p>Destroys a table and frees all memory.</p>
+<p><strong>Syntax:</strong> <code>sfTableDestroy( tab )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">tab</td>
+<td align="left">float</td>
+<td align="left">Table ID</td>
+</tr>
+</table>
+<h3 id="sftablelength">sfTableLength</h3>
+<p>Returns the number of rows.</p>
+<p><strong>Syntax:</strong> <code>sfTableLength( tab )</code></p>
+<h3 id="sftablewidth">sfTableWidth</h3>
+<p>Returns the number of columns.</p>
+<p><strong>Syntax:</strong> <code>sfTableWidth( tab )</code></p>
+<h3 id="sftableget">sfTableGet</h3>
+<p>Gets the value at a given row and column.</p>
+<p><strong>Syntax:</strong> <code>sfTableGet( row_index, col_index, tab )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">row_index</td>
+<td align="left">float</td>
+<td align="left">Row index (0‑based)</td>
+</tr>
+<tr>
+<td align="left">col_index</td>
+<td align="left">float</td>
+<td align="left">Column index</td>
+</tr>
+<tr>
+<td align="left">tab</td>
+<td align="left">float</td>
+<td align="left">Table ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The value at that cell (float, string, or none if out of range).</p>
+<h3 id="sftablesetfloat">sfTableSetFloat</h3>
+<p>Sets a float value at a given row and column.</p>
+<p><strong>Syntax:</strong> <code>sfTableSetFloat( value, row_index, col_index, tab )</code></p>
+<h3 id="sftablesetstring">sfTableSetString</h3>
+<p>Sets a string value at a given row and column.</p>
+<p><strong>Syntax:</strong> <code>sfTableSetString( str, row_index, col_index, tab )</code></p>
+<h3 id="sftableappendrowstr">sfTableAppendRowStr</h3>
+<p>Appends a new row at the end, parsing values from a delimited string.</p>
+<p><strong>Syntax:</strong> <code>sfTableAppendRowStr( row_str, separator, tab )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">row_str</td>
+<td align="left">string</td>
+<td align="left">Delimited string of field values</td>
+</tr>
+<tr>
+<td align="left">separator</td>
+<td align="left">float</td>
+<td align="left">ASCII code of the field separator character</td>
+</tr>
+<tr>
+<td align="left">tab</td>
+<td align="left">float</td>
+<td align="left">Table ID</td>
+</tr>
+</table>
+<p>Fields are parsed as numbers if possible, otherwise stored as strings.</p>
+<h3 id="sftableinsertrowstr">sfTableInsertRowStr</h3>
+<p>Inserts a row at the position indicated by <code>key_val</code> in <code>column_index</code>.</p>
+<p>If the key already exists the row is updated; otherwise it is inserted</p>
+<p>in sorted order (if the table was created with <code>order=1</code>) or appended.</p>
+<p><strong>Syntax:</strong> <code>sfTableInsertRowStr( row_str, key_val, column_index, separator, tab )</code></p>
+<h3 id="sftableremoverow">sfTableRemoveRow</h3>
+<p>Removes a row by index.</p>
+<p><strong>Syntax:</strong> <code>sfTableRemoveRow( row_index, tab )</code></p>
+<h3 id="sftableclearrow">sfTableClearRow</h3>
+<p>Clears all cells in a row (sets them to <code>VAR_NONE</code>).</p>
+<p><strong>Syntax:</strong> <code>sfTableClearRow( row_index, tab )</code></p>
+<h3 id="sftablefindrow">sfTableFindRow</h3>
+<p>Finds the first row where <code>column_index</code> equals <code>key</code>.</p>
+<p>Returns the 0‑based row index, or −1 if not found.</p>
+<p><strong>Syntax:</strong> <code>sfTableFindRow( key, column_index, tab )</code></p>
+<h3 id="sftableavgcolumn">sfTableAvgColumn</h3>
+<p>Returns the average of all float values in a column.</p>
+<p><strong>Syntax:</strong> <code>sfTableAvgColumn( col_index, tab )</code></p>
+<h3 id="sftablecumcolumn">sfTableCumColumn</h3>
+<p>Returns the sum of all float values in a column.</p>
+<p><strong>Syntax:</strong> <code>sfTableCumColumn( col_index, tab )</code></p>
+<h3 id="sftablesort">sfTableSort</h3>
+<p>Sorts all rows in ascending order by the values in the specified column.</p>
+<p>Non‑float rows are treated as very large values and sort to the end.</p>
+<p><strong>Syntax:</strong> <code>sfTableSort( column, tab )</code></p>
+<h3 id="sftablerowtostring">sfTableRowToString</h3>
+<p>Converts a row to a delimited string.</p>
+<p><strong>Syntax:</strong> <code>sfTableRowToString( row_index, separator, tab )</code></p>
+<h3 id="sftablecolumntostring">sfTableColumnToString</h3>
+<p>Converts a column to a delimited string.</p>
+<p><strong>Syntax:</strong> <code>sfTableColumnToString( col_index, separator, tab )</code></p>
+<h3 id="sftablecolumntoarray">sfTableColumnToArray</h3>
+<p>Converts a column to an AFL array. Rows beyond the current chart size are</p>
+<p>omitted.</p>
+<p><strong>Syntax:</strong> <code>sfTableColumnToArray( col_index, tab )</code></p>
+<p><strong>Returns:</strong> array — Float array of column values (or <code>Empty</code> for string rows).</p>
+<h3 id="sftabletomatrix">sfTableToMatrix</h3>
+<p>Converts the entire table to a string in matrix format: rows separated by</p>
+<p>newline (<code>\n</code>), columns separated by comma.</p>
+<p><strong>Syntax:</strong> <code>sfTableToMatrix( tab )</code></p>
+<p><strong>Returns:</strong> string — Matrix representation of the table.</p>
+<h3 id="sftablecolumnfromstring">sfTableColumnFromString</h3>
+<p>Parses existing string values in a column to floats. The <code>separator</code></p>
+<p>character is treated as the decimal point (e.g. <code>,</code> for European locale</p>
+<p>where <code>&quot;123,45&quot;</code> → <code>123.45</code>). Non‑string cells are left unchanged;</p>
+<p>strings that cannot be parsed become 0.</p>
+<p><strong>Syntax:</strong> <code>sfTableColumnFromString( col_index, separator, tab )</code></p>
+<hr>
+</body>
+</html>

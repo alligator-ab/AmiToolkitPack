@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Codec Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Codec Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Codec Functions</h2>
+<p>Encode/decode data in Base64 and MessagePack formats for interoperability with external services.</p>
+<h3 id="sfbase64encode">sfBase64Encode</h3>
+<p>Encodes a string to Base64.</p>
+<p><strong>Syntax:</strong> <code>sfBase64Encode( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string to encode</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The Base64-encoded string.</p>
+<hr>
+<h3 id="sfbase64decode">sfBase64Decode</h3>
+<p>Decodes a Base64 string back to its original content.</p>
+<p><strong>Syntax:</strong> <code>sfBase64Decode( str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The Base64-encoded string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The decoded string.</p>
+<hr>
+<h3 id="sfmpencode">sfMPEncode</h3>
+<p>Encodes an AFL value to the MessagePack binary format.</p>
+<p>Supports <code>VAR_NONE</code> → nil, <code>VAR_FLOAT</code> → float/int, <code>VAR_STRING</code> → str, <code>VAR_ARRAY</code> → array of floats.</p>
+<p><strong>Syntax:</strong> <code>sfMPEncode( value )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">AmiVar</td>
+<td align="left">The value to encode (float, string, or array)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The MessagePack binary data as a string.</p>
+<p><strong>Note:</strong> Integer-valued floats (where <code>val == floor(val)</code> and within ±10¹⁵) are encoded as MessagePack integers for compactness; non‑integer floats use float64.</p>
+<hr>
+<h3 id="sfmpdecode">sfMPDecode</h3>
+<p>Decodes a MessagePack binary string back to an AFL value.</p>
+<p><strong>Syntax:</strong> <code>sfMPDecode( binary_str )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">binary_str</td>
+<td align="left">string</td>
+<td align="left">MessagePack-encoded binary data</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — Decoded value:</p>
+<li>nil → `Nothing`</li>
+<li>boolean → `Float(0.0)` / `Float(1.0)`</li>
+<li>integer / float → `Float(value)`</li>
+<li>string → `String(str)`</li>
+<li>array → `VarArray` of floats</li>
+<li>map → `Nothing` (keys/values consumed but not returned)</li>
+<li>binary → `Nothing` (data consumed but not returned)</li>
+<p>The underlying <code>mp::</code> encoder provides primitives for the full MessagePack</p>
+<p>specification, including <code>float32</code>, <code>bin</code> (8/16/32), and <code>map</code> (fixmap/map16/map32)</p>
+<p>headers, even though <code>sfMPEncode</code> only emits nil, int, float64, str, and array.</p>
+<hr>
+<h3>Example (Base64)</h3>
+<pre><code>
+encoded = sfBase64Encode(&quot;Hello World&quot;);
+
+// encoded == &quot;SGVsbG8gV29ybGQ=&quot;
+
+
+
+decoded = sfBase64Decode(encoded);
+
+// decoded == &quot;Hello World&quot;
+
+</code></pre>
+<h3>Example (MessagePack)</h3>
+<pre><code>
+mp = sfMPEncode(42.0);
+
+val = sfMPDecode(mp);        // val == 42.0
+
+
+
+mp = sfMPEncode(&quot;hello&quot;);
+
+val = sfMPDecode(mp);        // val == &quot;hello&quot;
+
+</code></pre>
+<hr>
+</body>
+</html>

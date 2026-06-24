@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Dialog Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Dialog Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Dialog Functions</h2>
+<p>Non‑blocking dialog boxes that run on a background thread, allowing the AFL engine to continue processing.</p>
+<h3 id="sfselectfile">sfSelectFile</h3>
+<p>Opens a Windows file‑open dialog <strong>without blocking the AFL engine</strong>.</p>
+<p>The dialog runs on a background thread; the function returns immediately.</p>
+<p><strong>Usage pattern (polling):</strong></p>
+<pre><code>
+file = SelectFile(&quot;C:\&quot;, &quot;MyVar&quot;);
+
+if (file != &quot;&quot;) {
+
+    // user selected a file, path is in &quot;file&quot; and also in StaticVarGetText(&quot;MyVar&quot;)
+
+}
+
+</code></pre>
+<li>**First call** in a scan/indicator: the dialog is opened, the function returns `Nothing`.</li>
+<li>**Subsequent calls** (next AFL recalc): if the user has selected a file, the path is stored</li>
+<p>  via <code>StaticVarSetText</code> and returned as a string. Returns <code>Nothing</code> while the dialog is still open.</p>
+<p><strong>Syntax:</strong> <code>sfSelectFile( directory, varname )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">directory</td>
+<td align="left">string</td>
+<td align="left">Initial directory shown in the dialog</td>
+</tr>
+<tr>
+<td align="left">varname</td>
+<td align="left">string</td>
+<td align="left">Name of the AmiBroker static variable to store the selected path</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The selected file path, or <code>Nothing</code> if cancelled or still pending.</p>
+<hr>
+<h3 id="sfsavefile">sfSaveFile</h3>
+<p>Opens a Windows <strong>Save As…</strong> dialog <strong>without blocking the AFL engine</strong>.</p>
+<p><strong>Syntax:</strong> <code>sfSaveFile( directory, filename_hint )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">directory</td>
+<td align="left">string</td>
+<td align="left">Initial directory shown in the dialog</td>
+</tr>
+<tr>
+<td align="left">filename_hint</td>
+<td align="left">string</td>
+<td align="left">Default file name pre‑filled in the dialog</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The full chosen path, or empty string if cancelled or still pending.</p>
+<hr>
+<h3 id="sfdialogyesno">sfDialogYesNo</h3>
+<p>Displays a message box with <strong>Yes / No</strong> buttons, non‑blocking.</p>
+<p><strong>Syntax:</strong> <code>sfDialogYesNo( message, title )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">message</td>
+<td align="left">string</td>
+<td align="left">Text to display in the message box</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="left">string</td>
+<td align="left">Window title</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> if Yes was clicked, <code>0</code> if No, or <code>Nothing</code> while the dialog is still open.</p>
+<hr>
+<h3 id="sfdialogokcancel">sfDialogOkCancel</h3>
+<p>Displays a message box with <strong>OK / Cancel</strong> buttons, non‑blocking.</p>
+<p><strong>Syntax:</strong> <code>sfDialogOkCancel( message, title )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">message</td>
+<td align="left">string</td>
+<td align="left">Text to display in the message box</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="left">string</td>
+<td align="left">Window title</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> if OK, <code>0</code> if Cancel, or <code>Nothing</code> while still pending.</p>
+<hr>
+<h3 id="sfdialogok">sfDialogOK</h3>
+<p>Displays an informational message box with a single <strong>OK</strong> button, non‑blocking.</p>
+<p><strong>Syntax:</strong> <code>sfDialogOK( message, title )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">message</td>
+<td align="left">string</td>
+<td align="left">Text to display in the message box</td>
+</tr>
+<tr>
+<td align="left">title</td>
+<td align="left">string</td>
+<td align="left">Window title</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> when the user clicks OK.</p>
+<hr>
+</body>
+</html>

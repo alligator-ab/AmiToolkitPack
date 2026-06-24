@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Vector Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Vector Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Vector Functions</h2>
+<p>The vector functions let you create and manipulate dynamic arrays of mixed-type</p>
+<p>values (<code>AmiVar</code>), identified by a unique numeric ID.</p>
+<h3 id="sfvectorcreate">sfVectorCreate</h3>
+<p>Creates a new struct with the specified number of elements.</p>
+<p><strong>Syntax:</strong> <code>sfVectorCreate( size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Number of elements in the struct</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The struct ID.</p>
+<hr>
+<h3 id="sfvectordestroy">sfVectorDestroy</h3>
+<p>Destroys a struct and frees its memory.</p>
+<p><strong>Syntax:</strong> <code>sfVectorDestroy( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfvectortostring">sfVectorToString</h3>
+<p>Returns a JSON-like string representation of the struct&apos;s contents.</p>
+<p><strong>Syntax:</strong> <code>sfVectorToString( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — e.g. <code>[1.5,&quot;hello&quot;,null]</code></p>
+<hr>
+<h3 id="sfvectorfromstring">sfVectorFromString</h3>
+<p>Parses a JSON-like string and creates a new struct from it if no struct&apos;s id is provided.</p>
+<p><strong>Syntax:</strong> <code>sfVectorFromString( str, id = -1 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The JSON-like string to parse</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The new struct ID, or nothing if parsing fails.</p>
+<hr>
+<h3 id="sfvectorget">sfVectorGet</h3>
+<p>Retrieves the value at a given index.</p>
+<p><strong>Syntax:</strong> <code>sfVectorGet( index, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">float</td>
+<td align="left">Zero-based element index</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The value (string, float, or none).</p>
+<hr>
+<h3 id="sfvectorsetfloat">sfVectorSetFloat</h3>
+<p>Sets a float value at a given index.</p>
+<p><strong>Syntax:</strong> <code>sfVectorSetFloat( value, index, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The float value to set</td>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">float</td>
+<td align="left">Zero-based element index</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The previous value at that index.</p>
+<hr>
+<h3 id="sfvectorsetstring">sfVectorSetString</h3>
+<p>Sets a string value at a given index.</p>
+<p><strong>Syntax:</strong> <code>sfVectorSetString( str, index, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string value to set</td>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">float</td>
+<td align="left">Zero-based element index</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The previous value at that index.</p>
+<hr>
+<h3 id="sfvectorsize">sfVectorSize</h3>
+<p>Returns the number of elements in the struct.</p>
+<p><strong>Syntax:</strong> <code>sfVectorSize( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The size of the struct.</p>
+<hr>
+<h3 id="sfvectorclear">sfVectorClear</h3>
+<p>Clears all values in the struct (sets them to none and frees string memory).</p>
+<p><strong>Syntax:</strong> <code>sfVectorClear( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfvectorresize">sfVectorResize</h3>
+<p>Changes the size of the struct. If the new size is smaller, the trailing</p>
+<p> elements are freed. If larger, new elements are initialized to none.</p>
+<p><strong>Syntax:</strong> <code>sfVectorResize( newSize, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">newSize</td>
+<td align="left">float</td>
+<td align="left">The new size</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The struct ID.</p>
+<hr>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — ESN Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>ESN Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>ESN Functions</h2>
+<p>Echo State Network (reservoir computing) routines. Each ESN is identified by</p>
+<p>a unique ID returned by <code>sfESNCreate</code>.</p>
+<h3 id="sfesncreate">sfESNCreate</h3>
+<p>Creates a new ESN with the specified reservoir size, input size, and output size.</p>
+<p><strong>Syntax:</strong> <code>sfESNCreate( N_res, N_in, N_out, sparsity, spectral_radius, leaking_rate )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">N_res</td>
+<td align="left">float</td>
+<td align="left">Number of reservoir neurons</td>
+</tr>
+<tr>
+<td align="left">N_in</td>
+<td align="left">float</td>
+<td align="left">Number of input dimensions</td>
+</tr>
+<tr>
+<td align="left">N_out</td>
+<td align="left">float</td>
+<td align="left">Number of output dimensions</td>
+</tr>
+<tr>
+<td align="left">sparsity</td>
+<td align="left">float</td>
+<td align="left">Fraction of non-zero reservoir connections (e.g. <code>0.1</code> = 10 %)</td>
+</tr>
+<tr>
+<td align="left">spectral_radius</td>
+<td align="left">float</td>
+<td align="left">Desired spectral radius of the reservoir weight matrix</td>
+</tr>
+<tr>
+<td align="left">leaking_rate</td>
+<td align="left">float</td>
+<td align="left">Leaking rate for state updates (<code>1.0</code> = no leak)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — ESN ID (used by all other ESN functions).</p>
+<hr>
+<h3 id="sfesnstep">sfESNStep</h3>
+<p>Advances the reservoir state by one time step.</p>
+<p><strong>Syntax:</strong> <code>sfESNStep( input, out_state, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">input</td>
+<td align="left">array</td>
+<td align="left">Input vector of size N\_in</td>
+</tr>
+<tr>
+<td align="left">out_state</td>
+<td align="left">array</td>
+<td align="left">(output) Reservoir state vector of size N\_res</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfesntrain">sfESNTrain</h3>
+<p>Trains the output weights using ridge regression. The new data batch is</p>
+<p>accumulated with any previous training data and W\_out is re-solved</p>
+<p>incrementally.</p>
+<p><strong>Syntax:</strong> <code>sfESNTrain( X_data, Y_data, T, lambda, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">X_data</td>
+<td align="left">array</td>
+<td align="left">Concatenated [x; u] matrix, row‑major, T × (N\_res+N\_in)</td>
+</tr>
+<tr>
+<td align="left">Y_data</td>
+<td align="left">array</td>
+<td align="left">Target matrix, row‑major, T × N\_out</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Number of timesteps in this batch</td>
+</tr>
+<tr>
+<td align="left">lambda</td>
+<td align="left">float</td>
+<td align="left">Ridge regularisation parameter</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<p>Call <code>sfESNTrain</code> multiple times with different data batches to perform</p>
+<p>progressive (incremental) training.</p>
+<hr>
+<h3 id="sfesnpredict">sfESNPredict</h3>
+<p>Computes the output from the current reservoir state and input.</p>
+<p><strong>Syntax:</strong> <code>sfESNPredict( input, output, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">input</td>
+<td align="left">array</td>
+<td align="left">Input vector of size N\_in</td>
+</tr>
+<tr>
+<td align="left">output</td>
+<td align="left">array</td>
+<td align="left">(output) Output vector of size N\_out</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfesntrainbg">sfESNTrainBg</h3>
+<p>Starts training in a background thread. The input data is copied so the</p>
+<p>caller may reuse or free the original AFL arrays immediately.</p>
+<p><strong>Syntax:</strong> <code>sfESNTrainBg( X_data, Y_data, T, lambda, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">X_data</td>
+<td align="left">array</td>
+<td align="left">Concatenated [x; u] matrix, row‑major, T × (N\_res+N\_in)</td>
+</tr>
+<tr>
+<td align="left">Y_data</td>
+<td align="left">array</td>
+<td align="left">Target matrix, row‑major, T × N\_out</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Number of timesteps in this batch</td>
+</tr>
+<tr>
+<td align="left">lambda</td>
+<td align="left">float</td>
+<td align="left">Ridge regularisation parameter</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Background task ID (can be ignored).</p>
+<p>Only one background training may run at a time per ESN; starting a new one</p>
+<p>cancels any pending task. Poll completion with <code>sfESNTrainingStatus</code>.</p>
+<hr>
+<h3 id="sfesntrainingstatus">sfESNTrainingStatus</h3>
+<p>Returns the current training status of an ESN.</p>
+<p><strong>Syntax:</strong> <code>sfESNTrainingStatus( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>0</code> idle, <code>1</code> training in background, <code>-1</code> error.</p>
+<hr>
+<h3 id="sfesndestroy">sfESNDestroy</h3>
+<p>Destroys an ESN and releases all associated resources. Any running background</p>
+<p>training is cancelled first.</p>
+<p><strong>Syntax:</strong> <code>sfESNDestroy( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">ESN ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+</body>
+</html>
