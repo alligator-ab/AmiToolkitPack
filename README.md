@@ -127,52 +127,6 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 `GetChrono`, `ResetChrono`, `UTF16ToAscii`, `UnicodeToAscii`, `DetectFileChange`, `DetectDirChange`, `GetFileSize`, `CreateTempFile`, `KellyCriterion`, `FixQuotes`, `MxSparseMatrix`
 
-
-## Running Tests
-
-### Compile and run
-
-From a **Developer Command Prompt for VS**:
-
-```cmd
-cd sfStr
-cl.exe /nologo /EHsc /std:c++20 /I. /I3rdparty /Fetests\AmiToolkit_tests.exe tests\tests.cpp /link comdlg32.lib ole32.lib ws2_32.lib
-tests\AmiToolkit_tests.exe
-```
-
-The test runner prints `PASS`/`FAIL` per assertion and exits with 0 on success, 1 on failure.
-
-### Adding new tests
-
-1. Open `tests\tests.cpp`.
-2. Write a test function using the macros from `tests\tests.h`:
-
-```cpp
-static void test_myFeature() {
-    section("myFeature");
-    AmiVar r = StrFind(1, args);
-    TEST_ASSERT_EQ(r.type, VAR_FLOAT, "returns float");
-    TEST_ASSERT(r.val > 0, "positive value");
-}
-```
-
-Macros: `TEST_ASSERT(cond, msg)`, `TEST_ASSERT_EQ(a, b, msg)`, `TEST_ASSERT_STR_EQ(a, b, msg)`, `TEST_ASSERT_FLOAT_EQ(a, b, msg)`.
-
-3. Call `test_myFeature()` from `main()`.
-4. Rebuild and run.
-
-#### LLM tests (OpenAI / Mistral)
-
-To test `OpenAIRequest` with a real API response, set the environment variable
-before running tests:
-
-```powershell
-$env:MISTRAL_API_KEY = "your-api-key-here"
-tests\AmiToolkit_tests.exe
-```
-
-If the variable is unset the test is skipped with a CAUSE message.
-
 ## License
 
 MIT License 2.0.
