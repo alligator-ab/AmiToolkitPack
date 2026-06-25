@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — JStr Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>JStr Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>JStr Functions</h2>
+<p>JStr functions manipulate lightweight JSON strings directly (no parser, no ID).</p>
+<p>All inputs and outputs are AFL strings.</p>
+<h3 id="sfjstrgetkey">sfJStrGetKey</h3>
+<p>Extracts a value by key from a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrGetKey( jstr, key )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string (e.g. <code>{"name":"John","age":30}</code>)</td>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">Key to look up</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The value as a JSON string, or nothing if the key does not exist.</p>
+<hr>
+<h3 id="sfjstrget">sfJStrGet</h3>
+<p>Extracts a value by index from a JSON array string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrGet( jstr, index )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON array string (e.g. <code>["a","b","c"]</code>)</td>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">float</td>
+<td align="left">Zero-based element index</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The value as a JSON string, or nothing if the index is out of range.</p>
+<hr>
+<h3 id="sfjstrsetkeystring">sfJStrSetKeyString</h3>
+<p>Sets a key to a string value in a JSON object string. If the key exists,</p>
+<p>its value is replaced; otherwise the key-value pair is appended.</p>
+<p><strong>Syntax:</strong> <code>sfJStrSetKeyString( jstr, key, value )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">Key to set</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">String value to assign</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The modified JSON object, or nothing on failure.</p>
+<hr>
+<h3 id="sfjstrsetkeyfloat">sfJStrSetKeyFloat</h3>
+<p>Sets a key to a numeric value in a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrSetKeyFloat( jstr, key, value )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">Key to set</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">Numeric value to assign</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The modified JSON object, or nothing on failure.</p>
+<hr>
+<h3 id="sfjstrsetkeybool">sfJStrSetKeyBool</h3>
+<p>Sets a key to a JSON boolean (<code>true</code> / <code>false</code>) in a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrSetKeyBool( jstr, key, bool )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">Key to set</td>
+</tr>
+<tr>
+<td align="left">bool</td>
+<td align="left">float</td>
+<td align="left">Non‑zero → <code>true</code>, zero → <code>false</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The modified JSON object, or nothing on failure.</p>
+<hr>
+<h3 id="sfjstrremovekey">sfJStrRemoveKey</h3>
+<p>Removes a key from a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrRemoveKey( jstr, key )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">Key to remove</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The modified JSON object.</p>
+<hr>
+<h3 id="sfjstrremove">sfJStrRemove</h3>
+<p>Removes an element by index from a JSON array string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrRemove( jstr, index )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON array string</td>
+</tr>
+<tr>
+<td align="left">index</td>
+<td align="left">float</td>
+<td align="left">Zero-based index to remove</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The modified JSON array.</p>
+<hr>
+<h3 id="sfjstrclear">sfJStrClear</h3>
+<p>Returns an empty JSON structure of the same type as the input</p>
+<p>(<code>{}</code> for objects, <code>[]</code> for arrays).</p>
+<p><strong>Syntax:</strong> <code>sfJStrClear( jstr )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">Input JSON string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — <code>{}</code> or <code>[]</code>.</p>
+<hr>
+<h3 id="sfjstrfix">sfJStrFix</h3>
+<p>Fixes common issues in a JSON string:</p>
+<li>Replaces `=` with `:`</li>
+<li>Replaces `;` with `,`</li>
+<li>Converts single quotes to double quotes</li>
+<li>Inserts missing separators</li>
+<li>Removes redundant separators and unnecessary whitespace</li>
+<p><strong>Syntax:</strong> <code>sfJStrFix( jstr )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">The (possibly malformed) JSON string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The fixed JSON string.</p>
+<hr>
+<h3 id="sfjstrmerge">sfJStrMerge</h3>
+<p>Merges two JSON strings of the same type. For objects, keys from both are</p>
+<p>combined. For arrays, elements are concatenated. If the types differ, the</p>
+<p>first argument is returned unchanged.</p>
+<p><strong>Syntax:</strong> <code>sfJStrMerge( jstr1, jstr2 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr1</td>
+<td align="left">string</td>
+<td align="left">First JSON string</td>
+</tr>
+<tr>
+<td align="left">jstr2</td>
+<td align="left">string</td>
+<td align="left">Second JSON string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The merged JSON string.</p>
+<hr>
+<h3 id="sfjstrgetpath">sfJStrGetPath</h3>
+<p>Navigates a dot-separated path into a JSON value and returns the result with</p>
+<p>the correct AFL type. Numeric path components index into arrays; string</p>
+<p>components index into objects.</p>
+<p><strong>Syntax:</strong> <code>sfJStrGetPath( jstr, path )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON string (object, array, or value)</td>
+</tr>
+<tr>
+<td align="left">path</td>
+<td align="left">string</td>
+<td align="left">Dot-separated path, e.g. <code>"x.1"</code> for the second element of the array at key <code>"x"</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> typed value — string, float (1.0/0.0 for booleans), or nothing for null/missing.</p>
+<table class="doc-table">
+<tr>
+<th align="left">JSON value</th>
+<th align="left">AFL type</th>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left">string (unquoted, unescaped)</td>
+</tr>
+<tr>
+<td align="left">number</td>
+<td align="left">float</td>
+</tr>
+<tr>
+<td align="left">true</td>
+<td align="left">float (1.0)</td>
+</tr>
+<tr>
+<td align="left">false</td>
+<td align="left">float (0.0)</td>
+</tr>
+<tr>
+<td align="left">null</td>
+<td align="left">nothing</td>
+</tr>
+<tr>
+<td align="left">object / array</td>
+<td align="left">string (raw JSON fragment)</td>
+</tr>
+</table>
+<hr>
+</body>
+</html>

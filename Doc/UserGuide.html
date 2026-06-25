@@ -41,11 +41,13 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 
 <h2>Function Categories</h2>
 <ul>
-<li><a href="StringFunctions.html">String Functions</a> (25 functions)</li>
+<li><a href="StringFunctions.html">String Functions</a> (26 functions)</li>
 <li><a href="StringBuilderFunctions.html">String Builder Functions</a> (8 functions)</li>
 <li><a href="PipeFunctions.html">Pipe Functions</a> (6 functions)</li>
-<li><a href="VectorFunctions.html">Vector Functions</a> (10 functions)</li>
+<li><a href="VectorFunctions.html">Vector Functions</a> (13 functions)</li>
 <li><a href="JSONFunctions.html">JSON Functions</a> (12 functions)</li>
+<li><a href="JStrFunctions.html">JStr Functions</a> (11 functions)</li>
+<li><a href="INIFunctions.html">INI Functions</a> (6 functions)</li>
 <li><a href="TextFileFunctions.html">Text File Functions</a> (3 functions)</li>
 <li><a href="IndicatorFunctions.html">Indicator Functions</a> (65 functions)</li>
 <li><a href="SlippageEstimationFunctions.html">Slippage Estimation Functions</a> (2 functions)</li>
@@ -58,7 +60,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <li><a href="CBORFunctions.html">CBOR Functions</a> (12 functions)</li>
 <li><a href="CSVFunctions.html">CSV Functions</a> (22 functions)</li>
 <li><a href="RecordFunctions.html">Record Functions</a> (7 functions)</li>
-<li><a href="StatisticsFunctions.html">Statistics Functions</a> (8 functions)</li>
+<li><a href="StoreFunctions.html">Store Functions</a> (8 functions)</li>
 <li><a href="TableFunctions.html">Table Functions</a> (20 functions)</li>
 <li><a href="PositionFunctions.html">Position Functions</a> (12 functions)</li>
 <li><a href="DetectFunctions.html">Detect Functions</a> (2 functions)</li>
@@ -118,7 +120,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="DialogFunctions.html#sfdialogok">sfDialogOK</a></td><td>Dialog Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfdialogokcancel">sfDialogOkCancel</a></td><td>Dialog Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfdialogyesno">sfDialogYesNo</a></td><td>Dialog Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfdiff">sfDiff</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfdiff">sfDiff</a></td><td>Store Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfdirection">sfDirection</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfdownalpha">sfDownAlpha</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfdownbeta">sfDownBeta</a></td><td>Indicator Functions</td></tr>
@@ -136,7 +138,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sffama">sfFAMA</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sffftdenoising">sfFFTDenoising</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sffftspectrum">sfFFTSpectrum</a></td><td>Indicator Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sffirstvalue">sfFirstValue</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sffirstvalue">sfFirstValue</a></td><td>Store Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sffixquotes">sfFixQuotes</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sffixspikes">sfFixSpikes</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfframa">sfFRAMA</a></td><td>Indicator Functions</td></tr>
@@ -151,6 +153,12 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sfhodrickprescott">sfHodrickPrescott</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfhurstdfa">sfHurstDFA</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfhurstdfa2">sfHurstDFA2</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfinigetfloat">sfINIGetFloat</a></td><td>INI Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfinigetstring">sfINIGetString</a></td><td>INI Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfiniload">sfINILoad</a></td><td>INI Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfiniremove">sfINIRemove</a></td><td>INI Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfinisave">sfINISave</a></td><td>INI Functions</td></tr>
+<tr><td><a href="INIFunctions.html#sfiniset">sfINISet</a></td><td>INI Functions</td></tr>
 <tr><td><a href="SlippageEstimationFunctions.html#sfintradayslippageestimate">sfIntradaySlippageEstimate</a></td><td>Slippage Estimation Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfinvfisher">sfInvFisher</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfitl">sfITL</a></td><td>Indicator Functions</td></tr>
@@ -167,6 +175,17 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="JSONFunctions.html#sfjsonsetfloat">sfJSONSetFloat</a></td><td>JSON Functions</td></tr>
 <tr><td><a href="JSONFunctions.html#sfjsonsetstring">sfJSONSetString</a></td><td>JSON Functions</td></tr>
 <tr><td><a href="JSONFunctions.html#sfjsontostring">sfJSONToString</a></td><td>JSON Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrclear">sfJStrClear</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrfix">sfJStrFix</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrget">sfJStrGet</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrgetkey">sfJStrGetKey</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrgetpath">sfJStrGetPath</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrmerge">sfJStrMerge</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrremove">sfJStrRemove</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrremovekey">sfJStrRemoveKey</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrsetkeybool">sfJStrSetKeyBool</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrsetkeyfloat">sfJStrSetKeyFloat</a></td><td>JStr Functions</td></tr>
+<tr><td><a href="JStrFunctions.html#sfjstrsetkeystring">sfJStrSetKeyString</a></td><td>JStr Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfkama">sfKAMA</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sflaguerrersi">sfLaguerreRSI</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sflakeratio">sfLakeRatio</a></td><td>Indicator Functions</td></tr>
@@ -176,10 +195,10 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sfma">sfMA</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfmama">sfMAMA</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sfmaxdrawdown">sfMaxDrawdown</a></td><td>Position Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfmedianarray2">sfMedianArray2</a></td><td>Statistics Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfmedianarray4">sfMedianArray4</a></td><td>Statistics Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfmedianarray6">sfMedianArray6</a></td><td>Statistics Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfmedianarrays">sfMedianArrays</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfmedianarray2">sfMedianArray2</a></td><td>Store Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfmedianarray4">sfMedianArray4</a></td><td>Store Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfmedianarray6">sfMedianArray6</a></td><td>Store Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfmedianarrays">sfMedianArrays</a></td><td>Store Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfmost">sfMOST</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="CodecFunctions.html#sfmpdecode">sfMPDecode</a></td><td>Codec Functions</td></tr>
 <tr><td><a href="CodecFunctions.html#sfmpencode">sfMPEncode</a></td><td>Codec Functions</td></tr>
@@ -197,7 +216,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="OpenAIFunctionsLLM.html#sfopenaigetanswer">sfOpenAIGetAnswer</a></td><td>OpenAI Functions (LLM)</td></tr>
 <tr><td><a href="OpenAIFunctionsLLM.html#sfopenairequest">sfOpenAIRequest</a></td><td>OpenAI Functions (LLM)</td></tr>
 <tr><td><a href="PositionFunctions.html#sfpercentize">sfPercentize</a></td><td>Position Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfperiodicstat">sfPeriodicStat</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfperiodicstat">sfPeriodicStat</a></td><td>Store Functions</td></tr>
 <tr><td><a href="PipeFunctions.html#sfpipeclose">sfPipeClose</a></td><td>Pipe Functions</td></tr>
 <tr><td><a href="PipeFunctions.html#sfpipecreate">sfPipeCreate</a></td><td>Pipe Functions</td></tr>
 <tr><td><a href="PipeFunctions.html#sfpipeisclosed">sfPipeIsClosed</a></td><td>Pipe Functions</td></tr>
@@ -216,7 +235,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="RecordFunctions.html#sfrecordsetfloat">sfRecordSetFloat</a></td><td>Record Functions</td></tr>
 <tr><td><a href="RecordFunctions.html#sfrecordsetstring">sfRecordSetString</a></td><td>Record Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfreflex">sfReflex</a></td><td>Indicator Functions</td></tr>
-<tr><td><a href="StatisticsFunctions.html#sfregularize">sfRegularize</a></td><td>Statistics Functions</td></tr>
+<tr><td><a href="StoreFunctions.html#sfregularize">sfRegularize</a></td><td>Store Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sfremoveexcesssignals">sfRemoveExcessSignals</a></td><td>Position Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfremovegaps">sfRemoveGaps</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sfrequiredmargin">sfRequiredMargin</a></td><td>Position Functions</td></tr>
@@ -226,6 +245,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sfrobustscaler">sfRobustScaler</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfrocketrsi">sfRocketRSI</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfroundprice">sfRoundPrice</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="StringFunctions.html#sfroundquote">sfRoundQuote</a></td><td>String Functions</td></tr>
 <tr><td><a href="StringFunctions.html#sfroundquotes">sfRoundQuotes</a></td><td>String Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfsavefile">sfSaveFile</a></td><td>Dialog Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfselectfile">sfSelectFile</a></td><td>Dialog Functions</td></tr>
@@ -307,6 +327,9 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="VectorFunctions.html#sfvectordestroy">sfVectorDestroy</a></td><td>Vector Functions</td></tr>
 <tr><td><a href="VectorFunctions.html#sfvectorfromstring">sfVectorFromString</a></td><td>Vector Functions</td></tr>
 <tr><td><a href="VectorFunctions.html#sfvectorget">sfVectorGet</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorpop">sfVectorPop</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorpushfloat">sfVectorPushFloat</a></td><td>Vector Functions</td></tr>
+<tr><td><a href="VectorFunctions.html#sfvectorpushstring">sfVectorPushString</a></td><td>Vector Functions</td></tr>
 <tr><td><a href="VectorFunctions.html#sfvectorresize">sfVectorResize</a></td><td>Vector Functions</td></tr>
 <tr><td><a href="VectorFunctions.html#sfvectorsetfloat">sfVectorSetFloat</a></td><td>Vector Functions</td></tr>
 <tr><td><a href="VectorFunctions.html#sfvectorsetstring">sfVectorSetString</a></td><td>Vector Functions</td></tr>

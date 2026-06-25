@@ -237,5 +237,66 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> float — The struct ID.</p>
 <hr>
+<h3 id="sfvectorpushfloat">sfVectorPushFloat</h3>
+<p>Pushes a float value to the end of the vector.</p>
+<p><strong>Syntax:</strong> <code>sfVectorPushFloat( value, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The float value to push</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfvectorpushstring">sfVectorPushString</h3>
+<p>Pushes a string value to the end of the vector.</p>
+<p><strong>Syntax:</strong> <code>sfVectorPushString( str, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The string value to push</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None</p>
+<hr>
+<h3 id="sfvectorpop">sfVectorPop</h3>
+<p>Removes and returns the last value from the vector.</p>
+<p><strong>Syntax:</strong> <code>sfVectorPop( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Vector ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The last value (string, float, or none). Returns <code>Null</code> if the vector is empty or the ID is invalid.</p>
+<hr>
 </body>
 </html>

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Store Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Store Functions</h1>
+<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<hr>
+<h2>Store Functions</h2>
+<p>Key-value store — a map of named <code>AmiVar</code> values (float, string, or null),</p>
+<p>identified by a unique numeric ID. Created via <code>StoreCreate</code>, accessed</p>
+<p>by key, and destroyed via <code>StoreDestroy</code>.</p>
+<p>All functions return <code>Null</code> on invalid input (bad handle).</p>
+<h3>StoreCreate</h3>
+<p>Creates a new empty store.</p>
+<p><strong>Syntax:</strong> <code>StoreCreate( size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Ignored (reserved for future use)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The store ID.</p>
+<hr>
+<h3>StoreDestroy</h3>
+<p>Destroys a store and frees all associated memory.</p>
+<p><strong>Syntax:</strong> <code>StoreDestroy( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID to destroy</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3>StoreSize</h3>
+<p>Returns the number of key-value pairs in the store.</p>
+<p><strong>Syntax:</strong> <code>StoreSize( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The number of entries.</p>
+<hr>
+<h3>StoreGet</h3>
+<p>Retrieves the value at a given key.</p>
+<p><strong>Syntax:</strong> <code>StoreGet( key, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">The key to look up</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The value (float, string, or null if not found).</p>
+<hr>
+<h3>StoreSet</h3>
+<p>Sets the value at a given key and returns the old value.</p>
+<p>If the key does not exist, it is created and <code>Null</code> is returned.</p>
+<p><strong>Syntax:</strong> <code>StoreSet( key, value, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">The key to set</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">AmiVar</td>
+<td align="left">The new value (float or string)</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The previous value, or null if the key was created.</p>
+<hr>
+<h3>StorePush</h3>
+<p>Sets the value at a given key and returns the old value.</p>
+<p>If the key does not exist, it is created and <code>Nothing</code> is returned.</p>
+<p><strong>Syntax:</strong> <code>StorePush( key, value, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">The key to set</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">AmiVar</td>
+<td align="left">The new value</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The previous value, or nothing if the key was created.</p>
+<hr>
+<h3>StorePushFloat</h3>
+<p>Alias for <code>StorePush</code> with a float value.</p>
+<p><strong>Syntax:</strong> <code>StorePushFloat( key, value, id )</code></p>
+<hr>
+<h3>StorePushString</h3>
+<p>Alias for <code>StorePush</code> with a string value.</p>
+<p><strong>Syntax:</strong> <code>StorePushString( key, value, id )</code></p>
+<hr>
+<h3>StoreRemove</h3>
+<p>Removes the value at the given key and returns it.</p>
+<p><strong>Syntax:</strong> <code>StoreRemove( key, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">The key to remove</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The removed value, or null if the key did not exist.</p>
+<hr>
+<h3>StoreClear</h3>
+<p>Removes all key-value pairs from the store.</p>
+<p><strong>Syntax:</strong> <code>StoreClear( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing</p>
+<hr>
+<h3>StoreExists</h3>
+<p>Checks whether a given key exists in the store.</p>
+<p><strong>Syntax:</strong> <code>StoreExists( key, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">The key to check</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> if the key exists, <code>0</code> otherwise.</p>
+<hr>
+<h3>StoreToString</h3>
+<p>Serializes the store to a JSON-like string.</p>
+<p><strong>Syntax:</strong> <code>StoreToString( id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — e.g. <code>{&quot;age&quot;:30,&quot;name&quot;:&quot;hello&quot;}</code>.</p>
+<hr>
+<h3>StoreFromString</h3>
+<p>Parses a JSON-like string into the store. If <code>id</code> is <code>-1</code>, a new store is</p>
+<p>created. If <code>id</code> is a valid store ID, the existing store is cleared and</p>
+<p>reloaded.</p>
+<p><strong>Syntax:</strong> <code>StoreFromString( str, id )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The JSON-like string to parse</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">float</td>
+<td align="left">Store ID (or <code>-1</code> to create new)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The store ID, or null if parsing fails.</p>
+<hr>
+<h3>Store Example</h3>
+<pre><code>
+// Create a store
+
+s = StoreCreate(0);
+
+
+
+// Load data from string
+
+StoreFromString(&quot;{\&quot;name\&quot;:\&quot;AAPL\&quot;,\&quot;price\&quot;:150.25,\&quot;active\&quot;:null}&quot;, s);
+
+
+
+// Read values
+
+name = StoreGet(&quot;name&quot;, s);    // &quot;AAPL&quot;
+
+price = StoreGet(&quot;price&quot;, s);  // 150.25
+
+active = StoreGet(&quot;active&quot;, s); // null (IsNull(active) == 1)
+
+
+
+// Check if a key exists
+
+exists = StoreExists(&quot;price&quot;, s); // 1
+
+exists = StoreExists(&quot;volume&quot;, s); // 0
+
+
+
+// Set creates the key if it doesn&apos;t exist
+
+old = StoreSet(&quot;volume&quot;, 1000000, s); // Null (key was created)
+
+old = StoreSet(&quot;price&quot;, 151.00, s);   // 150.25 (old value)
+
+
+
+// Push also creates keys and returns old value
+
+old = StorePush(&quot;sector&quot;, &quot;Technology&quot;, s); // Nothing (key was created)
+
+old = StorePush(&quot;price&quot;, 152.00, s);        // 151.00 (old value)
+
+
+
+// Remove a key
+
+removed = StoreRemove(&quot;active&quot;, s);
+
+
+
+// Clear all
+
+StoreClear(s);
+
+
+
+// Destroy
+
+StoreDestroy(s);
+
+</code></pre>
+<hr>
+<p>Statistical functions that operate on multiple arrays.</p>
+<h3 id="sfmedianarrays">sfMedianArrays</h3>
+<p>Computes the median of values from multiple AFL arrays, bar by bar.</p>
+<p>The arrays are accessed by name using the pattern <code>prefix</code> + number</p>
+<p>(e.g. <code>prefix1</code>, <code>prefix2</code>, …).</p>
+<p>For bars where all input values are empty, the result is <code>Empty</code>.</p>
+<p>For an even number of non-empty values, the average of the two middle</p>
+<p>values is returned.</p>
+<p><strong>Syntax:</strong> <code>sfMedianArrays( prefix, count )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Base name of the AFL arrays (e.g. <code>"MyArray"</code> for arrays <code>MyArray1</code>, <code>MyArray2</code>, …)</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">float</td>
+<td align="left">Number of arrays to read (1‑based). Must be ≥ 1</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Median of the input values at each bar.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Assume MyArray1, MyArray2, MyArray3 exist
+
+Med = sfMedianArrays( &quot;MyArray&quot;, 3 );
+
+</code></pre>
+<hr>
+<h3 id="sfmedianarray2">sfMedianArray2</h3>
+<p>Optimized median of exactly 2 arrays. For each bar, returns the average</p>
+<p>of the two values, or the single non-empty value if one is empty,</p>
+<p>or <code>Empty</code> if both are empty.</p>
+<p><strong>Syntax:</strong> <code>sfMedianArray2( Array1, Array2 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array1</td>
+<td align="left">array</td>
+<td align="left">First input array</td>
+</tr>
+<tr>
+<td align="left">Array2</td>
+<td align="left">array</td>
+<td align="left">Second input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Bar-by-bar median of the two arrays.</p>
+<hr>
+<h3 id="sfmedianarray4">sfMedianArray4</h3>
+<p>Optimized median of exactly 4 arrays.</p>
+<p><strong>Syntax:</strong> <code>sfMedianArray4( Array1, Array2, Array3, Array4 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array1‑Array4</td>
+<td align="left">array</td>
+<td align="left">Four input arrays</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Bar-by-bar median. For an even number of non-empty</p>
+<p>values at a bar, the average of the two middle values is returned.</p>
+<hr>
+<h3 id="sfmedianarray6">sfMedianArray6</h3>
+<p>Optimized median of exactly 6 arrays.</p>
+<p><strong>Syntax:</strong> <code>sfMedianArray6( Array1, Array2, Array3, Array4, Array5, Array6 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array1‑Array6</td>
+<td align="left">array</td>
+<td align="left">Six input arrays</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Bar-by-bar median.</p>
+<hr>
+<h3 id="sfperiodicstat">sfPeriodicStat</h3>
+<p>Computes a sliding-window statistic (mean, cumulative sum, or median)</p>
+<p>per period group. Each bar belongs to a group indicated by <code>PeriodNumber</code></p>
+<p>(e.g. day of week 1–7, month 1–12, etc.). A separate sliding window of</p>
+<p>the last <code>n</code> values is maintained for each unique period number, and the</p>
+<p>chosen statistic is computed over that window.</p>
+<p><strong>Syntax:</strong> <code>sfPeriodicStat( Values, PeriodNumber, n, type )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Values</td>
+<td align="left">array</td>
+<td align="left">The input values</td>
+</tr>
+<tr>
+<td align="left">PeriodNumber</td>
+<td align="left">array</td>
+<td align="left">Period identifier for each bar (e.g. <code>DayOfWeek()</code>, <code>Month()</code>)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">(optional) Sliding window size. Default: 20</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">(optional) Statistic type: 0 = mean, 1 = sum (cumul), 2 = median. Default: 0</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — The per-bar statistic for the group to which each bar</p>
+<p>belongs.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Average volume for each weekday over the last 20 weeks
+
+AvgVol = sfPeriodicStat( Volume, DayOfWeek(), 20, 0 );
+
+</code></pre>
+<p>The first bar of each period group returns the average/sum/median of</p>
+<p>all values encountered so far (results are valid from the first occurrence).</p>
+<hr>
+<h3 id="sfregularize">sfRegularize</h3>
+<p>Fills gaps (<code>Empty</code> values) in a time series array to produce a</p>
+<p>regularized (gap‑free) series.</p>
+<p><strong>Syntax:</strong> <code>sfRegularize( A, opt )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">array</td>
+<td align="left">Input time series (may contain <code>Empty</code> gaps)</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Filling method. Default: 0</td>
+</tr>
+</table>
+<table class="doc-table">
+<tr>
+<th align="left">opt</th>
+<th align="left">Behavior</th>
+</tr>
+<tr>
+<td align="left"><code>0</code></td>
+<td align="left">**Forward‑fill** — copy the last valid value forward</td>
+</tr>
+<tr>
+<td align="left"><code>≥ 1</code></td>
+<td align="left">**EMA** — fill with an exponential moving average of the last <code>opt</code> valid values (α = 2/(opt+1))</td>
+</tr>
+<tr>
+<td align="left"><code>−1</code></td>
+<td align="left">**Median‑2** — fill with the median (average) of the two most recent valid values</td>
+</tr>
+<tr>
+<td align="left"><code>< −1</code></td>
+<td align="left">**Linear regression** — fill by extrapolating a straight line fitted to the last <code>−opt</code> valid values</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — The regularized series (same length as input).</p>
+<p><strong>Notes:</strong></p>
+<li>All filling methods require at least one prior valid value; bars before</li>
+<p>  the first valid value remain <code>Empty</code>.</p>
+<li>For `opt ≥ 1`, the minimum effective period is 2.</li>
+<li>For `opt < −1`, regression requires at least 2 valid points.</li>
+<hr>
+<h3 id="sffirstvalue">sfFirstValue</h3>
+<p>Returns the first non‑<code>Empty</code> value in the array.</p>
+<p><strong>Syntax:</strong> <code>sfFirstValue( A )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The first valid value, or 0 if all values are empty.</p>
+<hr>
+<h3 id="sfdiff">sfDiff</h3>
+<p>Computes successive differences between array values. The first valid bar</p>
+<p>is set to 0. For <code>opt &gt; 1</code>, computes <code>A[n] − A[n − opt]</code>.</p>
+<p><strong>Syntax:</strong> <code>sfDiff( A, opt )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">A</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Lag. Default: 1 (consecutive bars)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Differences. <code>Empty</code> where either value is missing.</p>
+<hr>
+</body>
+</html>
