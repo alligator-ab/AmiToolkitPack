@@ -5,11 +5,11 @@ AmiToolkit is an [AmiBroker](https://www.amibroker.com/) plug-in that adds strin
 ## Installing
 
 1. Copy `libcurl-x64.dll` to your AmiBroker directory (NOT in `Plugins`).
-2. Copy `AmiToolkit.dll` in `Amibroker\Plugins` directory BEFORE starting Amibroker.
+2. Copy `AmiToolkit.dll` in `Amibroker\Plugins` subdirectory BEFORE starting Amibroker.
 
 ## User Guide
 
-Read `Doc\UserGuide.html`
+Read `Doc\index.html`
 
 ## Important Note
 
@@ -21,7 +21,7 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 ### String
 
-`RoundQuotes`, `StrFind`, `StrFindLast`, `StrExtractFrom`, `StrTrimExtractFrom`, `StrFindNested`, `StrNextField`, `StrFrom`, `StrFromChar`, `StrToChar`, `StrQuote`, `StrUnquote`, `StrDisclose`, `StrEnclose`, `StrToQuote`, `StrFromQuote`, `StrColumnSizes`, `StrFormatTable`, `StrFormatHeaders`, `StrFormatAlignedTable`, `StrTrimIn`
+`RoundQuotes`, `RoundQuote`, `StrFind`, `StrFindLast`, `StrExtractFrom`, `StrTrimExtractFrom`, `StrFindNested`, `StrNextField`, `StrFrom`, `StrFromChar`, `StrToChar`, `StrQuote`, `StrUnquote`, `StrDisclose`, `StrEnclose`, `StrToQuote`, `StrFromQuote`, `StrInsert`, `StrColumnSizes`, `StrFormatTable`, `StrFormatHeaders`, `StrFormatAlignedTable`, `StrTrimIn`
 
 ### Regex
 
@@ -35,9 +35,15 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 `VectorCreate`, `VectorDestroy`, `VectorGet`, `VectorSetFloat`, `VectorSetString`, `VectorSize`, `VectorClear`, `VectorResize`, `VectorToString`, `VectorFromString`, `VectorPushFloat`, `VectorPushString`, `VectorPop`
 
-### JSON
+### JSON (RapidJSON — object ID based)
 
 `JSONCreate`, `JSONDestroy`, `JSONLoad`, `JSONSave`, `JSONGet`, `JSONSetString`, `JSONSetFloat`, `JSONParse`, `JSONToString`, `JSONFix`, `JSONPretty`
+
+### JStr (Lightweight JSON strings — no parser, no ID)
+
+`JStrGetKey`, `JStrGet`, `JStrSetKeyString`, `JStrSetKeyFloat`, `JStrSetKeyBool`, `JStrRemoveKey`, `JStrRemove`, `JStrClear`, `JStrFix`, `JStrMerge`, `JStrGetPath`
+
+**Key builder / stream functions:** `JStrKeyFloat`, `JStrKeyString`, `JStrKeyRaw`, `JStrKeyBool`, `JStrKeyNull`, `JStrStripPair`, `JStrStrip`, `JStrNextPair`, `JStrNextKey`, `JStrNextValue`
 
 ### Text Files
 
@@ -51,6 +57,10 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 `RecordCreate`, `RecordGet`, `RecordSetString`, `RecordSetFloat`, `RecordSetArray`, `RecordClear`
 
+### Store
+
+`StoreCreate`, `StoreDestroy`, `StoreGet`, `StoreSet`, `StorePush`, `StorePushFloat`, `StorePushString`, `StoreRemove`, `StoreExists`, `StoreSize`, `StoreClear`, `StoreToString`, `StoreFromString`
+
 ### Table
 
 `TableCreate`, `TableDestroy`, `TableLength`, `TableWidth`, `TableGet`, `TableSetFloat`, `TableSetString`, `TableAppendRowStr`, `TableInsertRowStr`, `TableRemoveRow`, `TableClearRow`, `TableFindRow`, `TableAvgColumn`, `TableCumColumn`, `TableSort`, `TableRowToString`, `TableColumnToString`, `TableColumnToArray`, `TableToMatrix`, `TableColumnFromString`
@@ -62,6 +72,10 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 ### Codec
 
 `Base64Encode`, `Base64Decode`, `MPEncode`, `MPDecode`
+
+### Binary
+
+`BinFromString`, `BinFromFloat`, `BinFromInt`, `BinFromBool`, `BinToString`, `BinToFloat`, `BinToInt`, `BinToBool`, `BinExtract`, `BinInsert`, `BinReplace`, `BinLoad`, `BinSave`
 
 ### CBOR
 
@@ -125,7 +139,94 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 ### Utilities
 
-`GetChrono`, `ResetChrono`, `UTF16ToAscii`, `UnicodeToAscii`, `DetectFileChange`, `DetectDirChange`, `GetFileSize`, `CreateTempFile`, `KellyCriterion`, `FixQuotes`, `MxSparseMatrix`
+`GetChrono`, `ResetChrono`, `UTF16ToAscii`, `UnicodeToAscii`, `DetectFileChange`, `DetectDirChange`, `GetFileSize`, `CreateTempFile`, `KellyCriterion`, `FixQuotes`, `MxSparseMatrix`, `BondQuoteToStr`
+
+## Building the DLL
+
+### Prerequisites
+
+- Microsoft Visual Studio 2022 (or newer) with Desktop development with C++ workload.
+- [CMake](https://cmake.org/) 3.12+.
+
+### CMake (recommended)
+
+From a **Developer Command Prompt for VS**:
+
+```cmd
+cd AmiToolkit
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+```
+
+The DLL is produced at `build\Release\AmiToolkit.dll` (x86) or `build\x64\Release\AmiToolkit.dll` (x64).
+
+### Visual Studio solution
+
+Open `AmiToolkit.sln` in Visual Studio and build.
+
+### Direct `cl.exe`
+
+```cmd
+cl.exe /nologo /O2 /EHsc /std:c++20 /I. /I3rdparty /LD /FeAmiToolkit.dll ^
+    AmiToolkit.cpp Functions.cpp Plugin.cpp Helpers.cpp StdAfx.cpp ^
+    /link /DLL /OUT:AmiToolkit.dll
+```
+
+## Documentation
+
+A multi-page HTML user guide is generated from `Documentation.md`.
+
+```powershell
+# Requires PowerShell 7+ (pwsh.exe) — NOT Windows PowerShell 5.1
+pwsh.exe Doc/generate-docs.ps1
+```
+
+Output: `Doc/index.html` (index), `Doc/AmiToolkit Reference Guide.html` (navigation + glossary), and category pages.
+
+## Running Tests
+
+### Compile and run
+
+From a **Developer Command Prompt for VS**:
+
+```cmd
+cd sfStr
+cl.exe /nologo /EHsc /std:c++20 /I. /I3rdparty /Fetests\AmiToolkit_tests.exe tests\tests.cpp /link comdlg32.lib ole32.lib ws2_32.lib
+tests\AmiToolkit_tests.exe
+```
+
+The test runner prints `PASS`/`FAIL` per assertion and exits with 0 on success, 1 on failure.
+
+### Adding new tests
+
+1. Open `tests\tests.cpp`.
+2. Write a test function using the macros from `tests\tests.h`:
+
+```cpp
+static void test_myFeature() {
+    section("myFeature");
+    AmiVar r = StrFind(1, args);
+    TEST_ASSERT_EQ(r.type, VAR_FLOAT, "returns float");
+    TEST_ASSERT(r.val > 0, "positive value");
+}
+```
+
+Macros: `TEST_ASSERT(cond, msg)`, `TEST_ASSERT_EQ(a, b, msg)`, `TEST_ASSERT_STR_EQ(a, b, msg)`, `TEST_ASSERT_FLOAT_EQ(a, b, msg)`.
+
+3. Call `test_myFeature()` from `main()`.
+4. Rebuild and run.
+
+#### LLM tests (OpenAI / Mistral)
+
+To test `OpenAIRequest` with a real API response, set the environment variable
+before running tests:
+
+```powershell
+$env:MISTRAL_API_KEY = "your-api-key-here"
+tests\AmiToolkit_tests.exe
+```
+
+If the variable is unset the test is skipped with a CAUSE message.
 
 ## License
 
@@ -141,7 +242,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 
 
 
-NOTE: Of course this project uses the AmiBroker Plugin SDK (© Tomasz Janescko / AmiBroker.com). License reproduced below:
+Note: Of course this project uses the AmiBroker Plugin SDK (© Tomasz Janescko / AmiBroker.com). See `Plugin.h` for details and license. Reproduced below:
 
 // Copyright (c) 2001-2010 AmiBroker.com. All rights reserved. 
 //

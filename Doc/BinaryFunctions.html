@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Binary Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Binary Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Binary Functions</h2>
+<p>Binary encoding converts raw bytes into a printable ASCII string where each byte is represented by two characters: <code>&apos;a&apos; + (high nibble)</code> and <code>&apos;a&apos; + (low nibble)</code>. This &quot;Bin str&quot; format is safe for AFL string storage and can be persisted, transmitted, or embedded in formulas.</p>
+<p>All functions return <code>Null()</code> on invalid input (odd-length bin string, out-of-bounds access, unsupported size, I/O failure).</p>
+<h3 id="sfbinfromstring">sfBinFromString</h3>
+<p>Converts a raw AFL string into a binary-encoded string.</p>
+<p><strong>Syntax:</strong> <code>sfBinFromString( str [, maxlen ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">Raw string to encode</td>
+</tr>
+<tr>
+<td align="left">maxlen</td>
+<td align="left">float</td>
+<td align="left">Optional — pad or truncate to this many bytes (default: strlen(str))</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The binary-encoded representation (2×maxlen characters).</p>
+<p><strong>Note:</strong> If <code>maxlen &gt; strlen(str)</code> the extra bytes are zero-filled. If <code>maxlen &lt; strlen(str)</code> the string is truncated.</p>
+<hr>
+<h3 id="sfbinfromfloat">sfBinFromFloat</h3>
+<p>Encodes a float as a binary string with the given byte size.</p>
+<p><strong>Syntax:</strong> <code>sfBinFromFloat( val, size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">val</td>
+<td align="left">float</td>
+<td align="left">Value to encode</td>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Byte size — <code>1</code> (int8), <code>2</code> (int16), <code>4</code> (float32), <code>8</code> (float64)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Binary-encoded value.</p>
+<p><strong>Note:</strong> Sizes 1-2 truncate to integer. Unsupported sizes return <code>Null</code>.</p>
+<hr>
+<h3 id="sfbinfromint">sfBinFromInt</h3>
+<p>Encodes an integer as a binary string with the given byte size.</p>
+<p><strong>Syntax:</strong> <code>sfBinFromInt( val, size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">val</td>
+<td align="left">float</td>
+<td align="left">Integer value to encode</td>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Byte size — <code>1</code> (int8), <code>2</code> (int16), <code>4</code> (int32), <code>8</code> (int64)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Binary-encoded value.</p>
+<p><strong>Note:</strong> Values are clamped to the target integer range. Unsupported sizes return <code>Null</code>.</p>
+<hr>
+<h3 id="sfbinfrombool">sfBinFromBool</h3>
+<p>Encodes a boolean as a 1-byte binary string.</p>
+<p><strong>Syntax:</strong> <code>sfBinFromBool( val )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">val</td>
+<td align="left">float</td>
+<td align="left">Non-zero = true, zero = false</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — 2-character bin string (<code>0x01</code> or <code>0x00</code>).</p>
+<hr>
+<h3 id="sfbintostring">sfBinToString</h3>
+<p>Decodes a binary-encoded string back to a raw AFL string.</p>
+<p><strong>Syntax:</strong> <code>sfBinToString( bin )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Binary-encoded string (even length)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Decoded raw string.</p>
+<p><strong>Note:</strong> Returns <code>Null</code> for odd-length or empty input.</p>
+<hr>
+<h3 id="sfbintofloat">sfBinToFloat</h3>
+<p>Decodes a binary string to a float, auto-detecting the byte size from the encoded length.</p>
+<p><strong>Syntax:</strong> <code>sfBinToFloat( bin )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Binary-encoded value (1, 2, 4, or 8 bytes)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Decoded value.</p>
+<p><strong>Note:</strong> Sizes 1-2 decode as signed integers. Size 4 decodes as IEEE 754 float32; size 8 as float64 (converted to float). Returns <code>Null</code> for unsupported sizes.</p>
+<hr>
+<h3 id="sfbintoint">sfBinToInt</h3>
+<p>Decodes a binary string to an integer, auto-detecting the byte size from the encoded length.</p>
+<p><strong>Syntax:</strong> <code>sfBinToInt( bin )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Binary-encoded value (1, 2, 4, or 8 bytes)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Decoded integer as float.</p>
+<p><strong>Note:</strong> Returns <code>Null</code> for unsupported sizes or empty input.</p>
+<hr>
+<h3 id="sfbintobool">sfBinToBool</h3>
+<p>Decodes a binary string to a boolean (non-zero = true).</p>
+<p><strong>Syntax:</strong> <code>sfBinToBool( bin )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Binary-encoded value (any length)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1.0</code> if the first byte is non-zero, <code>0.0</code> otherwise.</p>
+<hr>
+<h3 id="sfbinextract">sfBinExtract</h3>
+<p>Extracts a sub-region from a binary string, optionally converting the extracted bytes.</p>
+<p><strong>Syntax:</strong> <code>sfBinExtract( bin, from, count [, type ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Source binary string</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">float</td>
+<td align="left">Zero-based byte offset</td>
+</tr>
+<tr>
+<td align="left">count</td>
+<td align="left">float</td>
+<td align="left">Number of bytes to extract</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Output type — <code>0</code> = bin string (default), <code>1</code> = bool, <code>2</code> = int, <code>3</code> = float, <code>4</code> = raw string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string or float — Depends on <code>type</code>.</p>
+<p><strong>Note:</strong> <code>from</code> and <code>count</code> are in bytes (not bin-string characters). <code>from + count</code> must not exceed the total byte length. Returns <code>Null</code> on out-of-bounds. Type conversions (2–3) follow the same size rules as <code>BinToInt</code>/<code>BinToFloat</code>.</p>
+<hr>
+<h3 id="sfbininsert">sfBinInsert</h3>
+<p>Inserts a binary string into another at a given byte position.</p>
+<p><strong>Syntax:</strong> <code>sfBinInsert( bin, sub, pos )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Destination binary string</td>
+</tr>
+<tr>
+<td align="left">sub</td>
+<td align="left">string</td>
+<td align="left">Binary string to insert</td>
+</tr>
+<tr>
+<td align="left">pos</td>
+<td align="left">float</td>
+<td align="left">Byte position (negative = append at end)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — New binary string with <code>sub</code> inserted.</p>
+<p><strong>Note:</strong> <code>pos</code> is clamped to <code>[0, len(bin)]</code>. If <code>pos = -1</code> the sub-string is appended at the end.</p>
+<hr>
+<h3 id="sfbinreplace">sfBinReplace</h3>
+<p>Replaces bytes in a binary string with another binary string starting at a given position.</p>
+<p><strong>Syntax:</strong> <code>sfBinReplace( bin, sub, pos )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Source binary string</td>
+</tr>
+<tr>
+<td align="left">sub</td>
+<td align="left">string</td>
+<td align="left">Replacement binary string</td>
+</tr>
+<tr>
+<td align="left">pos</td>
+<td align="left">float</td>
+<td align="left">Byte position to start replacement</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — New binary string with the region replaced.</p>
+<p><strong>Note:</strong> If <code>pos + len(sub) &gt; len(bin)</code>, the output is extended to accommodate the replacement. <code>pos</code> is clamped to <code>[0, len(bin)]</code>.</p>
+<hr>
+<h3 id="sfbinload">sfBinLoad</h3>
+<p>Reads a file from disk and returns its contents as a binary-encoded string.</p>
+<p><strong>Syntax:</strong> <code>sfBinLoad( filename )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Path to the file</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Binary-encoded file contents.</p>
+<p><strong>Note:</strong> Returns <code>Null</code> if the file cannot be opened, is empty, or a read error occurs.</p>
+<hr>
+<h3 id="sfbinsave">sfBinSave</h3>
+<p>Writes a binary-encoded string to disk (raw bytes, not the encoded representation).</p>
+<p><strong>Syntax:</strong> <code>sfBinSave( bin, filename [, mode ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">bin</td>
+<td align="left">string</td>
+<td align="left">Binary-encoded data</td>
+</tr>
+<tr>
+<td align="left">filename</td>
+<td align="left">string</td>
+<td align="left">Output file path</td>
+</tr>
+<tr>
+<td align="left">mode</td>
+<td align="left">float</td>
+<td align="left"><code>0</code> = write (default), <code>1</code> = append</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> Nothing.</p>
+<hr>
+<h3>Example</h3>
+<pre><code>
+// Encode a string to binary and back
+
+bin = sfBinFromString(&quot;Hello&quot;);
+
+back = sfBinToString(bin);
+
+// back == &quot;Hello&quot;
+
+
+
+// Encode/decode a float
+
+bin = sfBinFromFloat(3.14159, 4);
+
+val = sfBinToFloat(bin);
+
+// val ≈ 3.14159
+
+
+
+// Store integers compactly
+
+bin = sfBinFromInt(42000, 2);    // 2 bytes
+
+val = sfBinToInt(bin);            // val == 42000.0
+
+
+
+// Extract a sub-region
+
+bin = sfBinFromString(&quot;Hello World&quot;);
+
+sub = sfBinExtract(bin, 0, 5, 4); // raw string &quot;Hello&quot;
+
+
+
+// Insert at end
+
+bin = sfBinFromString(&quot;abc&quot;);
+
+sub = sfBinFromString(&quot;xyz&quot;);
+
+result = sfBinInsert(bin, sub, -1);
+
+// result encodes &quot;abcxyz&quot;
+
+
+
+// Load/save files
+
+data = sfBinLoad(&quot;image.bin&quot;);    // file → bin string
+
+sfBinSave(data, &quot;copy.bin&quot;);       // bin string → file
+
+</code></pre>
+</body>
+</html>

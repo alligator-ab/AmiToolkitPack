@@ -31,7 +31,7 @@ a:hover{text-decoration:underline}
 </head>
 <body>
 <h1>String Functions</h1>
-<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
 <hr>
 <h2>String Functions</h2>
 <h3 id="sfstrfind">sfStrFind</h3>
@@ -388,6 +388,33 @@ a:hover{text-decoration:underline}
 </tr>
 </table>
 <p><strong>Returns:</strong> string — The formatted quotation string.</p>
+<hr>
+<h3 id="sfstrinsert">sfStrInsert</h3>
+<p>Inserts a substring into a string at the specified position.</p>
+<p><strong>Syntax:</strong> <code>sfStrInsert( str, substr, pos )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">str</td>
+<td align="left">string</td>
+<td align="left">The original string</td>
+</tr>
+<tr>
+<td align="left">substr</td>
+<td align="left">string</td>
+<td align="left">The substring to insert</td>
+</tr>
+<tr>
+<td align="left">pos</td>
+<td align="left">float</td>
+<td align="left">Insertion position (0‑based). Negative positions count from the end; <code>-1</code> appends.</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The resulting string after insertion.</p>
 <hr>
 <h3 id="sfstrcolumnsizes">sfStrColumnSizes</h3>
 <p>Analyzes a delimited table string and returns the maximum width of each column, with an optional margin.</p>

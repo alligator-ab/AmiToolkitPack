@@ -31,7 +31,7 @@ a:hover{text-decoration:underline}
 </head>
 <body>
 <h1>Indicator Functions</h1>
-<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
 <hr>
 <h2>Indicator Functions</h2>
 <h3 id="sfdirection">sfDirection</h3>
@@ -113,7 +113,9 @@ a:hover{text-decoration:underline}
 <p><strong>Returns:</strong> array — The SMA values. The first <code>period-1</code> bars are <code>EMPTY_VAL</code>.</p>
 <hr>
 <h3 id="sfma">sfMA</h3>
-<p>Multi-type moving average dispatcher. Supports 11 types:</p>
+<p>Multi-type moving average dispatcher. Supports all standard types plus special types</p>
+<p>(JMA, MAMA, ITL, ITLX) that delegate to their dedicated implementations.</p>
+<p>#### Standard types</p>
 <table class="doc-table">
 <tr>
 <th align="left">Type</th>
@@ -131,6 +133,31 @@ a:hover{text-decoration:underline}
 <td align="left">α = 2/(p+1), seed = Price[0]</td>
 </tr>
 <tr>
+<td align="left"><code>"WMA"</code></td>
+<td align="left">Linear-Weighted Moving Average</td>
+<td align="left"><code>∑(i·Price[i]) / ∑i</code> over window</td>
+</tr>
+<tr>
+<td align="left"><code>"TMA"</code></td>
+<td align="left">Triangular Moving Average</td>
+<td align="left">SMA(SMA(Price, ceil(p/2)), floor(p/2)+1)</td>
+</tr>
+<tr>
+<td align="left"><code>"WWMA"</code></td>
+<td align="left">Welles-Wilder Windowed MA</td>
+<td align="left">Seeded with SMA, then EMA(α = 1/p)</td>
+</tr>
+<tr>
+<td align="left"><code>"VAR"</code></td>
+<td align="left">VIDYA variant</td>
+<td align="left">EMA seeded with SMA, alpha = 1/p</td>
+</tr>
+<tr>
+<td align="left"><code>"ZMA"</code> / <code>"ZLEMA"</code></td>
+<td align="left">Zero-Lag EMA (Ehlers)</td>
+<td align="left">α·(2·Price[i] − Price[i−lag]) + (1−α)·ZMA[i−1], lag = (p−1)/2</td>
+</tr>
+<tr>
 <td align="left"><code>"DEMA"</code></td>
 <td align="left">Double EMA</td>
 <td align="left">2·EMA − EMA(EMA)</td>
@@ -139,26 +166,6 @@ a:hover{text-decoration:underline}
 <td align="left"><code>"TEMA"</code></td>
 <td align="left">Triple EMA</td>
 <td align="left">3·EMA − 3·EMA(EMA) + EMA³</td>
-</tr>
-<tr>
-<td align="left"><code>"HULL"</code></td>
-<td align="left">Hull Moving Average</td>
-<td align="left">WMA(2·WMA(p/2) − WMA(p), √p)</td>
-</tr>
-<tr>
-<td align="left"><code>"WMA"</code></td>
-<td align="left">Wilder's Smoothing (RMA)</td>
-<td align="left">α = 1/p, seeded with SMA of first p bars</td>
-</tr>
-<tr>
-<td align="left"><code>"ZMA"</code></td>
-<td align="left">Zero-Lag EMA (Ehlers)</td>
-<td align="left">α·(2·Price[i] − Price[i−lag]) + (1−α)·ZMA[i−1], lag = (p−1)/2</td>
-</tr>
-<tr>
-<td align="left"><code>"TMA"</code></td>
-<td align="left">Triangular Moving Average</td>
-<td align="left">SMA(SMA(Price, ceil(p/2)), floor(p/2)+1) — triangular FIR filter</td>
 </tr>
 <tr>
 <td align="left"><code>"KAMA"</code></td>
@@ -171,12 +178,60 @@ a:hover{text-decoration:underline}
 <td align="left">Gaussian weighted, σ = 6, offset = 0.85</td>
 </tr>
 <tr>
+<td align="left"><code>"RMA"</code> / <code>"Wilder"</code></td>
+<td align="left">Wilder's Smoothing</td>
+<td align="left">α = 1/p, seeded with SMA of first p bars</td>
+</tr>
+<tr>
+<td align="left"><code>"VIDYA"</code></td>
+<td align="left">Variable Index Dynamic Average</td>
+<td align="left">Chande's VIDYA, α = 1/p</td>
+</tr>
+<tr>
 <td align="left"><code>"DSMA"</code></td>
 <td align="left">Deviation-Squared MA</td>
-<td align="left">Weighted by 1/(1+(Price−Mean)²/Var) per window — reduces outlier influence</td>
+<td align="left">Weighted by 1/(1+(Price−Mean)²/Var) per window</td>
+</tr>
+<tr>
+<td align="left"><code>"HULL"</code></td>
+<td align="left">Hull Moving Average</td>
+<td align="left">WMA(2·WMA(p/2) − WMA(p), √p)</td>
 </tr>
 </table>
-<p><strong>Syntax:</strong> <code>sfMA( Price, type, period )</code></p>
+<p>#### Special types</p>
+<table class="doc-table">
+<tr>
+<th align="left">Type</th>
+<th align="left">Description</th>
+<th align="left">Extra args</th>
+</tr>
+<tr>
+<td align="left"><code>"JMA"</code></td>
+<td align="left">Jurik Moving Average — 3-stage adaptive filter with phase/power control</td>
+<td align="left"><code>phase</code> (default 0, range −100…100), <code>power</code> (default 2, range 0.1…9)</td>
+</tr>
+<tr>
+<td align="left"><code>"ALMA"</code> (with extra args)</td>
+<td align="left">ALMA with configurable offset and sigma</td>
+<td align="left"><code>offset</code> (default 0.85), <code>sigma_div</code> (default 6.0)</td>
+</tr>
+<tr>
+<td align="left"><code>"MAMA"</code></td>
+<td align="left">MESA Adaptive Moving Average by John Ehlers</td>
+<td align="left"><code>slowLimit</code> (default 0.05)</td>
+</tr>
+<tr>
+<td align="left"><code>"ITL"</code></td>
+<td align="left">Instantaneous Trendline by John Ehlers (Hilbert Transform + Homodyne discriminator)</td>
+<td align="left">—</td>
+</tr>
+<tr>
+<td align="left"><code>"ITLX"</code></td>
+<td align="left">Extended Instantaneous Trendline with user-selectable detrender window</td>
+<td align="left">—</td>
+</tr>
+</table>
+<p><strong>Syntax:</strong> <code>sfMA( Price, type, period [, arg1 [, arg2 ]] )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -196,10 +251,30 @@ a:hover{text-decoration:underline}
 <tr>
 <td align="left">period</td>
 <td align="left">float</td>
-<td align="left">Period for the moving average</td>
+<td align="left">Period / primary float parameter</td>
+</tr>
+<tr>
+<td align="left">arg1</td>
+<td align="left">float</td>
+<td align="left">*Optional* — meaning depends on type (see per-type docs)</td>
+</tr>
+<tr>
+<td align="left">arg2</td>
+<td align="left">float</td>
+<td align="left">*Optional* — meaning depends on type (see per-type docs)</td>
 </tr>
 </table>
 <p><strong>Returns:</strong> array — The moving average values.</p>
+<p><strong>Notes:</strong></p>
+<li>For most standard types, only `Price`, `type`, and `period` are needed.</li>
+<li>When `type = "JMA"`: `period` is used as the JMA lookback, `arg1` = phase (default 0),</li>
+<p>  <code>arg2</code> = power (default 2). See [JurikMA](#sfJurikMA) for details.</p>
+<li>When `type = "MAMA"`: `period` is used as `fastLimit` (default 0.5), `arg1` = `slowLimit`</li>
+<p>  (default 0.05). See [MAMA](#sfMAMA) for details.</p>
+<li>When `type = "ITL"`: `period` and extras are ignored — ITL takes only the price array.</li>
+<li>When `type = "ITLX"`: `period` is used as the detrender window `n`. See [ITLX](#sfITLX) for details.</li>
+<li>When `type = "ALMA"` with extra args: `period` = window, `arg1` = offset (default 0.85),</li>
+<p>  <code>arg2</code> = sigma_div (default 6.0). Without extras, ALMA uses the defaults via the standard path.</p>
 <hr>
 <h3 id="sfkama">sfKAMA</h3>
 <p>Kaufman&apos;s Adaptive Moving Average, incorporating volume for greater responsiveness.</p>

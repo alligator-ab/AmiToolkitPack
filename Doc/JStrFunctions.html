@@ -31,7 +31,7 @@ a:hover{text-decoration:underline}
 </head>
 <body>
 <h1>JStr Functions</h1>
-<nav class="section-nav"><a href="UserGuide.html">← Back to User Guide</a></nav>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
 <hr>
 <h2>JStr Functions</h2>
 <p>JStr functions manipulate lightweight JSON strings directly (no parser, no ID).</p>
@@ -323,6 +323,241 @@ a:hover{text-decoration:underline}
 <td align="left">string (raw JSON fragment)</td>
 </tr>
 </table>
+<hr>
+<h3 id="sfjstrkeyfloat">sfJStrKeyFloat</h3>
+<p>Builds a JSON key—value pair with a numeric value.</p>
+<p><strong>Syntax:</strong> <code>sfJStrKeyFloat( key, value, opt = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">JSON key</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">Numeric value</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) 1 = append <code>,</code> after value, -1 = prepend <code>,</code> before key, 0 = no comma</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A JSON fragment <code>&quot;key&quot;:value</code> (possibly with comma).</p>
+<hr>
+<h3 id="sfjstrkeystring">sfJStrKeyString</h3>
+<p>Builds a JSON key—value pair with a string value.</p>
+<p><strong>Syntax:</strong> <code>sfJStrKeyString( key, value, opt = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">JSON key</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">String value (will be JSON-escaped)</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Comma placement: 1 = after, -1 = before, 0 = none</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A JSON fragment <code>&quot;key&quot;:&quot;value&quot;</code> (possibly with comma).</p>
+<hr>
+<h3 id="sfjstrkeyraw">sfJStrKeyRaw</h3>
+<p>Builds a JSON key—value pair with a raw (unescaped) string value.</p>
+<p><strong>Syntax:</strong> <code>sfJStrKeyRaw( key, value, opt = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">JSON key</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">string</td>
+<td align="left">Raw value (inserted as-is, no escaping)</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Comma placement: 1 = after, -1 = before, 0 = none</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A JSON fragment <code>&quot;key&quot;:value</code> (value not quoted/escaped).</p>
+<hr>
+<h3 id="sfjstrkeybool">sfJStrKeyBool</h3>
+<p>Builds a JSON key—value pair with a boolean value.</p>
+<p><strong>Syntax:</strong> <code>sfJStrKeyBool( key, value, opt = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">JSON key</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">Non‑zero → <code>true</code>, zero → <code>false</code></td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Comma placement: 1 = after, -1 = before, 0 = none</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A JSON fragment <code>&quot;key&quot;:true</code> or <code>&quot;key&quot;:false</code>.</p>
+<hr>
+<h3 id="sfjstrkeynull">sfJStrKeyNull</h3>
+<p>Builds a JSON key with a <code>null</code> value.</p>
+<p><strong>Syntax:</strong> <code>sfJStrKeyNull( key, opt = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">key</td>
+<td align="left">string</td>
+<td align="left">JSON key</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">(optional) Comma placement: 1 = after, -1 = before, 0 = none</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A JSON fragment <code>&quot;key&quot;:null</code>.</p>
+<hr>
+<h3 id="sfjstrstrippair">sfJStrStripPair</h3>
+<p>Strips the key (and separator) from a <code>key:value</code> pair string, returning only the value part.</p>
+<p><strong>Syntax:</strong> <code>sfJStrStripPair( pair, sep = &apos;:&apos; )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">pair</td>
+<td align="left">string</td>
+<td align="left">A string containing a <code>key:value</code> pair</td>
+</tr>
+<tr>
+<td align="left">sep</td>
+<td align="left">string</td>
+<td align="left">(optional) Separator character, default <code>:</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The value part of the pair.</p>
+<hr>
+<h3 id="sfjstrstrip">sfJStrStrip</h3>
+<p>Strips outermost <code>{</code> <code>}</code> or <code>[</code> <code>]</code> brackets from a JSON string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrStrip( jstr )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON string</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The inner content, or the original string if no brackets.</p>
+<hr>
+<h3 id="sfjstrnextpair">sfJStrNextPair</h3>
+<p>Extracts the first <code>key:value</code> pair from a JSON object string and returns it.</p>
+<p><strong>Syntax:</strong> <code>sfJStrNextPair( jstr, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting offset to begin searching</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The next <code>&quot;key&quot;:value</code> pair, or empty string if no more pairs.</p>
+<hr>
+<h3 id="sfjstrnextkey">sfJStrNextKey</h3>
+<p>Extracts the key from the next <code>key:value</code> pair in a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrNextKey( jstr, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting offset</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The key (unquoted), or empty string if no more pairs.</p>
+<hr>
+<h3 id="sfjstrnextvalue">sfJStrNextValue</h3>
+<p>Extracts the value from the next <code>key:value</code> pair in a JSON object string.</p>
+<p><strong>Syntax:</strong> <code>sfJStrNextValue( jstr, start = 0 )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">jstr</td>
+<td align="left">string</td>
+<td align="left">JSON object string</td>
+</tr>
+<tr>
+<td align="left">start</td>
+<td align="left">float</td>
+<td align="left">(optional) Starting offset</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — The value part (raw JSON), or empty string if no more pairs.</p>
 <hr>
 </body>
 </html>
