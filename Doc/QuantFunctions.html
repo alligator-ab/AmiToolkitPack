@@ -169,6 +169,111 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> array — Fractionally differenced series.</p>
 <hr>
+<h3 id="sfsimulateprices">sfSimulatePrices</h3>
+<p>Generates a synthetic price series with controlled statistical properties using</p>
+<p>Geometric Brownian Motion. Log-returns follow a normal distribution when</p>
+<p><code>skew≈0</code> and <code>kurt≈3</code>, or a Normal Inverse Gaussian (NIG) distribution otherwise.</p>
+<p><strong>Syntax:</strong> <code>sfSimulatePrices( P0, drift, vol [, skew [, kurt [, seed ]]] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">P0</td>
+<td align="left">float</td>
+<td align="left">Starting price</td>
+</tr>
+<tr>
+<td align="left">drift</td>
+<td align="left">float</td>
+<td align="left">Mean log-return per bar</td>
+</tr>
+<tr>
+<td align="left">vol</td>
+<td align="left">float</td>
+<td align="left">Standard deviation of log-returns per bar</td>
+</tr>
+<tr>
+<td align="left">skew</td>
+<td align="left">float</td>
+<td align="left">(optional) Target skewness (default <code>0</code>)</td>
+</tr>
+<tr>
+<td align="left">kurt</td>
+<td align="left">float</td>
+<td align="left">(optional) Target kurtosis (default <code>3</code> — normal)</td>
+</tr>
+<tr>
+<td align="left">seed</td>
+<td align="left">float</td>
+<td align="left">(optional) RNG seed. <code>0</code> = random (default <code>0</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Synthetic price series (length same as current price array).</p>
+<p><strong>Note:</strong> When NIG parameters cannot be fitted (invalid skew/kurt combination),</p>
+<p>falls back to a normal distribution.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Generate 252 bars of GBM with 10% annual drift &amp; 20% vol
+
+price = sfSimulatePrices( 100, 0.10/252, 0.20/252, 0, 3, 42 );
+
+
+
+// Generate with skew = 0.5, excess kurtosis
+
+price = sfSimulatePrices( 100, 0.0005, 0.02, 0.5, 5, 123 );
+
+</code></pre>
+<hr>
+<h3 id="sfaddnoise">sfAddNoise</h3>
+<p>Adds noise to an existing series. Supports Gaussian additive/multiplicative,</p>
+<p>uniform additive, and Student-t noise.</p>
+<p><strong>Syntax:</strong> <code>sfAddNoise( Series, level [, type [, seed ]] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Series</td>
+<td align="left">array</td>
+<td align="left">Input series to add noise to</td>
+</tr>
+<tr>
+<td align="left">level</td>
+<td align="left">float</td>
+<td align="left">Noise level (standard deviation for Gaussian, half-amplitude for uniform)</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">(optional) Noise type (default <code>1</code>):<br> <code>0</code> = Gaussian additive<br> <code>1</code> = Gaussian multiplicative (preserves expectation)<br> <code>2</code> = Uniform additive<br> <code>3</code> = Student-t (dof=4)</td>
+</tr>
+<tr>
+<td align="left">seed</td>
+<td align="left">float</td>
+<td align="left">(optional) RNG seed. <code>0</code> = random (default <code>0</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Noisy series.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Gaussian multiplicative noise, 20% level
+
+noisy = sfAddNoise( Close, 0.20, 1, 42 );
+
+
+
+// Uniform additive noise, level 0.5
+
+noisy = sfAddNoise( Close, 0.50, 2 );
+
+</code></pre>
+<hr>
 <h3 id="sfmutualinfo">sfMutualInfo</h3>
 <p>Rolling mutual information between two series over a fixed window.</p>
 <p>For each window the function:</p>

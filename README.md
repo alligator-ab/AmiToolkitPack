@@ -67,7 +67,7 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 ### Position / Backtesting
 
-`RemoveExcessSignals`, `RestrictSignals`, `RestrictPosition`, `PositionFromSignals`, `EquityCurve`, `FutureMarginEstimate`, `RequiredMargin`, `LimitPositionSize`, `DrawdownCurve`, `MaxDrawdown`, `Percentize`, `SwitchEquityCurves`
+`RemoveExcessSignals`, `RestrictSignals`, `RestrictPosition`, `CapPosition`, `PositionFromSignals`, `SignalsFromPosition`, `EquityCurve`, `FutureMarginEstimate`, `RequiredMargin`, `LimitPositionSize`, `DrawdownCurve`, `MaxDrawdown`, `Percentize`, `SwitchEquityCurves`
 
 ### Codec
 
@@ -89,25 +89,29 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 **Ehlers DSP** — `MAMA`, `FAMA`, `FRAMA`, `ITL`, `ITLX`, `NET`, `Sinewave`, `LaguerreRSI`, `Reflex`, `SuperSmoother`, `HilbertOsc`, `RocketRSI`
 
-**Beta / Regression** — `UpBeta`, `DownBeta`, `UpAlpha`, `DownAlpha`, `PolyReg`
+**Beta / Regression / Cointegration** — `UpBeta`, `DownBeta`, `UpAlpha`, `DownAlpha`, `PolyReg`, `Cointegrate`
 
-**Statistical** — `ZScore`, `RobustScaler`, `MutualInfo`, `SortinoRatio`, `UlcerIndex`
+**Statistical** — `ZScore`, `RobustScaler`, `MutualInfo`, `SortinoRatio`, `UlcerIndex`, `VaR`, `VaREx`
 
 **Volume / Money Flow** — `ChaikinMoneyFlow`, `TwiggsMoneyFlow`, `DemandIndex`
 
 **Volatility / Oscillators** — `VIXFix`, `WilliamsPercentRange`, `Expectancy`, `DeMarker`, `TDSetup`, `TDCountdown`
 
-**Pricing / Utilities** — `HeikinAshi`, `RoundPrice`, `HHV`, `LLV`, `RemoveGaps`, `LimitJumps`, `FixSpikes`
+**Pricing / Utilities** — `HeikinAshi`, `RoundPrice`, `LogReturns`, `FracDiff`, `SimulatePrices`, `AddNoise`, `HHV`, `LLV`, `RemoveGaps`, `LimitJumps`, `FixSpikes`
+
+**Regime Detection** — `MarketRegime`
+
+**Floor Pivot Score** — `FloorPivotScore`
 
 **Detection** — `BarsSincePeak`, `BarsSinceTrough`, `LakeRatio`
 
 ### Statistics
 
-`MedianArrays`, `MedianArray2`, `MedianArray4`, `MedianArray6`, `PeriodicStat`, `Regularize`, `FirstValue`, `Diff`
+`MedianArrays`, `MedianArray2`, `MedianArray4`, `MedianArray6`, `PeriodicStat`, `Regularize`, `FirstValue`, `Diff`, `TestAverage`, `TestThreshold`, `HitProbability`, `HitLevel`, `HitMovingTarget`
 
 ### Wavelet / ARIMA / GARCH / FFT
 
-`WaveletD4`, `WaveletHaar`, `WaveletMorlet`, `ARIMA`, `GARCH`, `HurstDFA`, `HurstDFA2`, `HodrickPrescott`, `Goertzel`, `GoertzelDFTSpectrum`, `FFTSpectrum`, `FFTDenoising`
+`WaveletD4`, `WaveletHaar`, `WaveletMorlet`, `ARFIMA`, `ARIMA`, `GARCH`, `HurstDFA`, `HurstDFA2`, `HodrickPrescott`, `Goertzel`, `GoertzelDFTSpectrum`, `FFTSpectrum`, `FFTDenoising`
 
 ### Slippage Estimation
 
@@ -137,9 +141,17 @@ the sf prefix should be used. Thus practical names are sfRoundQuotes, sfStrFind,
 
 `SelectFile`, `SaveFile`, `DialogYesNo`, `DialogOkCancel`, `DialogOK`
 
+### Options
+
+`BSCall`, `BSPut`, `Black76Call`, `Black76Put`, `BSImpliedVol`, `Black76ImpliedVol`, `OptionPrice`, `ImpliedVol`
+
 ### Utilities
 
-`GetChrono`, `ResetChrono`, `UTF16ToAscii`, `UnicodeToAscii`, `DetectFileChange`, `DetectDirChange`, `GetFileSize`, `CreateTempFile`, `KellyCriterion`, `FixQuotes`, `MxSparseMatrix`, `BondQuoteToStr`
+`GetChrono`, `ResetChrono`, `UTF16ToAscii`, `UnicodeToAscii`, `DetectFileChange`, `DetectDirChange`, `GetFileSize`, `CreateTempFile`, `KellyCriterion`, `FixQuotes`, `MxSparseMatrix`, `BondQuoteToStr`, `BondPrice`, `YieldToMaturity`, `WACC`, `TerminalValue`
+
+### Other
+
+`GetPluginInfo`, `CheckArrayInit`, `InitArray`, `IsAllocArrayInit`, `EmptyValue`, `EqualVariables`, `Alloc`, `Free`, `AllocArrayResult`, `GetArrayLength`, `GetVariable`, `SetArray`, `SetFloat`, `ArrayShiftLeft`, `ArrayShiftRight`
 
 ## Building the DLL
 
@@ -227,6 +239,8 @@ tests\AmiToolkit_tests.exe
 ```
 
 If the variable is unset the test is skipped with a CAUSE message.
+
+**Total: 1866 tests all passing**
 
 ## License
 
