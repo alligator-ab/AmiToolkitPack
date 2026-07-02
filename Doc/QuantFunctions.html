@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Quant Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Quant Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Quant Functions</h2>
+<h3 id="sfzscore">sfZScore</h3>
+<p>Rolling Z-score normalization over a fixed window. At each bar computes</p>
+<p><code>(Price - mean) / stddev</code> using the last <code>n</code> values. Returns <code>EMPTY_VAL</code></p>
+<p>before the window fills.</p>
+<p><strong>Syntax:</strong> <code>sfZScore( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 2)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — The Z-score values.</p>
+<hr>
+<h3 id="sfrobustscaler">sfRobustScaler</h3>
+<p>Rolling Robust Scaler over a fixed window. At each bar computes</p>
+<p><code>(Price - median) / IQR</code> using the last <code>n</code> values with Tukey hinges</p>
+<p>for quartile estimation. Robust to outliers compared to Z-score.</p>
+<p>Returns <code>EMPTY_VAL</code> before the window fills.</p>
+<p><strong>Syntax:</strong> <code>sfRobustScaler( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 4)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — The robustly scaled values.</p>
+<hr>
+<h3 id="sfpolyreg">sfPolyReg</h3>
+<p>Rolling polynomial regression over a fixed window. Fits a polynomial</p>
+<p>of degree <code>d</code> to the last <code>n</code> values (x normalized to [0,1]) and</p>
+<p>returns the fitted value at the rightmost bar (end-point of the</p>
+<p>window). Useful for smoothing and trend estimation with higher-order</p>
+<p>curvature.</p>
+<p><strong>Syntax:</strong> <code>sfPolyReg( Price, n, d )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">float</td>
+<td align="left">Polynomial degree (≥1, must be < n, capped at 10)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 2)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>Filter weights are precomputed analytically via the pseudo-inverse</li>
+<p>  of the design matrix (x in [0,1] for numerical stability).</p>
+<li>Degree is capped at 10 to keep the moment matrix well-conditioned.</li>
+<li>For `d=1`, equivalent to rolling endpoint linear regression (a</li>
+<p>  smoothed version of the last value).</p>
+<p><strong>Returns:</strong> array — The polynomial-fitted values.</p>
+<hr>
+<h3 id="sflogreturns">sfLogReturns</h3>
+<p>Computes log-returns from a price series: <code>ln(P[i] / P[i-1])</code>.</p>
+<p>The first bar is set to <code>EMPTY_VAL</code> (no previous price to compare).</p>
+<p><strong>Syntax:</strong> <code>sfLogReturns( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Log-returns (<code>ln(P[i]/P[i-1])</code>), first bar is <code>EMPTY_VAL</code>.</p>
+<hr>
+<h3 id="sffracdiff">sfFracDiff</h3>
+<p>Fractional differencing of order <code>d</code>.  Transforms a price series into a</p>
+<p>stationary-like series while retaining memory.</p>
+<p>Weights <code>w_k</code> follow <code>w₀ = 1</code> and <code>w_k = −w_{k−1} × (d − k + 1) / k</code> for <code>k ≥ 1</code>.</p>
+<p>The series is truncated when <code>|w_k| &lt; threshold</code>.</p>
+<p><code>d = 0</code> returns the original series; <code>d = 1</code> returns the first difference.</p>
+<p><strong>Syntax:</strong> <code>sfFracDiff( Price [, d [, threshold ]] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">float</td>
+<td align="left">Differencing order (default <code>0.5</code>)</td>
+</tr>
+<tr>
+<td align="left">threshold</td>
+<td align="left">float</td>
+<td align="left">Weight truncation threshold (default <code>1e-5</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Fractionally differenced series.</p>
+<hr>
+<h3 id="sfmutualinfo">sfMutualInfo</h3>
+<p>Rolling mutual information between two series over a fixed window.</p>
+<p>For each window the function:</p>
+<p>1. <strong>Z-score</strong> normalizes both series within the window — captures</p>
+<p>   linear/co-dependence structure.</p>
+<p>2. <strong>Percentile-ranks</strong> both series within the window — distribution-</p>
+<p>   free, robust to outliers and scale differences.</p>
+<p>3. Returns the <strong>average</strong> of the two MI estimates (in nats).</p>
+<p>MI is computed via equal-width histogram binning with</p>
+<p><code>k = max(2, min(10, floor(sqrt(n))))</code> bins per dimension.</p>
+<p>Range: 0 (independent) → ~log(k) (fully dependent, limited by</p>
+<p>discretisation).</p>
+<p><strong>Syntax:</strong> <code>sfMutualInfo( SeriesA, SeriesB, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">SeriesA</td>
+<td align="left">array</td>
+<td align="left">First input series</td>
+</tr>
+<tr>
+<td align="left">SeriesB</td>
+<td align="left">array</td>
+<td align="left">Second input series</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 5)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Average MI (z-score + percentile) per window.</p>
+<hr>
+<h3 id="sfcointegrate">sfCointegrate</h3>
+<p>Rolling Engle–Granger cointegration test over a fixed sliding window.</p>
+<p>At each bar the function regresses <code>Price2</code> on <code>Price1</code> over the last <code>n</code></p>
+<p>observations, computes the residuals, and runs an Augmented Dickey–Fuller</p>
+<p>(ADF) test on the residuals to detect stationarity (cointegration).</p>
+<p>The ADF regression uses <code>lag</code> lagged differences:</p>
+<p><code>Δε_t = γ·ε_{t-1} + Σ φ_j·Δε_{t-j} + u_t</code></p>
+<p>The t-statistic for <code>γ</code> is compared against MacKinnon (1991) critical</p>
+<p>values for two variables with a constant.</p>
+<p><strong>Syntax:</strong> <code>sfCointegrate( Price1, Price2, n [, type [, sig [, lag ]]] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price1</td>
+<td align="left">array</td>
+<td align="left">First series (X)</td>
+</tr>
+<tr>
+<td align="left">Price2</td>
+<td align="left">array</td>
+<td align="left">Second series (Y)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Window size (≥ 6)</td>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">0 = ADF t-stat, 1 = cointegrated?, 2 = hedge ratio β (default 0)</td>
+</tr>
+<tr>
+<td align="left">sig</td>
+<td align="left">float</td>
+<td align="left">Significance level for type=1: 0.01, 0.05, or 0.10 (default 0.05)</td>
+</tr>
+<tr>
+<td align="left">lag</td>
+<td align="left">float</td>
+<td align="left">ADF lag order; 0 = auto = min(4, n−4) (default 0)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>Two series are cointegrated if they share a long‑term equilibrium</li>
+<p>  relationship. A stationary residual from the OLS regression</p>
+<p>  <code>Y = α + βX + ε</code> indicates cointegration.</p>
+<li>`type = 1` returns **1** if the ADF t-statistic is less than the</li>
+<p>  MacKinnon critical value at the chosen <code>sig</code>, <strong>0</strong> otherwise.</p>
+<li>`type = 2` returns the hedge ratio `β` (the OLS slope), useful for</li>
+<p>  constructing the spread <code>Y − β·X</code>.</p>
+<li>The function skips bars where either series has `EMPTY_VAL`.</li>
+<p><strong>Returns:</strong> array — Depends on <code>type</code> (see above).</p>
+<hr>
+<h3 id="sfupbeta">sfUpBeta / sfDownBeta <span id="sfdownbeta"></span></h3>
+<p>Rolling bull-beta / bear-beta over a fixed window. Computes the</p>
+<p>slope of asset vs market returns conditional on market direction.</p>
+<p><strong>Up beta (bull):</strong> regression of <code>asset_return</code> on <code>market_return</code></p>
+<p>using only periods where <code>market_return &gt; 0</code>.</p>
+<p><strong>Down beta (bear):</strong> same but using only periods where</p>
+<p><code>market_return &lt; 0</code>. Periods where market return = 0 are excluded</p>
+<p>from both.</p>
+<p>Returns are computed from simple period-over-period returns of the</p>
+<p>input arrays (prices). The first valid output bar is at position</p>
+<p><code>j + n</code> (where <code>j</code> is the first bar with non-empty values in both</p>
+<p>series). If fewer than 2 periods of the required direction are found</p>
+<p>within the window, returns 0.</p>
+<p><strong>Syntax:</strong> <code>sfUpBeta( Asset, Market, n )</code>\</p>
+<p><code>sfDownBeta( Asset, Market, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Asset</td>
+<td align="left">array</td>
+<td align="left">Dependent variable (asset prices)</td>
+</tr>
+<tr>
+<td align="left">Market</td>
+<td align="left">array</td>
+<td align="left">Independent variable (market prices)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 3)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Conditional beta values.</p>
+<hr>
+<h3 id="sfupalpha">sfUpAlpha / sfDownAlpha <span id="sfdownalpha"></span></h3>
+<p>Rolling bull-alpha / bear-alpha over a fixed window. Regresses</p>
+<p>excess returns (simple return minus per-period risk-free rate) of</p>
+<p>the asset on excess market returns, conditional on the sign of</p>
+<p>market excess return.</p>
+<p><strong>Up alpha (bull):</strong> regression intercept using only periods where</p>
+<p><code>market_return - rf &gt; 0</code>.</p>
+<p><strong>Down alpha (bear):</strong> regression intercept using only periods where</p>
+<p><code>market_return - rf &lt; 0</code>.</p>
+<p>For a given subset, <code>α = E[R_asset - Rf] - β·E[R_market - Rf]</code> where</p>
+<p><code>β</code> is the conditional beta on that subset.</p>
+<p><strong>Syntax:</strong> <code>sfUpAlpha( Asset, Market, Rf, n )</code>\</p>
+<p><code>sfDownAlpha( Asset, Market, Rf, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Asset</td>
+<td align="left">array</td>
+<td align="left">Dependent variable (asset prices)</td>
+</tr>
+<tr>
+<td align="left">Market</td>
+<td align="left">array</td>
+<td align="left">Independent variable (market prices)</td>
+</tr>
+<tr>
+<td align="left">Rf</td>
+<td align="left">array</td>
+<td align="left">Per-period risk-free return (same length)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Rolling window size (minimum 3)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>`Rf` should be the per-period (daily / weekly / …) risk-free</li>
+<p>  return, e.g. <code>0.05 / 252</code> for 5 % annualised on daily data.</p>
+<p>  Pass a constant or an array.</p>
+<li>First valid output at `j + n` (where `j` is first bar with all</li>
+<p>  three inputs non-empty). Returns 0 if fewer than 2 periods of</p>
+<p>  the required direction are available in the window.</p>
+<p><strong>Returns:</strong> array — Conditional alpha values.</p>
+<hr>
+<h3 id="sfwaveletd4">sfWaveletD4</h3>
+<p>Causal k-level Daubechies-4 wavelet decomposition over a fixed</p>
+<p>sliding window. At each bar the function decomposes the last <code>n</code></p>
+<p>values into approximation and detail coefficients at <code>k</code> scales,</p>
+<p>keeping the most recent (rightmost) coefficient per level.</p>
+<p>Boundary treatment uses symmetric mirror extension. The minimum</p>
+<p>window size is 4.</p>
+<p><strong>Syntax:</strong> <code>sfWaveletD4( Price, prefix, n, k )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for generated variable names</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">k</td>
+<td align="left">float</td>
+<td align="left">Number of decomposition levels (≥1)</td>
+</tr>
+</table>
+<p><strong>AFL variables created (via `gSite.SetVariable`):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CA</code></td>
+<td align="left">Final-level approximation (smoothest) — also the return value</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD1</code></td>
+<td align="left">Detail level 1 (highest frequency)</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD2</code></td>
+<td align="left">Detail level 2</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CDK</code></td>
+<td align="left">Detail level K (lowest-frequency detail)</td>
+</tr>
+</table>
+<p><strong>Example (AFL):</strong></p>
+<pre><code>
+approx = sfWaveletD4( Close, &quot;WAV&quot;, 64, 3 );
+
+Plot( WAV_CD1, &quot;D1&quot;, colorRed );
+
+Plot( approx, &quot;CA3&quot;, colorBlue );
+
+</code></pre>
+<p><strong>Returns:</strong> array — Final-level approximation.</p>
+<hr>
+<h3 id="sfwavelethaar">sfWaveletHaar</h3>
+<p>Causal k-level Haar wavelet decomposition over a fixed sliding window.</p>
+<p>Same semantics as <code>sfWaveletD4</code> but uses the 2-tap Haar filter</p>
+<p>(<code>h = [1/√2, 1/√2]</code>, <code>g = [1/√2, -1/√2]</code>).</p>
+<p>Minimum window size is 2.</p>
+<p><strong>Syntax:</strong> <code>sfWaveletHaar( Price, prefix, n, k )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for generated variable names</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥2)</td>
+</tr>
+<tr>
+<td align="left">k</td>
+<td align="left">float</td>
+<td align="left">Number of decomposition levels (≥1)</td>
+</tr>
+</table>
+<p><strong>AFL variables created (via `gSite.SetVariable`):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CA</code></td>
+<td align="left">Final-level approximation — also the return value</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD1</code></td>
+<td align="left">Detail level 1 (highest frequency)</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD2</code></td>
+<td align="left">Detail level 2</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CDK</code></td>
+<td align="left">Detail level K</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Final-level approximation.</p>
+<hr>
+<h3 id="sfwaveletmorlet">sfWaveletMorlet</h3>
+<p>Causal k-scale Morlet continuous wavelet decomposition over a fixed</p>
+<p>sliding window. Uses the real part of the Morlet wavelet with</p>
+<p>ω₀ = 6 at octave scales s = 1, 2, 4, …, 2^(k−1). At each bar the</p>
+<p>wavelet filter is convolved with the window and the rightmost value</p>
+<p>is kept per scale.</p>
+<p>Unlike the DWT-based wavelets (<code>sfWaveletD4</code>, <code>sfWaveletHaar</code>), the</p>
+<p>Morlet CWT does not sub-sample — each scale produces a full-length</p>
+<p>bandpass-filtered version of the input.</p>
+<p>The largest scale (lowest frequency) is stored as <code>&lt;prefix&gt;_CA</code> and</p>
+<p>is also the return value. All k scales are available as</p>
+<p><code>&lt;prefix&gt;_CD1</code> … <code>&lt;prefix&gt;_CDK</code>.</p>
+<p><strong>Syntax:</strong> <code>sfWaveletMorlet( Price, prefix, n, k )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for generated variable names</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">k</td>
+<td align="left">float</td>
+<td align="left">Number of scales (≥1)</td>
+</tr>
+</table>
+<p><strong>AFL variables created (via `gSite.SetVariable`):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CA</code></td>
+<td align="left">Largest scale (smoothest) — also the return value</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD1</code></td>
+<td align="left">Scale 1 (highest frequency)</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CD2</code></td>
+<td align="left">Scale 2</td>
+</tr>
+<tr>
+<td align="left">…</td>
+<td align="left">…</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_CDK</code></td>
+<td align="left">Scale K (lowest frequency — same as CA)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Largest-scale wavelet coefficient.</p>
+<hr>
+<h3 id="sfarima">sfARIMA</h3>
+<p>Rolling ARIMA(p,d,q) forecast over a fixed sliding window. At each</p>
+<p>bar the function estimates an ARIMA model on the last <code>n</code> values of</p>
+<p><code>Price</code> (allowing <code>d</code> extra leading bars for differencing) and</p>
+<p>returns the <code>h</code>-step-ahead forecast.</p>
+<p><strong>Estimation method:</strong></p>
+<p>1. Difference the window <code>d</code> times.</p>
+<p>2. Fit a high-order AR(p+q) via Yule–Walker / Levinson–Durbin and</p>
+<p>   compute residuals.</p>
+<p>3. Estimate ARMA(p,q) via OLS (Hannan–Rissanen two-stage) on the</p>
+<p>   differenced series.</p>
+<p>4. Forecast <code>h</code> steps on the differenced scale.</p>
+<p>5. Undifference to obtain the price forecast.</p>
+<p><strong>Limits:</strong> <code>p ≤ 10</code>, <code>q ≤ 10</code>, <code>d ≤ 2</code>, <code>h ≤ 20</code>.</p>
+<p><strong>Syntax:</strong> <code>sfARIMA( Price, n, p, d, q, h )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">p</td>
+<td align="left">float</td>
+<td align="left">AR order (0–10)</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">float</td>
+<td align="left">Differencing order (0–2)</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">MA order (0–10)</td>
+</tr>
+<tr>
+<td align="left">h</td>
+<td align="left">float</td>
+<td align="left">Forecast horizon (≥1, ≤20)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>If the effective sample after differencing is too small for</li>
+<p>  estimation, the function returns the last observed price.</p>
+<li>The window used internally is `n + d` bars to account for the</li>
+<p>  <code>d</code> lost observations after differencing. The first valid output</p>
+<p>  bar is at <code>j + n + d</code>.</p>
+<li>Use `h = 1` for a one-step-ahead forecast.</li>
+<p><strong>Returns:</strong> array — The h-step-ahead forecast made at each bar.</p>
+<hr>
+<h3 id="sfarfima">sfARFIMA</h3>
+<p>Rolling ARFIMA(p,d,q) forecast over a fixed sliding window. ARFIMA</p>
+<p>extends ARIMA by allowing the differencing order <code>d</code> to be fractional.</p>
+<p>At each bar the function fractionally differences the last <code>n</code> values</p>
+<p>of <code>Price</code>, fits an ARMA(p,q) model to the fractionally differenced</p>
+<p>series, forecasts <code>h</code> steps on the differenced scale, and</p>
+<p>reconstructs the price forecast via the inverse fractional</p>
+<p>differencing operator.</p>
+<p><strong>Estimation method:</strong></p>
+<p>1. Fractionally difference the window with order <code>d</code> (binomial</p>
+<p>   weight truncation when <code>|w_k| &lt; threshold</code>).</p>
+<p>2. Fit a high-order AR(p+q) via Yule–Walker / Levinson–Durbin and</p>
+<p>   compute residuals.</p>
+<p>3. Estimate ARMA(p,q) via OLS (Hannan–Rissanen two-stage) on the</p>
+<p>   fractionally differenced series.</p>
+<p>4. Forecast <code>h</code> steps on the differenced scale.</p>
+<p>5. Undifference via the direct integration weights</p>
+<p>   <code>w&apos;_0 = 1,  w&apos;_k = w&apos;_{k-1} · (d + k - 1) / k</code>.</p>
+<p><strong>Limits:</strong> <code>p ≤ 10</code>, <code>q ≤ 10</code>, <code>0 ≤ d ≤ 2</code>, <code>h ≤ 20</code>.</p>
+<p><strong>Syntax:</strong> <code>sfARFIMA( Price, n, p, d, q, h [, threshold ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">p</td>
+<td align="left">float</td>
+<td align="left">AR order (0–10)</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">float</td>
+<td align="left">Fractional differencing order (0–2, default 0.5)</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">MA order (0–10, default 0)</td>
+</tr>
+<tr>
+<td align="left">h</td>
+<td align="left">float</td>
+<td align="left">Forecast horizon (≥1, ≤20, default 1)</td>
+</tr>
+<tr>
+<td align="left">threshold</td>
+<td align="left">float</td>
+<td align="left">Weight truncation threshold (default 1e‑5)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>`d = 0` reduces to ARMA(p,q) (no differencing) and gives the same</li>
+<p>  result as <code>sfARIMA(Price, n, p, 0, q, h)</code>.</p>
+<li>`d = 1` reduces to ARIMA(p,1,q) (first difference) and gives the</li>
+<p>  same result as <code>sfARIMA(Price, n, p, 1, q, h)</code>.</p>
+<li>Fractional values of `d` (e.g. 0.5) produce forecasts that</li>
+<p>  smoothly interpolate between the ARMA and ARIMA cases.</p>
+<p><strong>Returns:</strong> array — The h-step-ahead forecast made at each bar.</p>
+<hr>
+<h3 id="sfgarch">sfGARCH</h3>
+<p>Rolling GARCH(1,1) conditional volatility over a fixed sliding</p>
+<p>window. At each bar the function estimates the GARCH(1,1) model on</p>
+<p>the last <code>n</code> values (producing <code>n-1</code> simple returns) and returns</p>
+<p>the conditional standard deviation σ at the window endpoint.</p>
+<p><strong>Estimation method:</strong></p>
+<p>1. Compute simple returns <code>r_t = (P_{t+1} - P_t) / P_t</code>.</p>
+<p>2. Compute the unconditional variance <code>σ²_unc</code>.</p>
+<p>3. Variance-targeting: <code>ω = σ²_unc · (1 − α − β)</code>.</p>
+<p>4. Grid search over <code>α ∈ [0.01, 0.31]</code>, <code>β ∈ [0.55, 0.97]</code> (step</p>
+<p>   0.02) to minimise the negative log-likelihood</p>
+<p>   <code>Σ [ln(σ²_t) + r²_t / σ²_t]</code>.</p>
+<p>5. Return <code>√σ²_T</code> using the optimal (α, β).</p>
+<p>The model:</p>
+<p><code>σ²_t = ω + α · r²_{t-1} + β · σ²_{t-1}</code></p>
+<p>Stationarity requires <code>α + β &lt; 1</code>.</p>
+<p><strong>Syntax:</strong> <code>sfGARCH( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥5, gives ≥4 returns)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>Returns 0 if the unconditional variance is zero (constant prices</li>
+<p>  within the window).</p>
+<li>The grid spans typical financial GARCH parameters. For unusual</li>
+<p>  data the estimate may fall on the grid boundary.</p>
+<p><strong>Returns:</strong> array — Conditional volatility (standard deviation).</p>
+<hr>
+<h3 id="sfsortinoratio">sfSortinoRatio</h3>
+<p>Rolling Sortino ratio over a fixed sliding window. Measures</p>
+<p>risk-adjusted return using only downside (negative excess) deviation</p>
+<p>instead of total volatility.</p>
+<p><code>Sortino = (E[R] − Rf) / DD</code></p>
+<p>where <code>DD = √( mean( min(R − Rf, 0)² ) )</code>.</p>
+<p>The optional <code>Rf</code> parameter sets the risk-free rate / minimum</p>
+<p>acceptable return (default 0). Returns are computed as simple</p>
+<p>period-over-period changes from the price array.</p>
+<p><strong>Syntax:</strong> <code>sfSortinoRatio( Price, n [, Rf ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥3)</td>
+</tr>
+<tr>
+<td align="left">Rf</td>
+<td align="left">float</td>
+<td align="left">Risk-free return per period (optional, default 0)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>If the downside deviation is zero (all excess returns ≥ 0) and</li>
+<p>  mean excess is positive, returns 100 (practical upper bound).</p>
+<li>If all excess returns are negative or zero, returns 0.</li>
+<p><strong>Returns:</strong> array — Sortino ratio.</p>
+<hr>
+<h3 id="sfulcerindex">sfUlcerIndex</h3>
+<p>Rolling Ulcer Index over a fixed sliding window. Measures downside</p>
+<p>risk by quantifying the depth and duration of drawdowns from the</p>
+<p>running peak within the window.</p>
+<p><code>UI = √( mean( drawdown² ) )</code></p>
+<p>where for each bar inside the window:</p>
+<p><code>drawdown = (Price − running_peak) / running_peak</code></p>
+<p>The index is always ≥ 0; higher values indicate larger and/or longer</p>
+<p>drawdowns.</p>
+<p><strong>Syntax:</strong> <code>sfUlcerIndex( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥2)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Ulcer Index.</p>
+<hr>
+<h3 id="sfhurstdfa">sfHurstDFA</h3>
+<p>Rolling Hurst exponent via Detrended Fluctuation Analysis (DFA)</p>
+<p>over a fixed sliding window. At each bar the function:</p>
+<p>1. Computes the <strong>profile</strong> (cumulative sum of mean-adjusted values).</p>
+<p>2. For each segment size <code>s ∈ [4, n/4]</code>, detrends each segment with</p>
+<p>   a linear OLS fit and computes the RMS fluctuation <code>F(s)</code>.</p>
+<p>3. Fits <code>log F(s)</code> vs <code>log s</code> via OLS → slope = Hurst exponent <code>H</code>.</p>
+<p><strong>Interpretation:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">H</th>
+<th align="left">Behaviour</th>
+</tr>
+<tr>
+<td align="left">0.5</td>
+<td align="left">Random walk (no memory)</td>
+</tr>
+<tr>
+<td align="left">> 0.5</td>
+<td align="left">Trending / persistent (long memory)</td>
+</tr>
+<tr>
+<td align="left">< 0.5</td>
+<td align="left">Mean-reverting / anti-persistent</td>
+</tr>
+</table>
+<p><strong>Syntax:</strong> <code>sfHurstDFA( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥8)</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>Uses at most 64 scale sizes from `4` to `n/4`. Requires at least 3</li>
+<p>  valid scales for a stable regression, otherwise returns 0.5.</p>
+<li>If the window is too small (`n < 8`), it is silently raised to 8.</li>
+<li>DFA is robust to non-stationarities compared to R/S analysis.</li>
+<p><strong>Returns:</strong> array — Hurst exponent (0.0–1.0 range typical).</p>
+<hr>
+<h3 id="sfhurstdfa2">sfHurstDFA2</h3>
+<p>Rolling Hurst exponent via <strong>second-order</strong> Detrended Fluctuation Analysis</p>
+<p>(DFA‑2) over a fixed sliding window. Identical to <code>sfHurstDFA</code> except that</p>
+<p>each segment is detrended with a <strong>quadratic</strong> (order 2) instead of a</p>
+<p>linear polynomial.</p>
+<p>This removes curvature artefacts from the profile before computing the RMS</p>
+<p>fluctuation, making the estimator more robust for non‑stationary data with</p>
+<p>trends that are not purely linear.</p>
+<p><strong>Syntax:</strong> <code>sfHurstDFA2( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥8)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Hurst exponent (0.0–1.0 range typical).</p>
+<hr>
+<h3 id="sfhodrickprescott">sfHodrickPrescott</h3>
+<p>Rolling Hodrick‑Prescott filter over a fixed sliding window. At each</p>
+<p>bar solves the HP optimisation on the last <code>n</code> values:</p>
+<p><code>minimise  Σ(y_t − τ_t)² + λ Σ((τ_{t+1}−τ_t) − (τ_t−τ_{t-1}))²</code></p>
+<p>where <code>τ_t</code> is the trend. Returns the rightmost trend value <code>τ_T</code></p>
+<p>from the window (purely causal).</p>
+<p>The penalty parameter λ controls the smoothness of the trend:</p>
+<table class="doc-table">
+<tr>
+<th align="left">Data frequency</th>
+<th align="center">Recommended λ</th>
+</tr>
+<tr>
+<td align="left">Yearly</td>
+<td align="center">100</td>
+</tr>
+<tr>
+<td align="left">Quarterly</td>
+<td align="center">1 600</td>
+</tr>
+<tr>
+<td align="left">Monthly</td>
+<td align="center">14 400</td>
+</tr>
+<tr>
+<td align="left">Daily</td>
+<td align="center">129 600</td>
+</tr>
+<tr>
+<td align="left">5‑minute</td>
+<td align="center">6.25 × 10⁷</td>
+</tr>
+</table>
+<p>Internally the function solves the pentadiagonal system <code>(I+λD′D)τ=y</code></p>
+<p>with a specialised O(n) banded Gaussian elimination.</p>
+<p><strong>Syntax:</strong> <code>sfHodrickPrescott( Price, n, lambda )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥5)</td>
+</tr>
+<tr>
+<td align="left">lambda</td>
+<td align="left">float</td>
+<td align="left">Smoothing parameter (≥ 0). λ = 0 returns the raw price</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — HP trend component. Use <code>Price − trend</code> for the</p>
+<p>cyclical component.</p>
+<p><strong>Example (AFL):</strong></p>
+<pre><code>
+trend = sfHodrickPrescott( Close, 128, 129600 );
+
+cycle = Close - trend;
+
+</code></pre>
+<hr>
+<h3 id="sfgoertzel">sfGoertzel</h3>
+<p>Rolling Goertzel algorithm over a fixed sliding window. Detects the</p>
+<p>amplitude of a specific frequency bin <code>k</code> in the last <code>n</code> values using</p>
+<p>the second-order Goertzel filter (single-bin DFT).</p>
+<p>For each window the function computes:</p>
+<p><code>s₀ = x[t] + 2·cos(2πk/n)·s₁ − s₂</code> for <code>t = 0…n−1</code>, then derives</p>
+<p>the magnitude from the final state variables.</p>
+<p><strong>Use cases:</strong></p>
+<li>Detect cycles at a specific harmonic of the window length</li>
+<li>Build narrow band-pass filters without a full FFT</li>
+<li>Measure the strength of a known periodic component</li>
+<p><strong>Syntax:</strong> <code>sfGoertzel( Price, n, k )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥3)</td>
+</tr>
+<tr>
+<td align="left">k</td>
+<td align="left">float</td>
+<td align="left">Frequency bin index (0 ≤ k < n). <code>k=0</code> → DC component, <code>k=1</code> → fundamental frequency</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>The output is the **magnitude** normalized by `n` (consistent scale</li>
+<p>  across different window sizes).</p>
+<li>`k = n/2` corresponds to the Nyquist frequency.</li>
+<li>The algorithm is O(n) per bar and numerically stable for moderate n.</li>
+<p><strong>Returns:</strong> array — Goertzel magnitude at frequency bin <code>k</code>.</p>
+<hr>
+<h3 id="sffftspectrum">sfFFTSpectrum</h3>
+<p>Rolling full FFT spectrum (radix‑2 Cooley–Tukey) over a fixed sliding</p>
+<p>window. At each bar the function computes the DFT of the last <code>n</code></p>
+<p>values of <code>Price</code>, zero‑padded to the next power of two</p>
+<p><code>N = 2^ceil(log₂(n))</code>.</p>
+<p>The magnitude spectrum (<code>N/2 + 1</code> bins) is stored as an AFL variable</p>
+<p><code>&lt;prefix&gt;_MAG</code> via <code>gSite.SetVariable</code>. This array is sized to the</p>
+<p>chart length and its first <code>N/2 + 1</code> entries contain the magnitude at</p>
+<p>each frequency bin (index 0 = DC, index 1 = fundamental, …,</p>
+<p>index N/2 = Nyquist).</p>
+<p>The function returns the magnitude of the <strong>dominant</strong> (largest)</p>
+<p>bin excluding DC, which can be used to detect the prevailing cycle.</p>
+<p><strong>Syntax:</strong> <code>sfFFTSpectrum( Price, n, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for the stored variable name</td>
+</tr>
+</table>
+<p><strong>AFL variable created:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_MAG</code></td>
+<td align="left">Magnitude spectrum array (first <code>N/2+1</code> entries valid)</td>
+</tr>
+</table>
+<p><strong>Example (AFL):</strong></p>
+<pre><code>
+dom = sfFFTSpectrum( Close, 256, &quot;SP&quot; );
+
+Plot( SP_MAG, &quot;Spectrum&quot;, colorRed );
+
+printf( &quot;Dominant magnitude: %g\n&quot;, dom );
+
+</code></pre>
+<p><strong>Returns:</strong> array — Dominant magnitude (largest bin, excluding DC).</p>
+<hr>
+<h3 id="sffftdenoising">sfFFTDenoising</h3>
+<p>Rolling FFT-based denoising over a fixed sliding window. At each bar</p>
+<p>the function:</p>
+<p>1. Computes the full radix‑2 FFT of the last <code>n</code> values (zero‑padded</p>
+<p>   to the next power of two <code>N</code>)</p>
+<p>2. <strong>Hard-thresholds</strong> the spectrum: bins whose magnitude is below</p>
+<p>   <code>threshold × max_magnitude</code> are zeroed (DC is always preserved)</p>
+<p>3. Reconstructs the signal via IFFT (conjugation trick)</p>
+<p>This produces a non-linear low‑pass / band‑pass filter that adapts</p>
+<p>to the signal&apos;s spectral content, removing low‑amplitude noise while</p>
+<p>preserving strong cyclical components.</p>
+<p><strong>Syntax:</strong> <code>sfFFTDenoising( Price, n, threshold )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥4)</td>
+</tr>
+<tr>
+<td align="left">threshold</td>
+<td align="left">float</td>
+<td align="left">Relative cutoff (0–1). Higher values = more aggressive denoising. <code>threshold = 0</code> returns the raw signal; <code>threshold = 0.1</code> keeps bins with magnitude ≥ 10 % of the dominant component</td>
+</tr>
+</table>
+<p><strong>Notes:</strong></p>
+<li>The threshold is relative to the **maximum magnitude** (excluding</li>
+<p>  DC) within each window.</p>
+<li>The function returns the **rightmost** reconstructed value from</li>
+<p>  each window, making it purely causal.</p>
+<li>Internally uses the conjugation trick (`IFFT(X) = conj(FFT(conj(X)))</li>
+<p>  / N`) to reuse the same radix‑2 FFT routine.</p>
+<p><strong>Returns:</strong> array — Denoised price series.</p>
+<hr>
+<h3 id="sfgoertzeldftspectrum">sfGoertzelDFTSpectrum</h3>
+<p>Rolling Goertzel DFT spectrum with <strong>Bartels significance test</strong> for</p>
+<p>cycle detection. At each bar the function:</p>
+<p>1. Computes the <strong>Goertzel magnitude</strong> for every frequency bin</p>
+<p>   <code>k = 1 … n/2</code> (period = <code>n/k</code>)</p>
+<p>2. Runs the <strong>Bartels rank test</strong> on the window data to assess</p>
+<p>   whether it deviates significantly from white noise</p>
+<p>3. If the Bartels p‑value <code>&lt; sigLevel</code>, the dominant cycle is</p>
+<p>   reported; otherwise the output is 0 (no significant cycle)</p>
+<p>The Bartels statistic:</p>
+<p><code>RV = Σ(R_i − R_{i+1})² / Σ(R_i − R̄)²</code> where <code>R_i</code> are the ranks.</p>
+<p>Under H₀ (randomness) <code>RV ~ N(2, 4/n)</code>. A one‑sided p‑value</p>
+<p>(small → cyclicality) is computed via the normal CDF.</p>
+<p><strong>Syntax:</strong> <code>sfGoertzelDFTSpectrum( Price, n, prefix, sigLevel )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Sliding window size (≥6)</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for stored variable names</td>
+</tr>
+<tr>
+<td align="left">sigLevel</td>
+<td align="left">float</td>
+<td align="left">Significance threshold (default 0.05). Cycles with p‑value ≥ sigLevel are rejected</td>
+</tr>
+</table>
+<p><strong>AFL variables created:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_PERIOD</code></td>
+<td align="left">Dominant cycle period (bars), or 0 if none</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_MAG</code></td>
+<td align="left">Goertzel magnitude at the dominant bin</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_BARTELS_RV</code></td>
+<td align="left">Bartels RV statistic per bar</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_BARTELS_P</code></td>
+<td align="left">Bartels one‑sided p‑value per bar</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Dominant cycle period in bars (0 = no significant</p>
+<p>cycle detected).</p>
+<p><strong>Example (AFL):</strong></p>
+<pre><code>
+period = sfGoertzelDFTSpectrum( Close, 128, &quot;DFT&quot;, 0.05 );
+
+Plot( DFT_PERIOD, &quot;Dominant Cycle&quot;, colorRed );
+
+Plot( DFT_BARTELS_P, &quot;Bartels p&quot;, colorBlue );
+
+</code></pre>
+<hr>
+<h3 id="sfdynamiccycles">sfDynamicCycles</h3>
+<p>Rolling dynamic cycle detection with adaptive entropy‑based threshold,</p>
+<p>EWMA smoothing, multi‑scale hierarchy, and signal reconstruction.</p>
+<p>At each bar the algorithm:</p>
+<p>1. <strong>Multi‑scale spectrum</strong>: computes Goertzel magnitudes at 3 time</p>
+<p>   scales (<code>n</code>, <code>2n/3</code>, <code>n/2</code>) for robust cycle detection</p>
+<p>2. <strong>Entropy‑based threshold</strong>: estimates the normalised spectral</p>
+<p>   entropy <code>H ∈ [0,1]</code> (0 = fully peaked, 1 = white noise) and adjusts</p>
+<p>   the threshold factor: <code>k = k₀·(1 + β·(H − 0.5))</code></p>
+<p>3. <strong>EWMA smoothing</strong>: smooths the threshold cross‑bar:</p>
+<p>   <code>T̅ = α·T_raw + (1−α)·T̅_prev</code></p>
+<p>4. <strong>Peak detection</strong>: finds spectral peaks above <code>T̅</code> with a minimum</p>
+<p>   separation of <code>min_gap</code> bins</p>
+<p>5. <strong>Signal reconstruction</strong>: reconstructs the rightmost value from the</p>
+<p>   detected cycles: <code>recon = DC + Σ 2·Aₖ·cos(φₖ − 2πk/n)</code></p>
+<p>6. <strong>Window adaptation</strong>: adjusts the window size to ~3× the dominant</p>
+<p>   cycle period: <code>n_new = 0.9·n_old + 0.1·W_optimal</code></p>
+<p><strong>Syntax:</strong> <code>sfDynamicCycles( Price, n, k0, alpha, min_gap, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Input price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Initial window size (≥20)</td>
+</tr>
+<tr>
+<td align="left">k0</td>
+<td align="left">float</td>
+<td align="left">Base threshold multiplier (recommended 2.5–3.0)</td>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">EWMA smoothing factor (recommended 0.03–0.08)</td>
+</tr>
+<tr>
+<td align="left">min_gap</td>
+<td align="left">float</td>
+<td align="left">Minimum bin separation for peaks (recommended 3–5)</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for stored variable names</td>
+</tr>
+</table>
+<p><strong>AFL variables created:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Content</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_RECON</code></td>
+<td align="left">Reconstructed signal (also the return value)</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_ENTROPY</code></td>
+<td align="left">Normalised spectral entropy per bar</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_NCYCLES</code></td>
+<td align="left">Number of detected cycles</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_ADAPT_K</code></td>
+<td align="left">Adapted k‑factor per bar</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_ADAPT_N</code></td>
+<td align="left">Adapted window size per bar</td>
+</tr>
+<tr>
+<td align="left"><code><prefix>_THRESHOLD</code></td>
+<td align="left">EWMA‑smoothed threshold value</td>
+</tr>
+</table>
+<p><strong>Parameter adaptation rules (per the original specification):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Parameter</th>
+<th align="left">Initial</th>
+<th align="left">Adaptation</th>
+</tr>
+<tr>
+<td align="left">k (k0)</td>
+<td align="left">2.5–3.0</td>
+<td align="left">Decreases 1 % per extra cycle if > 5 cycles; increases 2 % if no cycles found at low entropy</td>
+</tr>
+<tr>
+<td align="left">Window n</td>
+<td align="left">100–200</td>
+<td align="left"><code>n_new = 0.9·n_old + 0.1·W_optimal</code> where <code>W_optimal ≈ 3 × dominant_period</code></td>
+</tr>
+<tr>
+<td align="left">α EWMA</td>
+<td align="left">0.03–0.08</td>
+<td align="left">Fixed per call (choose smaller α for slow cycles, larger α for fast cycles)</td>
+</tr>
+<tr>
+<td align="left">β entropy</td>
+<td align="left">0.3</td>
+<td align="left">Fixed factor weighting the entropy deviation from H = 0.5</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Reconstructed (de‑noised) price series.</p>
+<hr>
+<h3 id="sfinvfisher">sfInvFisher</h3>
+<p>Inverse Fisher Transform.</p>
+<p><strong>Syntax:</strong> <code>sfInvFisher( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">input price array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array - the inverse Fisher transform of input prices.</p>
+<hr>
+<h3 id="sfmama">sfMAMA</h3>
+<p>MESA Adaptive Moving Average by John Ehlers.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) to measure the instantaneous dominant cycle period via the Homodyne discriminator, then adapts the smoothing factor <em>α</em> to the measured period. When the market is cycling (short period) the filter responds quickly; when the market is trending (long period) it smooths heavily.</p>
+<p><strong>Syntax:</strong> <code>sfMAMA( Price, fastLimit, slowLimit, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">fastLimit</td>
+<td align="left">float</td>
+<td align="left">Upper bound for *α* (default 0.5)</td>
+</tr>
+<tr>
+<td align="left">slowLimit</td>
+<td align="left">float</td>
+<td align="left">Lower bound for *α* (default 0.05)</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for stored variables</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — MAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (needed for the Hilbert FIR filter).</li>
+<li>`fastLimit` must be ≥ `slowLimit`; values are swapped if needed.</li>
+<li>Input arrays with leading `Empty` values are skipped automatically.</li>
+<hr>
+<h3 id="sffama">sfFAMA</h3>
+<p>Following Adaptive Moving Average by John Ehlers.</p>
+<p>Uses the same Hilbert‑Transform cycle measurement as <code>sfMAMA</code> but returns the</p>
+<p>double‑smoothed FAMA line instead of the faster MAMA line.  No stored variables.</p>
+<p><strong>Syntax:</strong> <code>sfFAMA( Price, fastLimit, slowLimit )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">fastLimit</td>
+<td align="left">float</td>
+<td align="left">Upper bound for *α* (default 0.5)</td>
+</tr>
+<tr>
+<td align="left">slowLimit</td>
+<td align="left">float</td>
+<td align="left">Lower bound for *α* (default 0.05)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — FAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty`.</li>
+<li>`fastLimit` must be ≥ `slowLimit`; values are swapped if needed.</li>
+<li>Input arrays with leading `Empty` values are skipped automatically.</li>
+<hr>
+<h3 id="sfframa">sfFRAMA</h3>
+<p>Fractal Adaptive Moving Average by John Ehlers.</p>
+<p>Computes the fractal dimension <em>D</em> from the log‑range ratio of two window halves. When <em>D</em> → 1 (smooth trend) the filter is fast (α → 1); when <em>D</em> → 2 (rough/choppy market) it becomes very smooth (α → 0.01).</p>
+<p><strong>Syntax:</strong> <code>sfFRAMA( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Window length (≥4, rounded to even)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — FRAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `n` bars return `Empty`.</li>
+<li>`n` must be ≥ 4; odd values are rounded up to the nearest even.</li>
+<hr>
+<h3 id="sfitl">sfITL</h3>
+<p>Instantaneous Trendline by John Ehlers.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) and Homodyne discriminator to measure the dominant cycle period, then applies a super‑smooth recursive filter with <em>α</em> = ( 2 / (Period + 1) )². The squared alpha makes the ITL considerably smoother than MAMA while still adapting to the measured cycle.</p>
+<p><strong>Syntax:</strong> <code>sfITL( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Instantaneous Trendline values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (Hilbert FIR lookback).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfitlx">sfITLX</h3>
+<p>Extended Instantaneous Trendline with a user‑selectable detrender window.</p>
+<p>Same Hilbert‑Transform / Homodyne structure as <code>sfITL</code>, but both the detrender</p>
+<p>(SMA window) and the Hilbert‑FIR lags are scaled proportionally to <em>n</em>.</p>
+<p>A larger <em>n</em> removes slower cycles and produces a smoother trendline.</p>
+<p><strong>Syntax:</strong> <code>sfITLX( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Detrender SMA window (≥ 4, rounded up to multiple of 4)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — ITLX values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `3·n` bars return `Empty` (Hilbert lookback scales with *n*).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfnet">sfNET</h3>
+<p>Noise Elimination Technology by John Ehlers.</p>
+<p>Measures the signal‑to‑noise ratio via 1‑bar and 2‑bar differences over a window <em>n</em>.  When the market trends strongly (d₁ ≫ d₂) the filter tracks closely; when it is noisy (d₂ ≈ d₁) the filter smooths heavily.</p>
+<p><strong>Syntax:</strong> <code>sfNET( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Smoothing window for the SNR estimates (≥ 2)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`d₁[i] = Price[i] − Price[i−1]`</li>
+<li>`d₂[i] = (Price[i] − Price[i−1]) − (Price[i−1] − Price[i−2])`  *(second difference)*</li>
+<li>`SNR = SMA(|d₁|, n) / SMA(|d₂|, n)`</li>
+<li>`α = SNR² / (1 + SNR²)` — maps [0, ∞) → [0, 1)</li>
+<li>`NET[i] = α · Price[i] + (1−α) · NET[i−1]`</li>
+<p><strong>Returns:</strong> array — NET values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `n + 1` bars return `Empty` (needed for the SMA and second difference).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfsinewave">sfSinewave</h3>
+<p>Ehlers&apos; sinewave oscillator for identifying cycle turning points.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) to extract the instantaneous phase angle from the detrended price, then normalises it to a sine wave oscillating in [−1, +1].  The lead sine (45° ahead) is stored as a named variable.</p>
+<p><strong>Syntax:</strong> <code>sfSinewave( Price, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for the stored LeadSine variable</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Sine values.</p>
+<p><strong>Stored variable:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_LEADSINE</code></td>
+<td align="left">Sine advanced by 45°; its crossings with the main Sine identify cycle tops and bottoms</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`I` and `Q` via Hilbert FIR on the detrended price (`Price − SMA(Price, 4)`)</li>
+<li>`r = √(I² + Q²)`,  `Sine = Q / r`,  `LeadSine = (I + Q) / (r · √2)`</li>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty`.</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sflaguerrersi">sfLaguerreRSI</h3>
+<p>Laguerre RSI by John Ehlers.</p>
+<p>Applies a 4‑pole Laguerre all‑pass filter to the price, then computes an RSI‑like oscillator from the cumulative differences between the leading (L₀) and lagging (L₁) filter outputs.</p>
+<p>The Laguerre RSI is smoother and more responsive than a traditional RSI of comparable lookback.</p>
+<p><strong>Syntax:</strong> <code>sfLaguerreRSI( Price, gamma, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">gamma</td>
+<td align="left">float</td>
+<td align="left">Laguerre filter coefficient (0.01–0.99, default 0.5)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Decay period for the Cu/Cd accumulators (≥ 1, default 8)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Laguerre filter (recursive, all‑pass):</li>
+<p>  <code>L₀ = (1−γ)·Price + γ·L₀[1]</code></p>
+<p>  <code>L₁ = −γ·L₀ + L₀[1] + γ·L₁[1]</code></p>
+<p>  <em>(L₂, L₃ follow the same structure)</em></p>
+<li>Cu/Cd accumulation with exponential decay `α = 1/n`:</li>
+<p>  - if <code>L₀ &gt; L₁</code> : <code>Cu += (L₀−L₁) − Cu·α</code> , else <code>Cu −= Cu·α</code></p>
+<p>  - if <code>L₀ &lt; L₁</code> : <code>Cd += (L₁−L₀) − Cd·α</code> , else <code>Cd −= Cd·α</code></p>
+<li>`RSI = Cu / (Cu+Cd) · 100`</li>
+<p><strong>Returns:</strong> array — Laguerre RSI values (0–100 scale).</p>
+<p><strong>Notes:</strong></p>
+<li>The first bar returns `Empty` (filter needs at least one prior bar).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfreflex">sfReflex</h3>
+<p>Reflex indicator by John Ehlers.</p>
+<p>Extracts the underlying trend via a SuperSmoother (2‑pole Butterworth), isolates the cycle component (<code>Price − Trend</code>), smooths it with a second SuperSmoother, and normalises by the rolling standard deviation of the raw cycle. Positive extremes show price extended above its trend; negative extremes show price extended below.</p>
+<p><strong>Syntax:</strong> <code>sfReflex( Price, hp, lp, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">hp</td>
+<td align="left">float</td>
+<td align="left">High‑pass SuperSmoother period for trend extraction (4–200)</td>
+</tr>
+<tr>
+<td align="left">lp</td>
+<td align="left">float</td>
+<td align="left">Low‑pass SuperSmoother period for cycle smoothing (2–50)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">EMA lookback for rolling variance of the raw cycle (2–100)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Trend = SuperSmoother(Price, hp)</li>
+<li>Cycle = Price − Trend</li>
+<li>SmoothCycle = SuperSmoother(Cycle, lp)</li>
+<li>Rolling mean *M* and variance *V* of Cycle via EMA(α = 1 / n)</li>
+<li>`Reflex = SmoothCycle / √V`, clipped to [−3, +3]</li>
+<p><strong>Returns:</strong> array — Reflex oscillator (dimensionless).</p>
+<p><strong>Recommended defaults:</strong> <code>hp = 20…48</code>, <code>lp = 5…10</code>, <code>n = hp / 2</code> (or ≈ 20).</p>
+<p><strong>Notes:</strong></p>
+<li>The first `max(hp, 8)` bars return `Empty` (filter warm‑up).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfsupersmoother">sfSuperSmoother</h3>
+<p>2‑pole SuperSmoother filter by John Ehlers.</p>
+<p>A maximally smooth, zero‑lag filter based on a 2‑pole Butterworth design. Often used as a building block for other Ehlers indicators (e.g. Reflex, Roofing Filter).</p>
+<p><strong>Syntax:</strong> <code>sfSuperSmoother( Price, period )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">period</td>
+<td align="left">float</td>
+<td align="left">Filter period (≥ 2)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`a₁ = exp(−√2 · π / period)`</li>
+<li>`b₁ = 2 · a₁ · cos(√2 · π / period)`</li>
+<li>`c₂ = b₁`,  `c₃ = −a₁²`,  `c₁ = 1 − c₂ − c₃`</li>
+<li>`SS[t] = c₁ · (Price[t] + Price[t−1]) / 2 + c₂ · SS[t−1] + c₃ · SS[t−2]`</li>
+<p><strong>Returns:</strong> array — SuperSmoother values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `period` bars return `Empty` (filter convergence).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfhilbertosc">sfHilbertOsc</h3>
+<p>Hilbert oscillator by John Ehlers.</p>
+<p>Returns the normalised in‑phase component (cosine of the instantaneous phase) extracted from the Hilbert Transform. Oscillates in [−1, +1] and is 90° out of phase with <code>sfSinewave</code>.</p>
+<p>Use the two together to identify cycle turning points:</p>
+<li>Sine (`sfSinewave`) crosses zero at cycle midpoints</li>
+<li>Hilbert Osc crosses zero at cycle extremes</li>
+<p><strong>Syntax:</strong> <code>sfHilbertOsc( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Detrender = Price − SMA(Price, 4)</li>
+<li>`I`, `Q` via Hilbert FIR (7‑weight)</li>
+<li>`r = √(I² + Q²)`,  `HilbertOsc = I / r` (cosine of phase)</li>
+<p><strong>Returns:</strong> array — Hilbert oscillator values [−1, +1].</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (Hilbert FIR lookback).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfrocketrsi">sfRocketRSI</h3>
+<p>Rocket RSI by John Ehlers.</p>
+<p>Replaces the traditional RSI&apos;s EMA / Wilder smoothing with a SuperSmoother (2‑pole Butterworth) applied to the raw up/down changes. The result is a smoother, more responsive RSI with less lag.</p>
+<p><strong>Syntax:</strong> <code>sfRocketRSI( Price, period )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">period</td>
+<td align="left">float</td>
+<td align="left">SuperSmoother period (≥ 2, typical 8–14)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`Up[t] = max(Price[t]−Price[t−1], 0)`,  `Dn[t] = max(Price[t−1]−Price[t], 0)`</li>
+<li>`Sup = SuperSmoother(Up, period)`,  `Sdn = SuperSmoother(Dn, period)`</li>
+<li>`RSI = Sup / (Sup + Sdn) · 100`</li>
+<p><strong>Returns:</strong> array — Rocket RSI values (0–100 scale).</p>
+<p><strong>Notes:</strong></p>
+<li>The first `period + 1` bars return `Empty` (change + SuperSmoother convergence).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+</body>
+</html>

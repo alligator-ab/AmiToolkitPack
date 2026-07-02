@@ -75,10 +75,17 @@ a:hover{text-decoration:underline}
 <p><strong>Returns:</strong> Nothing.</p>
 <hr>
 <h3 id="sfrestrictsignals">sfRestrictSignals</h3>
-<p>Removes or modifies signals based on a <code>Restriction</code> array. Values:</p>
-<p><code>1</code> = everything allowed, <code>0</code> = close any open positions,</p>
-<p><code>2</code> = hold existing but prevent new entries.  Modifies original arrays.</p>
-<p><strong>Syntax:</strong> <code>sfRestrictSignals( Buy, Sell, Short, Cover, Size, Restriction )</code></p>
+<p>Restricts signals to allowed timezones.  Uses a <strong>pipeline</strong>:</p>
+<p><code>PositionFromSignals(opt=0)</code> → <code>RestrictPosition</code> → derive signals from</p>
+<p>the delta of the restricted position.</p>
+<li>The delta is the restricted position change between consecutive bars.</li>
+<li>A positive delta becomes a **Buy** signal, a negative delta becomes a</li>
+<p>  <strong>Short</strong> signal (Sell/Cover are never generated).</p>
+<li>The `Size` array receives the absolute delta value.</li>
+<li>Stray signals are automatically removed because the nominal position</li>
+<p>  correctly captures entry/exit before restriction.</p>
+<p>Modifies original arrays.</p>
+<p><strong>Syntax:</strong> <code>sfRestrictSignals( Buy, Sell, Short, Cover, Size, Restriction [, policy ] )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -115,14 +122,101 @@ a:hover{text-decoration:underline}
 <td align="left">array</td>
 <td align="left">Per‑bar restriction (1 / 0 / 2)</td>
 </tr>
+<tr>
+<td align="left">policy</td>
+<td align="left">float</td>
+<td align="left">(optional) 0 = immediate catch‑up (default), 1 = gradual attenuation with deficit tracking</td>
+</tr>
 </table>
 <p><strong>Returns:</strong> Nothing.</p>
 <hr>
+<h3 id="sfcapposition">sfCapPosition</h3>
+<p>Limits the absolute position size (<code>|Position|</code>) to a <code>MaxiPos</code> array at each bar,</p>
+<p>with optional deficit‑tracking for gradual resizing.</p>
+<p><strong>Policy modes (optional 3rd argument, default 0):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Policy</th>
+<th align="left">Behaviour</th>
+</tr>
+<tr>
+<td align="left"><code>0</code></td>
+<td align="left">Immediate catch‑up: the position is immediately capped; a deficit tracks blocked growth and is resolved as soon as cap room opens</td>
+</tr>
+<tr>
+<td align="left"><code>1</code></td>
+<td align="left">Gradual attenuation: blocked growth feeds a deficit; only future position changes (`</td>
+<td>Position[i]</td>
+<td>` changes) can reduce the deficit and grow the effective position</td>
+</tr>
+</table>
+<p><strong>Syntax:</strong> <code>sfCapPosition( Position, MaxiPos [, policy ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Position sizes (input, can be positive for long or negative for short)</td>
+</tr>
+<tr>
+<td align="left">MaxiPos</td>
+<td align="left">array</td>
+<td align="left">Maximum absolute position size per bar (≥ 0)</td>
+</tr>
+<tr>
+<td align="left">policy</td>
+<td align="left">float</td>
+<td align="left">(optional) 0 = immediate catch‑up (default), 1 = gradual attenuation with deficit tracking</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Capped position sizes.</p>
+<hr>
 <h3 id="sfrestrictposition">sfRestrictPosition</h3>
 <p>Returns a new position array with positions restricted per a <code>Restriction</code></p>
-<p>array.  Values: <code>1</code> = pass through, <code>0</code> = close to zero,</p>
-<p><code>2</code> = hold current size, no new entries.</p>
-<p><strong>Syntax:</strong> <code>sfRestrictPosition( Position, Restriction )</code></p>
+<p>array, handling all position‑change patterns.</p>
+<p><strong>Restriction values:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Value</th>
+<th align="left">Meaning</th>
+<th align="left">Behaviour</th>
+</tr>
+<tr>
+<td align="left"><code>1</code></td>
+<td align="left">All allowed</td>
+<td align="left">Position passed through unchanged (or attenuated per <code>policy</code>)</td>
+</tr>
+<tr>
+<td align="left"><code>0</code></td>
+<td align="left">Close positions</td>
+<td align="left">All positions set to <code>0</code></td>
+</tr>
+<tr>
+<td align="left"><code>2</code></td>
+<td align="left">Hold only</td>
+<td align="left">**Increase in same direction** → capped at previous bar's size (and feeds deficit if <code>policy=1</code>); **Decrease in same direction** → allowed; **Flip (sign change)** → set to <code>0</code> (close old, block new); **New from flat** → blocked (kept at previous <code>0</code>); **Steady** → kept</td>
+</tr>
+</table>
+<p><strong>Policy modes (optional 3rd argument, default 0):</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Policy</th>
+<th align="left">Behaviour</th>
+</tr>
+<tr>
+<td align="left"><code>0</code></td>
+<td align="left">Immediate catch‑up: when restriction lifts to <code>1</code>, the position jumps to the nominal value in a single bar</td>
+</tr>
+<tr>
+<td align="left"><code>1</code></td>
+<td align="left">Gradual attenuation with deficit tracking: a **deficit** records the cumulative position increase that was blocked by <code>2</code> caps. In zone <code>1</code>, positive deltas first reduce the deficit before increasing the position; negative deltas reduce the position first, and excess sell‑pressure reduces the deficit.</td>
+</tr>
+</table>
+<p><strong>Syntax:</strong> <code>sfRestrictPosition( Position, Restriction [, policy ] )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -138,6 +232,11 @@ a:hover{text-decoration:underline}
 <td align="left">Restriction</td>
 <td align="left">array</td>
 <td align="left">Per‑bar restriction (1 / 0 / 2)</td>
+</tr>
+<tr>
+<td align="left">policy</td>
+<td align="left">float</td>
+<td align="left">(optional) 0 = immediate catch‑up (default), 1 = gradual attenuation with deficit tracking</td>
 </tr>
 </table>
 <p><strong>Returns:</strong> array — Restricted position sizes.</p>
@@ -186,6 +285,51 @@ a:hover{text-decoration:underline}
 </tr>
 </table>
 <p><strong>Returns:</strong> array — Accumulated position sizes (positive = long, negative = short).</p>
+<hr>
+<h3 id="sfsignalsfromposition">sfSignalsFromPosition</h3>
+<p>Inverse of <code>sfPositionFromSignals</code>.  Derives BUY, SELL, SHORT, COVER signals and</p>
+<p>lot sizes from a position array (positive = long, negative = short).  The first</p>
+<p>non‑empty bar establishes the initial position without generating a signal;</p>
+<p>subsequent changes in position produce the corresponding signals.</p>
+<p><strong>Syntax:</strong> <code>sfSignalsFromPosition( Position, Buy, Sell, Short, Cover [, opt ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Position</td>
+<td align="left">array</td>
+<td align="left">Position sizes (positive = long, negative = short)</td>
+</tr>
+<tr>
+<td align="left">Buy</td>
+<td align="left">array</td>
+<td align="left">Receives BUY signals (1 when position increases from a long)</td>
+</tr>
+<tr>
+<td align="left">Sell</td>
+<td align="left">array</td>
+<td align="left">Receives SELL signals (1 when position decreases to flat)</td>
+</tr>
+<tr>
+<td align="left">Short</td>
+<td align="left">array</td>
+<td align="left">Receives SHORT signals (1 when position decreases in a short)</td>
+</tr>
+<tr>
+<td align="left">Cover</td>
+<td align="left">array</td>
+<td align="left">Receives COVER signals (1 when position increases from a short)</td>
+</tr>
+<tr>
+<td align="left">opt</td>
+<td align="left">float</td>
+<td align="left">Shift signals by 1 bar if non‑zero (default <code>0</code>)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Delta (lot size) at each signal bar.</p>
 <hr>
 <h3 id="sfequitycurve">sfEquityCurve</h3>
 <p>Computes an equity curve from a position array and a price array.  A cost</p>

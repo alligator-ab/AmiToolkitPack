@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Other Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Other Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Other Functions</h2>
+<p>Internal / diagnostic functions that expose AmiBroker&apos;s plugin site interface,</p>
+<p>memory management, and variable access to AFL. Use with care.</p>
+<h3 id="sfgetplugininfo">sfGetPluginInfo</h3>
+<p>Returns a formatted string with plugin metadata (name, vendor, version, type, etc.)</p>
+<p>by calling <code>GetPluginInfo</code> on the plugin interface.</p>
+<p><strong>Syntax:</strong> <code>sfGetPluginInfo()</code></p>
+<p><strong>Returns:</strong> string — e.g. <code>Name:&quot;AmiToolkit Plug-in&quot;,Vendor:&quot;SF&quot;,Version:&quot;1.0.0&quot;,IDCode:0,Type:1,...</code></p>
+<hr>
+<h3 id="sfcheckarrayinit">sfCheckArrayInit</h3>
+<p>Checks whether an array is initialized (all elements equal) and describes its state.</p>
+<p><strong>Syntax:</strong> <code>sfCheckArrayInit( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">The array to inspect</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — A description of the array state:</p>
+<li>`"Array is allocated and initialized with a single value ..."` if all elements are identical</li>
+<li>`"Array is allocated but not initialized - several values detected"` if elements differ</li>
+<li>`"Error: Wrong Argument: Array expected"` if the argument is not an array</li>
+<hr>
+<h3 id="sfinitarray">sfInitArray</h3>
+<p>Quickly fills an array with a single float value using an optimised</p>
+<p>write-once + doubling (<code>memmove</code>) algorithm, with AVX acceleration</p>
+<p>when available.</p>
+<p><strong>Syntax:</strong> <code>sfInitArray( Array [, value ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Array to initialise (modified in-place)</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">(optional) Fill value. Default: <code>Empty</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>0</code> on success, <code>-1</code> on error (wrong argument types).</p>
+<p><strong>Notes:</strong></p>
+<li>Uses `memmove` doubling (O(log n) steps) for bulk filling.</li>
+<li>If the CPU supports AVX, a seed-and-AVX strategy is used for arrays ≥ 256 elements.</li>
+<li>The array is modified in-place; no new allocation is made.</li>
+<hr>
+<h3 id="sfisallocarrayinit">sfIsAllocArrayInit</h3>
+<p>Allocates a new array result via <code>AllocArrayResult</code> and immediately checks</p>
+<p>its initialisation state via <code>CheckArrayInit</code>. Useful for testing whether</p>
+<p>newly allocated arrays are pre-initialised.</p>
+<p><strong>Syntax:</strong> <code>sfIsAllocArrayInit()</code></p>
+<p><strong>Returns:</strong> string — Same as <code>CheckArrayInit</code> applied to a freshly allocated array.</p>
+<hr>
+<h3 id="sfemptyvalue">sfEmptyValue</h3>
+<p>Returns the <code>EMPTY_VAL</code> constant used by AmiBroker to represent missing data.</p>
+<p><strong>Syntax:</strong> <code>sfEmptyValue()</code></p>
+<p><strong>Returns:</strong> float — The <code>EMPTY_VAL</code> sentinel value.</p>
+<hr>
+<h3 id="sfequalvariables">sfEqualVariables</h3>
+<p>Checks whether two AFL variables refer to the <strong>same underlying object</strong></p>
+<p>(identity check, not value equality). Works for float, array, string,</p>
+<p>and display-pointer types.</p>
+<p><strong>Syntax:</strong> <code>sfEqualVariables( VarName, VarValue )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">VarName</td>
+<td align="left">string</td>
+<td align="left">Name of an existing AFL variable</td>
+</tr>
+<tr>
+<td align="left">VarValue</td>
+<td align="left">AmiVar</td>
+<td align="left">A value or variable to compare against</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> if both refer to the same object, <code>0</code> otherwise.</p>
+<p><strong>Note:</strong> For arrays this checks pointer identity, not element-by-element equality.</p>
+<hr>
+<h3 id="sfalloc">sfAlloc</h3>
+<p>Allocates a raw memory buffer through AmiBroker&apos;s site interface (<code>gSite.Alloc</code>).</p>
+<p><strong>Syntax:</strong> <code>sfAlloc( size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Number of bytes to allocate</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> disp — A display pointer to the allocated memory, or <code>Nothing</code> if allocation fails.</p>
+<p><strong>Warning:</strong> Memory allocated with <code>sfAlloc</code> must be freed with <code>sfFree</code>.</p>
+<p>Use only for interop with AmiBroker&apos;s memory manager.</p>
+<hr>
+<h3 id="sffree">sfFree</h3>
+<p>Frees a memory buffer previously allocated with <code>sfAlloc</code>.</p>
+<p><strong>Syntax:</strong> <code>sfFree( pointer )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">pointer</td>
+<td align="left">disp</td>
+<td align="left">Display pointer returned by <code>sfAlloc</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> on success.</p>
+<hr>
+<h3 id="sfallocarrayresult">sfAllocArrayResult</h3>
+<p>Allocates a new AFL array result via <code>gSite.AllocArrayResult</code>. The array</p>
+<p>is pre-filled with <code>EMPTY_VAL</code>.</p>
+<p><strong>Syntax:</strong> <code>sfAllocArrayResult( size )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">size</td>
+<td align="left">float</td>
+<td align="left">Number of elements</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — A new array initialised to <code>EMPTY_VAL</code>.</p>
+<hr>
+<h3 id="sfgetarraylength">sfGetArrayLength</h3>
+<p>Returns the length of the initialised (non-empty) prefix of an array</p>
+<p>using binary search. Useful for arrays that were allocated larger than</p>
+<p>the data they contain.</p>
+<p><strong>Syntax:</strong> <code>sfGetArrayLength( Array [, maxSize ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">The array to measure</td>
+</tr>
+<tr>
+<td align="left">maxSize</td>
+<td align="left">float</td>
+<td align="left">(optional) Maximum size to consider. Default: full array size</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The number of leading non-<code>Empty</code> elements.</p>
+<hr>
+<h3 id="sfgetvariable">sfGetVariable</h3>
+<p>Retrieves an AFL variable by name via <code>gSite.GetVariable</code>.</p>
+<p><strong>Syntax:</strong> <code>sfGetVariable( name )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">name</td>
+<td align="left">string</td>
+<td align="left">The variable name</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> AmiVar — The variable&apos;s value (float, string, array, or <code>Nothing</code>).</p>
+<hr>
+<h3 id="sfsetarray">sfSetArray</h3>
+<p>Sets an AFL variable to an array value via <code>gSite.SetVariable</code>.</p>
+<p><strong>Syntax:</strong> <code>sfSetArray( name, array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">name</td>
+<td align="left">string</td>
+<td align="left">Variable name to create / overwrite</td>
+</tr>
+<tr>
+<td align="left">array</td>
+<td align="left">array</td>
+<td align="left">The array value to assign</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> on success.</p>
+<hr>
+<h3 id="sfsetfloat">sfSetFloat</h3>
+<p>Sets an AFL variable to a float value via <code>gSite.SetVariable</code>.</p>
+<p><strong>Syntax:</strong> <code>sfSetFloat( name, value )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">name</td>
+<td align="left">string</td>
+<td align="left">Variable name to create / overwrite</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The float value to assign</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>1</code> on success.</p>
+<hr>
+<h3 id="sfarrayshiftleft">sfArrayShiftLeft</h3>
+<p>Shifts all non-empty elements of an array to the left, filling the vacated</p>
+<p>positions at the right with <code>EMPTY_VAL</code>.</p>
+<p><strong>Syntax:</strong> <code>sfArrayShiftLeft( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — A new array with elements shifted left.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// a = [Empty, 10, 20, 30, Empty];
+
+b = sfArrayShiftLeft(a);  // [10, 20, 30, Empty, Empty]
+
+</code></pre>
+<hr>
+<h3 id="sfarrayshiftright">sfArrayShiftRight</h3>
+<p>Shifts all non-empty elements of an array to the right, filling the vacated</p>
+<p>positions at the left with <code>EMPTY_VAL</code>.</p>
+<p><strong>Syntax:</strong> <code>sfArrayShiftRight( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — A new array with elements shifted right.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// a = [10, 20, 30, Empty, Empty];
+
+b = sfArrayShiftRight(a);  // [Empty, Empty, 10, 20, 30]
+
+</code></pre>
+</body>
+</html>

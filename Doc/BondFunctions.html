@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Bond Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Bond Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Bond Functions</h2>
+<h3 id="sfbondprice">sfBondPrice</h3>
+<p>Calculates the theoretical price of a bond for a given yield to maturity.</p>
+<p><strong>Syntax:</strong> <code>sfBondPrice( nominal, couponRate, years, paymentsPerYear, yield )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">nominal</td>
+<td align="left">float</td>
+<td align="left">Face value of the bond</td>
+</tr>
+<tr>
+<td align="left">couponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate (e.g. <code>0.05</code> for 5 %)</td>
+</tr>
+<tr>
+<td align="left">years</td>
+<td align="left">float</td>
+<td align="left">Time to maturity in years</td>
+</tr>
+<tr>
+<td align="left">paymentsPerYear</td>
+<td align="left">float</td>
+<td align="left">Number of coupon payments per year (e.g. <code>2</code> for semi‑annual)</td>
+</tr>
+<tr>
+<td align="left">yield</td>
+<td align="left">float</td>
+<td align="left">Yield to maturity (annual, e.g. <code>0.05</code> for 5 %)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The theoretical bond price. Returns <code>Null</code> if required arguments are missing or parameters are invalid (non‑positive nominal, years, or payments per year).</p>
+<p><strong>Formula:</strong></p>
+<pre><code>
+P = Σ C/(1+Y/f)^t + N/(1+Y/f)^n
+
+</code></pre>
+<p>where <code>C</code> = coupon per period, <code>Y</code> = annual yield, <code>f</code> = payments/year, <code>n</code> = total payments, <code>N</code> = nominal.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// 5-year bond, 4% semi-annual coupon, 3% yield
+
+price = sfBondPrice( 100, 0.04, 5, 2, 0.03 );
+
+</code></pre>
+<hr>
+<h3 id="sfyieldtomaturity">sfYieldToMaturity</h3>
+<p>Calculates the yield to maturity of a bond given its market price, using Newton‑Raphson iteration.</p>
+<p><strong>Syntax:</strong> <code>sfYieldToMaturity( nominal, couponRate, years, paymentsPerYear, marketPrice )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">nominal</td>
+<td align="left">float</td>
+<td align="left">Face value of the bond</td>
+</tr>
+<tr>
+<td align="left">couponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate (e.g. <code>0.05</code> for 5 %)</td>
+</tr>
+<tr>
+<td align="left">years</td>
+<td align="left">float</td>
+<td align="left">Time to maturity in years</td>
+</tr>
+<tr>
+<td align="left">paymentsPerYear</td>
+<td align="left">float</td>
+<td align="left">Number of coupon payments per year (e.g. <code>2</code> for semi‑annual)</td>
+</tr>
+<tr>
+<td align="left">marketPrice</td>
+<td align="left">float</td>
+<td align="left">Current market price of the bond</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The annual yield to maturity, or <code>Null</code> on invalid arguments. Returns <code>NaN</code> if Newton‑Raphson does not converge within 100 iterations.</p>
+<p><strong>Algorithm:</strong></p>
+<p>1. Start with an initial guess of 5 %.</p>
+<p>2. Iterate <code>y_new = y - (P(y) - marketPrice) / P&apos;(y)</code> using a numerical derivative.</p>
+<p>3. Converge when <code>|P(y) - marketPrice| &lt; 1e-8</code>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// 5-year bond, 4% semi-annual coupon, price = 104.58
+
+ytm = sfYieldToMaturity( 100, 0.04, 5, 2, 104.58 );
+
+</code></pre>
+<hr>
+<h3 id="sfbonddv01">sfBondDV01</h3>
+<p>Calculates the Dollar Value of a 1 basis point (DV01) move for a bond, using the analytical first derivative of price with respect to yield.</p>
+<p><strong>Syntax:</strong> <code>sfBondDV01( nominal, couponRate, years, paymentsPerYear, yield )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">nominal</td>
+<td align="left">float</td>
+<td align="left">Face value of the bond</td>
+</tr>
+<tr>
+<td align="left">couponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate (e.g. <code>0.05</code> for 5 %)</td>
+</tr>
+<tr>
+<td align="left">years</td>
+<td align="left">float</td>
+<td align="left">Time to maturity in years</td>
+</tr>
+<tr>
+<td align="left">paymentsPerYear</td>
+<td align="left">float</td>
+<td align="left">Number of coupon payments per year (e.g. <code>2</code> for semi‑annual)</td>
+</tr>
+<tr>
+<td align="left">yield</td>
+<td align="left">float</td>
+<td align="left">Yield to maturity (annual)</td>
+</tr>
+</table>
+<p><strong>Formula (analytical):</strong></p>
+<pre><code>
+DV01 = [ Σ t·C_f/(1+y/f)^(t+1) + n·N/(1+y/f)^(n+1) ] / (f · 10000)
+
+</code></pre>
+<p>where <code>C_f = N·c/f</code>, <code>n = years·f</code>, <code>r = y/f</code>.</p>
+<p><strong>Returns:</strong> float — DV01 (price change for +1bp in yield). Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// 5-year, 5% semi-annual coupon, 5% yield
+
+dv01 = sfBondDV01( 100, 0.05, 5, 2, 0.05 );
+
+</code></pre>
+<hr>
+<h3 id="sffuturedv01">sfFutureDV01</h3>
+<p>Calculates the DV01 of a Treasury bond futures contract using the desk‑ready CTD conversion method: <code>FutDV01 = BondDV01(CTD) / CF</code>.</p>
+<p><strong>Syntax:</strong> <code>sfFutureDV01( ctdNominal, ctdCouponRate, ctdYears, ctdPayPerYear, ctdYield, convFactor )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">ctdNominal</td>
+<td align="left">float</td>
+<td align="left">Face value of the cheapest‑to‑deliver bond</td>
+</tr>
+<tr>
+<td align="left">ctdCouponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdYears</td>
+<td align="left">float</td>
+<td align="left">Years to maturity of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdPayPerYear</td>
+<td align="left">float</td>
+<td align="left">Coupon frequency of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdYield</td>
+<td align="left">float</td>
+<td align="left">Yield to maturity of the CTD</td>
+</tr>
+<tr>
+<td align="left">convFactor</td>
+<td align="left">float</td>
+<td align="left">Conversion factor of the CTD for the futures contract</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Futures DV01. Returns <code>Null</code> on invalid parameters or if <code>convFactor ≤ 0</code>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// CTD: 100 face, 6% coupon, 15yr, semi-annual, 5% yield, CF=1.05
+
+futDV01 = sfFutureDV01( 100, 0.06, 15, 2, 0.05, 1.05 );
+
+</code></pre>
+<hr>
+<h3 id="sfeurobonddv01">sfEuroBondDV01</h3>
+<p>Convenience wrapper for <code>sfBondDV01</code> with annual payments (European bond convention).</p>
+<p><strong>Syntax:</strong> <code>sfEuroBondDV01( nominal, couponRate, years, yield )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">nominal</td>
+<td align="left">float</td>
+<td align="left">Face value</td>
+</tr>
+<tr>
+<td align="left">couponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate</td>
+</tr>
+<tr>
+<td align="left">years</td>
+<td align="left">float</td>
+<td align="left">Years to maturity</td>
+</tr>
+<tr>
+<td align="left">yield</td>
+<td align="left">float</td>
+<td align="left">Yield to maturity</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — DV01 for 1bp at annual frequency.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+dv01 = sfEuroBondDV01( 100, 0.04, 10, 0.03 );
+
+</code></pre>
+<hr>
+<h3 id="sfeurofuturedv01">sfEuroFutureDV01</h3>
+<p>Convenience wrapper for <code>sfFutureDV01</code> with annual coupon frequency (European bond futures convention).</p>
+<p><strong>Syntax:</strong> <code>sfEuroFutureDV01( ctdNominal, ctdCouponRate, ctdYears, ctdYield, convFactor )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">ctdNominal</td>
+<td align="left">float</td>
+<td align="left">Face value of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdCouponRate</td>
+<td align="left">float</td>
+<td align="left">Annual coupon rate of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdYears</td>
+<td align="left">float</td>
+<td align="left">Years to maturity of the CTD</td>
+</tr>
+<tr>
+<td align="left">ctdYield</td>
+<td align="left">float</td>
+<td align="left">Yield to maturity of the CTD</td>
+</tr>
+<tr>
+<td align="left">convFactor</td>
+<td align="left">float</td>
+<td align="left">Conversion factor of the CTD</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Futures DV01 (annual frequency). Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+futDV01 = sfEuroFutureDV01( 100, 0.05, 10, 0.04, 1.02 );
+
+</code></pre>
+<hr>
+</body>
+</html>

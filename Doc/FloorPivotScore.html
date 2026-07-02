@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Floor Pivot Score</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Floor Pivot Score</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Floor Pivot Score</h2>
+<p>The <code>sfFloorPivotScore</code> function quantifies the relative position of a price</p>
+<p>within the Floor Pivot level framework (Pivot, R1-R3, S1-S3). It computes</p>
+<p>consecutive non-overlapping periods from a <code>StartPeriod</code> marker array, uses each</p>
+<p>completed period&apos;s High/Low/Close to compute Floor Pivot levels, then assigns a</p>
+<p>linear score from −3 (below S3) to +3 (above R3) to every bar of the following</p>
+<p>period.</p>
+<p><strong>Syntax:</strong> <code>sfFloorPivotScore( Price, High, Low, Close, StartPeriod )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price series to score (e.g. Close)</td>
+</tr>
+<tr>
+<td align="left">High</td>
+<td align="left">array</td>
+<td align="left">High prices for pivot calculation</td>
+</tr>
+<tr>
+<td align="left">Low</td>
+<td align="left">array</td>
+<td align="left">Low prices for pivot calculation</td>
+</tr>
+<tr>
+<td align="left">Close</td>
+<td align="left">array</td>
+<td align="left">Close prices (last close of each period = CC)</td>
+</tr>
+<tr>
+<td align="left">StartPeriod</td>
+<td align="left">array</td>
+<td align="left"><code>1</code> on the first bar of each period, <code>0</code> elsewhere</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array of scores clamped to [−3, +3]</p>
+<p><strong>Scoring zones:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Zone</th>
+<th align="left">Score range</th>
+</tr>
+<tr>
+<td align="left">S3 → S2</td>
+<td align="left">−3 to −2 (linear)</td>
+</tr>
+<tr>
+<td align="left">S2 → S1</td>
+<td align="left">−2 to −1</td>
+</tr>
+<tr>
+<td align="left">S1 → Pivot</td>
+<td align="left">−1 to 0</td>
+</tr>
+<tr>
+<td align="left">Pivot</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">Pivot → R1</td>
+<td align="left">0 to 1</td>
+</tr>
+<tr>
+<td align="left">R1 → R2</td>
+<td align="left">1 to 2</td>
+</tr>
+<tr>
+<td align="left">R2 → R3</td>
+<td align="left">2 to 3</td>
+</tr>
+<tr>
+<td align="left">< S3 / > R3</td>
+<td align="left">−3 / +3 (clamped)</td>
+</tr>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code>
+StartPeriod[0] = 1; StartPeriod[10] = 1; StartPeriod[20] = 1;
+
+Score = sfFloorPivotScore( Close, High, Low, Close, StartPeriod );
+
+</code></pre>
+<p><strong>Notes:</strong></p>
+<li>Requires at least two complete periods (i.e. at least two `1` markers)</li>
+<p>  before scoring begins. Bars in the first period and bars before the first</p>
+<p>  marker return <code>Empty</code>.</p>
+<li>Levels are computed from the preceding completed period:</li>
+<p>  <code>HH = highest High</code>, <code>LL = lowest Low</code>, <code>CC = last Close</code> of that period.</p>
+<li>Periods are disjoint — the next period's levels are ignored while scoring</li>
+<p>  the current one.</p>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Option Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Option Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Option Functions</h2>
+<h3 id="sfbscall">sfBSCall</h3>
+<p>Calculates the price of a European call option using the Black-Scholes model.</p>
+<p><strong>Syntax:</strong> <code>sfBSCall( S, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Call option price. Returns <code>Null</code> if any parameter is non-positive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfBSCall( 100, 100, 1, 0.05, 0.02, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbsput">sfBSPut</h3>
+<p>Calculates the price of a European put option using the Black-Scholes model.</p>
+<p><strong>Syntax:</strong> <code>sfBSPut( S, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Put option price. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfBSPut( 100, 100, 1, 0.05, 0.02, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfblack76call">sfBlack76Call</h3>
+<p>Calculates the price of a European call option on a futures contract using the Black-76 model.</p>
+<p><strong>Syntax:</strong> <code>sfBlack76Call( F, K, T, r, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Call option price. Returns <code>Null</code> if any parameter is non-positive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfBlack76Call( 100, 100, 1, 0.05, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfblack76put">sfBlack76Put</h3>
+<p>Calculates the price of a European put option on a futures contract using the Black-76 model.</p>
+<p><strong>Syntax:</strong> <code>sfBlack76Put( F, K, T, r, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Put option price. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfBlack76Put( 100, 100, 1, 0.05, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbsimpliedvol">sfBSImpliedVol</h3>
+<p>Computes the implied volatility of a European option using Newton-Raphson iteration on the Black-Scholes model.</p>
+<p><strong>Syntax:</strong> <code>sfBSImpliedVol( S, K, T, r, q, price, isCall )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+iv = sfBSImpliedVol( 100, 100, 1, 0.05, 0.02, 10.45, 1 );
+
+</code></pre>
+<hr>
+<h3 id="sfblack76impliedvol">sfBlack76ImpliedVol</h3>
+<p>Computes the implied volatility of a European option on a futures contract using Newton-Raphson iteration on the Black-76 model.</p>
+<p><strong>Syntax:</strong> <code>sfBlack76ImpliedVol( F, K, T, r, price, isCall )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+iv = sfBlack76ImpliedVol( 100, 100, 1, 0.05, 8.91, 1 );
+
+</code></pre>
+<hr>
+<h3 id="sfoptionprice">sfOptionPrice</h3>
+<p>Multi-asset dispatcher that prices options by underlying type using the appropriate model (Black-Scholes for spot equity / FX, Black-76 for futures / rate futures).</p>
+<p><strong>Syntax:</strong> <code>sfOptionPrice( type, isCall, S_or_F, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot or futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX)</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Option price. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Equity call
+
+p1 = sfOptionPrice( 0, 1, 100, 100, 1, 0.05, 0.02, 0.20 );
+
+// Futures put
+
+p2 = sfOptionPrice( 1, 0, 100, 100, 1, 0.05, 0, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfimpliedvol">sfImpliedVol</h3>
+<p>Multi-asset dispatcher that computes implied volatility by underlying type. Uses Newton-Raphson for futures and Brent&apos;s method for spot/FX.</p>
+<p><strong>Syntax:</strong> <code>sfImpliedVol( type, isCall, S_or_F, K, T, r, q, price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot or futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX)</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Equity call IV
+
+iv1 = sfImpliedVol( 0, 1, 100, 100, 1, 0.05, 0.02, 10.45 );
+
+// Futures put IV
+
+iv2 = sfImpliedVol( 1, 0, 100, 100, 1, 0.05, 0, 8.91 );
+
+</code></pre>
+<hr>
+</body>
+</html>
