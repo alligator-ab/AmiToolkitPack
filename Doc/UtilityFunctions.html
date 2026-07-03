@@ -38,6 +38,7 @@ a:hover{text-decoration:underline}
 <p>Reset the chrono.</p>
 <p><strong>Syntax:</strong> <code>sfResetChrono()</code></p>
 <p><strong>Returns:</strong> float — Elapsed time in seconds (with sub-millisecond precision).</p>
+<hr>
 <h3 id="sfgetchrono">sfGetChrono</h3>
 <p>Returns the number of seconds elapsed since the plug-in was loaded</p>
 <p>or since the chrono was resetted. Precision is between 1 millisecond and 1 microsecond,</p>
@@ -47,6 +48,114 @@ a:hover{text-decoration:underline}
 <p>an elapsed time during long sessions (a long time after software start).</p>
 <p><strong>Syntax:</strong> <code>sfGetChrono()</code></p>
 <p><strong>Returns:</strong> float — Elapsed time in seconds (with sub-millisecond precision).</p>
+<hr>
+<h3 id="sfemptyvalue">sfEmptyValue</h3>
+<p>Returns the <code>EMPTY_VAL</code> constant used by AmiBroker to represent missing data.</p>
+<p><strong>Syntax:</strong> <code>sfEmptyValue()</code></p>
+<p><strong>Returns:</strong> float — The <code>EMPTY_VAL</code> sentinel value.</p>
+<hr>
+<h3 id="sfgetarraylength">sfGetArrayLength</h3>
+<p>Returns the length of the initialised (non-empty) prefix of an array</p>
+<p>using binary search. Useful for arrays that were allocated larger than</p>
+<p>the data they contain.</p>
+<p><strong>Syntax:</strong> <code>sfGetArrayLength( Array [, maxSize ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">The array to measure</td>
+</tr>
+<tr>
+<td align="left">maxSize</td>
+<td align="left">float</td>
+<td align="left">(optional) Maximum size to consider. Default: full array size</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The number of leading non-<code>Empty</code> elements.</p>
+<hr>
+<h3 id="sfarrayshiftleft">sfArrayShiftLeft</h3>
+<p>Shifts all non-empty elements of an array to the left, filling the vacated</p>
+<p>positions at the right with <code>EMPTY_VAL</code>.</p>
+<p><strong>Syntax:</strong> <code>sfArrayShiftLeft( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — A new array with elements shifted left.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// a = [Empty, 10, 20, 30, Empty];
+
+b = sfArrayShiftLeft(a);  // [10, 20, 30, Empty, Empty]
+
+</code></pre>
+<hr>
+<h3 id="sfarrayshiftright">sfArrayShiftRight</h3>
+<p>Shifts all non-empty elements of an array to the right, filling the vacated</p>
+<p>positions at the left with <code>EMPTY_VAL</code>.</p>
+<p><strong>Syntax:</strong> <code>sfArrayShiftRight( Array )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Input array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — A new array with elements shifted right.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// a = [10, 20, 30, Empty, Empty];
+
+b = sfArrayShiftRight(a);  // [Empty, Empty, 10, 20, 30]
+
+</code></pre>
+<hr>
+<h3 id="sfinitarray">sfInitArray</h3>
+<p>Quickly fills an array with a single float value using an optimised</p>
+<p>write-once + doubling (<code>memmove</code>) algorithm, with AVX acceleration</p>
+<p>when available.</p>
+<p><strong>Syntax:</strong> <code>sfInitArray( Array [, value ] )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Array</td>
+<td align="left">array</td>
+<td align="left">Array to initialise (modified in-place)</td>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">(optional) Fill value. Default: <code>Empty</code></td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — <code>0</code> on success, <code>-1</code> on error (wrong argument types).</p>
+<p><strong>Notes:</strong></p>
+<li>Uses `memmove` doubling (O(log n) steps) for bulk filling.</li>
+<li>If the CPU supports AVX, a seed-and-AVX strategy is used for arrays ≥ 256 elements.</li>
+<li>The array is modified in-place; no new allocation is made.</li>
+<hr>
 <h3 id="sfutf16toascii">sfUTF16ToAscii</h3>
 <p>This function converts a UTF‑16LE encoded string (stored in a char* buffer)</p>
 <p> into an ASCII string by removing diacritics and mapping Latin, Latin‑1,</p>
@@ -55,6 +164,7 @@ a:hover{text-decoration:underline}
 <p> producing a clean, accent‑stripped ASCII output.</p>
 <p><strong>Syntax:</strong> <code>sfUTF16ToAscii(UTF16String)</code></p>
 <p><strong>Returns:</strong> char * — Converted string in ASCII Extended.</p>
+<hr>
 <h3 id="sfunicodetoascii">sfUnicodeToAscii</h3>
 <p>Converts a UTF‑8 or ANSI string into an ASCII string by removing diacritics</p>
 <p> and mapping accented Latin characters and typographic punctuation</p>
@@ -333,6 +443,50 @@ sfFixSpikes(O, H, L, C, amp);
 </table>
 <p><strong>Returns:</strong> string — Bond‑quote representation.  Examples:</p>
 <p><code>101.125</code> → <code>&quot;101&apos;04&quot;</code>, <code>99.515625</code> → <code>&quot;99&apos;16+&quot;</code>, <code>100.0625</code> → <code>&quot;100&apos;02&quot;</code>.</p>
+<hr>
+<h3 id="sfroundquotes">sfRoundQuotes</h3>
+<p>Rounds the numeric values in an AFL array in-place to the nearest multiple of the specified tick size.</p>
+<p><strong>Syntax:</strong> <code>sfRoundQuotes( array, tickSize )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">array</td>
+<td align="left">array</td>
+<td align="left">The numeric array to be modified in-place (passed by reference)</td>
+</tr>
+<tr>
+<td align="left">tickSize</td>
+<td align="left">float</td>
+<td align="left">The tick size to round to. Supports fractional tick sizes (e.g. 0.5, 0.25, 0.125). For sub-1 tick sizes the function computes the appropriate reciprocal internally</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> None — The function returns nothing and updates the provided array in-place. Empty values (<code>EMPTY_VAL</code>) are preserved.</p>
+<hr>
+<h3 id="sfroundquote">sfRoundQuote</h3>
+<p>Rounds a single numeric value to the nearest multiple of the specified tick size and returns the result.</p>
+<p><strong>Syntax:</strong> <code>sfRoundQuote( value, tickSize )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">value</td>
+<td align="left">float</td>
+<td align="left">The numeric value to round</td>
+</tr>
+<tr>
+<td align="left">tickSize</td>
+<td align="left">float</td>
+<td align="left">The tick size to round to. See <code>sfRoundQuotes</code> for supported tick sizes</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — The rounded value. Returns the original value unchanged if <code>tickSize &lt;= 0</code>. Returns <code>Null</code> if fewer than 2 arguments are provided.</p>
 <hr>
 </body>
 </html>

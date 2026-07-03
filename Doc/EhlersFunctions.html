@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmiToolkit — Ehlers Functions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;color:#1a1a1a;background:#fafafa;padding:2rem;max-width:1000px;margin:0 auto}
+h1{color:#2c3e50;border-bottom:3px solid #3498db;padding-bottom:.5rem;margin-bottom:1.5rem}
+h2{color:#2c3e50;margin-top:2rem;margin-bottom:.75rem}
+h3{color:#2980b9;margin-top:1.5rem;margin-bottom:.5rem}
+h3:target{background:#fff3cd;padding:.25rem .5rem;border-radius:4px}
+p{margin:.5rem 0}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem;border-radius:6px;overflow-x:auto;font-size:.9rem;margin:.75rem 0}
+code{font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;font-size:.9em}
+pre code{background:0 0;padding:0}
+p code{background:#e8e8e8;padding:.1em .4em;border-radius:3px}
+.doc-table{border-collapse:collapse;margin:.75rem 0;width:100%;font-size:.9rem}
+.doc-table th,.doc-table td{border:1px solid #d0d0d0;padding:.4rem .6rem;text-align:left}
+.doc-table th{background:#3498db;color:#fff;font-weight:600}
+.doc-table tr:nth-child(even){background:#f0f4f8}
+hr{border:0;border-top:1px solid #d0d0d0;margin:1.5rem 0}
+li{margin:.25rem 0 .25rem 1.5rem}
+a{color:#2980b9;text-decoration:none}
+a:hover{text-decoration:underline}
+.section-nav{margin-bottom:1rem}
+.section-nav a{font-size:.9rem;color:#7f8c8d}
+.section-nav a:hover{color:#2980b9}
+</style>
+</head>
+<body>
+<h1>Ehlers Functions</h1>
+<nav class="section-nav"><a href="AmiToolkit Reference Guide.html">← Back to AmiToolkit Reference</a></nav>
+<hr>
+<h2>Ehlers Functions</h2>
+<p>Most famous John Ehlers contributions to trading using signal processing techniques.</p>
+<h3 id="sfinvfisher">sfInvFisher</h3>
+<p>Inverse Fisher Transform.</p>
+<p><strong>Syntax:</strong> <code>sfInvFisher( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">input price array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array - the inverse Fisher transform of input prices.</p>
+<hr>
+<h3 id="sfmama">sfMAMA</h3>
+<p>MESA Adaptive Moving Average by John Ehlers.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) to measure the instantaneous dominant cycle period via the Homodyne discriminator, then adapts the smoothing factor <em>α</em> to the measured period. When the market is cycling (short period) the filter responds quickly; when the market is trending (long period) it smooths heavily.</p>
+<p><strong>Syntax:</strong> <code>sfMAMA( Price, fastLimit, slowLimit, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">fastLimit</td>
+<td align="left">float</td>
+<td align="left">Upper bound for *α* (default 0.5)</td>
+</tr>
+<tr>
+<td align="left">slowLimit</td>
+<td align="left">float</td>
+<td align="left">Lower bound for *α* (default 0.05)</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for stored variables</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — MAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (needed for the Hilbert FIR filter).</li>
+<li>`fastLimit` must be ≥ `slowLimit`; values are swapped if needed.</li>
+<li>Input arrays with leading `Empty` values are skipped automatically.</li>
+<hr>
+<h3 id="sffama">sfFAMA</h3>
+<p>Following Adaptive Moving Average by John Ehlers.</p>
+<p>Uses the same Hilbert‑Transform cycle measurement as <code>sfMAMA</code> but returns the</p>
+<p>double‑smoothed FAMA line instead of the faster MAMA line.  No stored variables.</p>
+<p><strong>Syntax:</strong> <code>sfFAMA( Price, fastLimit, slowLimit )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">fastLimit</td>
+<td align="left">float</td>
+<td align="left">Upper bound for *α* (default 0.5)</td>
+</tr>
+<tr>
+<td align="left">slowLimit</td>
+<td align="left">float</td>
+<td align="left">Lower bound for *α* (default 0.05)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — FAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty`.</li>
+<li>`fastLimit` must be ≥ `slowLimit`; values are swapped if needed.</li>
+<li>Input arrays with leading `Empty` values are skipped automatically.</li>
+<hr>
+<h3 id="sfframa">sfFRAMA</h3>
+<p>Fractal Adaptive Moving Average by John Ehlers.</p>
+<p>Computes the fractal dimension <em>D</em> from the log‑range ratio of two window halves. When <em>D</em> → 1 (smooth trend) the filter is fast (α → 1); when <em>D</em> → 2 (rough/choppy market) it becomes very smooth (α → 0.01).</p>
+<p><strong>Syntax:</strong> <code>sfFRAMA( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Window length (≥4, rounded to even)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — FRAMA values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `n` bars return `Empty`.</li>
+<li>`n` must be ≥ 4; odd values are rounded up to the nearest even.</li>
+<hr>
+<h3 id="sfitl">sfITL</h3>
+<p>Instantaneous Trendline by John Ehlers.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) and Homodyne discriminator to measure the dominant cycle period, then applies a super‑smooth recursive filter with <em>α</em> = ( 2 / (Period + 1) )². The squared alpha makes the ITL considerably smoother than MAMA while still adapting to the measured cycle.</p>
+<p><strong>Syntax:</strong> <code>sfITL( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Instantaneous Trendline values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (Hilbert FIR lookback).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfitlx">sfITLX</h3>
+<p>Extended Instantaneous Trendline with a user‑selectable detrender window.</p>
+<p>Same Hilbert‑Transform / Homodyne structure as <code>sfITL</code>, but both the detrender</p>
+<p>(SMA window) and the Hilbert‑FIR lags are scaled proportionally to <em>n</em>.</p>
+<p>A larger <em>n</em> removes slower cycles and produces a smoother trendline.</p>
+<p><strong>Syntax:</strong> <code>sfITLX( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Detrender SMA window (≥ 4, rounded up to multiple of 4)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — ITLX values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `3·n` bars return `Empty` (Hilbert lookback scales with *n*).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfnet">sfNET</h3>
+<p>Noise Elimination Technology by John Ehlers.</p>
+<p>Measures the signal‑to‑noise ratio via 1‑bar and 2‑bar differences over a window <em>n</em>.  When the market trends strongly (d₁ ≫ d₂) the filter tracks closely; when it is noisy (d₂ ≈ d₁) the filter smooths heavily.</p>
+<p><strong>Syntax:</strong> <code>sfNET( Price, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Smoothing window for the SNR estimates (≥ 2)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`d₁[i] = Price[i] − Price[i−1]`</li>
+<li>`d₂[i] = (Price[i] − Price[i−1]) − (Price[i−1] − Price[i−2])`  *(second difference)*</li>
+<li>`SNR = SMA(|d₁|, n) / SMA(|d₂|, n)`</li>
+<li>`α = SNR² / (1 + SNR²)` — maps [0, ∞) → [0, 1)</li>
+<li>`NET[i] = α · Price[i] + (1−α) · NET[i−1]`</li>
+<p><strong>Returns:</strong> array — NET values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `n + 1` bars return `Empty` (needed for the SMA and second difference).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfsinewave">sfSinewave</h3>
+<p>Ehlers&apos; sinewave oscillator for identifying cycle turning points.</p>
+<p>Uses the Hilbert Transform (7‑weight FIR) to extract the instantaneous phase angle from the detrended price, then normalises it to a sine wave oscillating in [−1, +1].  The lead sine (45° ahead) is stored as a named variable.</p>
+<p><strong>Syntax:</strong> <code>sfSinewave( Price, prefix )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">prefix</td>
+<td align="left">string</td>
+<td align="left">Prefix for the stored LeadSine variable</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array — Sine values.</p>
+<p><strong>Stored variable:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Variable</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left"><code><prefix>_LEADSINE</code></td>
+<td align="left">Sine advanced by 45°; its crossings with the main Sine identify cycle tops and bottoms</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`I` and `Q` via Hilbert FIR on the detrended price (`Price − SMA(Price, 4)`)</li>
+<li>`r = √(I² + Q²)`,  `Sine = Q / r`,  `LeadSine = (I + Q) / (r · √2)`</li>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty`.</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sflaguerrersi">sfLaguerreRSI</h3>
+<p>Laguerre RSI by John Ehlers.</p>
+<p>Applies a 4‑pole Laguerre all‑pass filter to the price, then computes an RSI‑like oscillator from the cumulative differences between the leading (L₀) and lagging (L₁) filter outputs.</p>
+<p>The Laguerre RSI is smoother and more responsive than a traditional RSI of comparable lookback.</p>
+<p><strong>Syntax:</strong> <code>sfLaguerreRSI( Price, gamma, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">gamma</td>
+<td align="left">float</td>
+<td align="left">Laguerre filter coefficient (0.01–0.99, default 0.5)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">Decay period for the Cu/Cd accumulators (≥ 1, default 8)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Laguerre filter (recursive, all‑pass):</li>
+<p>  <code>L₀ = (1−γ)·Price + γ·L₀[1]</code></p>
+<p>  <code>L₁ = −γ·L₀ + L₀[1] + γ·L₁[1]</code></p>
+<p>  <em>(L₂, L₃ follow the same structure)</em></p>
+<li>Cu/Cd accumulation with exponential decay `α = 1/n`:</li>
+<p>  - if <code>L₀ &gt; L₁</code> : <code>Cu += (L₀−L₁) − Cu·α</code> , else <code>Cu −= Cu·α</code></p>
+<p>  - if <code>L₀ &lt; L₁</code> : <code>Cd += (L₁−L₀) − Cd·α</code> , else <code>Cd −= Cd·α</code></p>
+<li>`RSI = Cu / (Cu+Cd) · 100`</li>
+<p><strong>Returns:</strong> array — Laguerre RSI values (0–100 scale).</p>
+<p><strong>Notes:</strong></p>
+<li>The first bar returns `Empty` (filter needs at least one prior bar).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfreflex">sfReflex</h3>
+<p>Reflex indicator by John Ehlers.</p>
+<p>Extracts the underlying trend via a SuperSmoother (2‑pole Butterworth), isolates the cycle component (<code>Price − Trend</code>), smooths it with a second SuperSmoother, and normalises by the rolling standard deviation of the raw cycle. Positive extremes show price extended above its trend; negative extremes show price extended below.</p>
+<p><strong>Syntax:</strong> <code>sfReflex( Price, hp, lp, n )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">hp</td>
+<td align="left">float</td>
+<td align="left">High‑pass SuperSmoother period for trend extraction (4–200)</td>
+</tr>
+<tr>
+<td align="left">lp</td>
+<td align="left">float</td>
+<td align="left">Low‑pass SuperSmoother period for cycle smoothing (2–50)</td>
+</tr>
+<tr>
+<td align="left">n</td>
+<td align="left">float</td>
+<td align="left">EMA lookback for rolling variance of the raw cycle (2–100)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Trend = SuperSmoother(Price, hp)</li>
+<li>Cycle = Price − Trend</li>
+<li>SmoothCycle = SuperSmoother(Cycle, lp)</li>
+<li>Rolling mean *M* and variance *V* of Cycle via EMA(α = 1 / n)</li>
+<li>`Reflex = SmoothCycle / √V`, clipped to [−3, +3]</li>
+<p><strong>Returns:</strong> array — Reflex oscillator (dimensionless).</p>
+<p><strong>Recommended defaults:</strong> <code>hp = 20…48</code>, <code>lp = 5…10</code>, <code>n = hp / 2</code> (or ≈ 20).</p>
+<p><strong>Notes:</strong></p>
+<li>The first `max(hp, 8)` bars return `Empty` (filter warm‑up).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfsupersmoother">sfSuperSmoother</h3>
+<p>2‑pole SuperSmoother filter by John Ehlers.</p>
+<p>A maximally smooth, zero‑lag filter based on a 2‑pole Butterworth design. Often used as a building block for other Ehlers indicators (e.g. Reflex, Roofing Filter).</p>
+<p><strong>Syntax:</strong> <code>sfSuperSmoother( Price, period )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">period</td>
+<td align="left">float</td>
+<td align="left">Filter period (≥ 2)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`a₁ = exp(−√2 · π / period)`</li>
+<li>`b₁ = 2 · a₁ · cos(√2 · π / period)`</li>
+<li>`c₂ = b₁`,  `c₃ = −a₁²`,  `c₁ = 1 − c₂ − c₃`</li>
+<li>`SS[t] = c₁ · (Price[t] + Price[t−1]) / 2 + c₂ · SS[t−1] + c₃ · SS[t−2]`</li>
+<p><strong>Returns:</strong> array — SuperSmoother values.</p>
+<p><strong>Notes:</strong></p>
+<li>The first `period` bars return `Empty` (filter convergence).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfhilbertosc">sfHilbertOsc</h3>
+<p>Hilbert oscillator by John Ehlers.</p>
+<p>Returns the normalised in‑phase component (cosine of the instantaneous phase) extracted from the Hilbert Transform. Oscillates in [−1, +1] and is 90° out of phase with <code>sfSinewave</code>.</p>
+<p>Use the two together to identify cycle turning points:</p>
+<li>Sine (`sfSinewave`) crosses zero at cycle midpoints</li>
+<li>Hilbert Osc crosses zero at cycle extremes</li>
+<p><strong>Syntax:</strong> <code>sfHilbertOsc( Price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>Detrender = Price − SMA(Price, 4)</li>
+<li>`I`, `Q` via Hilbert FIR (7‑weight)</li>
+<li>`r = √(I² + Q²)`,  `HilbertOsc = I / r` (cosine of phase)</li>
+<p><strong>Returns:</strong> array — Hilbert oscillator values [−1, +1].</p>
+<p><strong>Notes:</strong></p>
+<li>The first 8 bars return `Empty` (Hilbert FIR lookback).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+<h3 id="sfrocketrsi">sfRocketRSI</h3>
+<p>Rocket RSI by John Ehlers.</p>
+<p>Replaces the traditional RSI&apos;s EMA / Wilder smoothing with a SuperSmoother (2‑pole Butterworth) applied to the raw up/down changes. The result is a smoother, more responsive RSI with less lag.</p>
+<p><strong>Syntax:</strong> <code>sfRocketRSI( Price, period )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price array</td>
+</tr>
+<tr>
+<td align="left">period</td>
+<td align="left">float</td>
+<td align="left">SuperSmoother period (≥ 2, typical 8–14)</td>
+</tr>
+</table>
+<p><strong>Algorithm:</strong></p>
+<li>`Up[t] = max(Price[t]−Price[t−1], 0)`,  `Dn[t] = max(Price[t−1]−Price[t], 0)`</li>
+<li>`Sup = SuperSmoother(Up, period)`,  `Sdn = SuperSmoother(Dn, period)`</li>
+<li>`RSI = Sup / (Sup + Sdn) · 100`</li>
+<p><strong>Returns:</strong> array — Rocket RSI values (0–100 scale).</p>
+<p><strong>Notes:</strong></p>
+<li>The first `period + 1` bars return `Empty` (change + SuperSmoother convergence).</li>
+<li>No static state — safe for multiple simultaneous calls.</li>
+<hr>
+</body>
+</html>

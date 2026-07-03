@@ -1318,5 +1318,101 @@ for each bar i:
 <p><strong>Returns:</strong> array — Lake Ratio values (non‑negative). The ratio grows as</p>
 <p>price declines from the peak and resets at each new high.</p>
 <hr>
+<h3 id="sffloorpivotscore">sfFloorPivotScore</h3>
+<p>The <code>sfFloorPivotScore</code> function quantifies the relative position of a price</p>
+<p>within the Floor Pivot level framework (Pivot, R1-R3, S1-S3). It computes</p>
+<p>consecutive non-overlapping periods from a <code>StartPeriod</code> marker array, uses each</p>
+<p>completed period&apos;s High/Low/Close to compute Floor Pivot levels, then assigns a</p>
+<p>linear score from −3 (below S3) to +3 (above R3) to every bar of the following</p>
+<p>period.</p>
+<p><strong>Syntax:</strong> <code>sfFloorPivotScore( Price, High, Low, Close, StartPeriod )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">Price</td>
+<td align="left">array</td>
+<td align="left">Price series to score (e.g. Close)</td>
+</tr>
+<tr>
+<td align="left">High</td>
+<td align="left">array</td>
+<td align="left">High prices for pivot calculation</td>
+</tr>
+<tr>
+<td align="left">Low</td>
+<td align="left">array</td>
+<td align="left">Low prices for pivot calculation</td>
+</tr>
+<tr>
+<td align="left">Close</td>
+<td align="left">array</td>
+<td align="left">Close prices (last close of each period = CC)</td>
+</tr>
+<tr>
+<td align="left">StartPeriod</td>
+<td align="left">array</td>
+<td align="left"><code>1</code> on the first bar of each period, <code>0</code> elsewhere</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> array of scores clamped to [−3, +3]</p>
+<p><strong>Scoring zones:</strong></p>
+<table class="doc-table">
+<tr>
+<th align="left">Zone</th>
+<th align="left">Score range</th>
+</tr>
+<tr>
+<td align="left">S3 → S2</td>
+<td align="left">−3 to −2 (linear)</td>
+</tr>
+<tr>
+<td align="left">S2 → S1</td>
+<td align="left">−2 to −1</td>
+</tr>
+<tr>
+<td align="left">S1 → Pivot</td>
+<td align="left">−1 to 0</td>
+</tr>
+<tr>
+<td align="left">Pivot</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">Pivot → R1</td>
+<td align="left">0 to 1</td>
+</tr>
+<tr>
+<td align="left">R1 → R2</td>
+<td align="left">1 to 2</td>
+</tr>
+<tr>
+<td align="left">R2 → R3</td>
+<td align="left">2 to 3</td>
+</tr>
+<tr>
+<td align="left">< S3 / > R3</td>
+<td align="left">−3 / +3 (clamped)</td>
+</tr>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code>
+StartPeriod[0] = 1; StartPeriod[10] = 1; StartPeriod[20] = 1;
+
+Score = sfFloorPivotScore( Close, High, Low, Close, StartPeriod );
+
+</code></pre>
+<p><strong>Notes:</strong></p>
+<li>Requires at least two complete periods (i.e. at least two `1` markers)</li>
+<p>  before scoring begins. Bars in the first period and bars before the first</p>
+<p>  marker return <code>Empty</code>.</p>
+<li>Levels are computed from the preceding completed period:</li>
+<p>  <code>HH = highest High</code>, <code>LL = lowest Low</code>, <code>CC = last Close</code> of that period.</p>
+<li>Periods are disjoint — the next period's levels are ignored while scoring</li>
+<p>  the current one.</p>
+<hr>
 </body>
 </html>

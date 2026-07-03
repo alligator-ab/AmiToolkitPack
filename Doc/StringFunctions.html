@@ -584,50 +584,6 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> string — A pointer into the original string starting at position <code>from</code>. This function does not allocate a new buffer; the returned string points into the original plugin-managed string. Do NOT store the result in a static AFL variable. If you need to modify or persist the substring, copy it first (for example with <code>StrMid()</code> or similar).</p>
 <hr>
-<h3 id="sfroundquotes">sfRoundQuotes</h3>
-<p>Rounds the numeric values in an AFL array in-place to the nearest multiple of the specified tick size.</p>
-<p><strong>Syntax:</strong> <code>sfRoundQuotes( array, tickSize )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">array</td>
-<td align="left">array</td>
-<td align="left">The numeric array to be modified in-place (passed by reference)</td>
-</tr>
-<tr>
-<td align="left">tickSize</td>
-<td align="left">float</td>
-<td align="left">The tick size to round to. Supports fractional tick sizes (e.g. 0.5, 0.25, 0.125). For sub-1 tick sizes the function computes the appropriate reciprocal internally</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> None — The function returns nothing and updates the provided array in-place. Empty values (<code>EMPTY_VAL</code>) are preserved.</p>
-<hr>
-<h3 id="sfroundquote">sfRoundQuote</h3>
-<p>Rounds a single numeric value to the nearest multiple of the specified tick size and returns the result.</p>
-<p><strong>Syntax:</strong> <code>sfRoundQuote( value, tickSize )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">value</td>
-<td align="left">float</td>
-<td align="left">The numeric value to round</td>
-</tr>
-<tr>
-<td align="left">tickSize</td>
-<td align="left">float</td>
-<td align="left">The tick size to round to. See <code>sfRoundQuotes</code> for supported tick sizes</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> float — The rounded value. Returns the original value unchanged if <code>tickSize &lt;= 0</code>. Returns <code>Null</code> if fewer than 2 arguments are provided.</p>
-<hr>
 <h3 id="sfstrfindregex">sfStrFindRegEx</h3>
 <p>Finds the position of the first substring matching a regular expression,</p>
 <p> starting from an optional position.</p>

@@ -62,45 +62,12 @@ a:hover{text-decoration:underline}
 <li>`"Array is allocated but not initialized - several values detected"` if elements differ</li>
 <li>`"Error: Wrong Argument: Array expected"` if the argument is not an array</li>
 <hr>
-<h3 id="sfinitarray">sfInitArray</h3>
-<p>Quickly fills an array with a single float value using an optimised</p>
-<p>write-once + doubling (<code>memmove</code>) algorithm, with AVX acceleration</p>
-<p>when available.</p>
-<p><strong>Syntax:</strong> <code>sfInitArray( Array [, value ] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array</td>
-<td align="left">array</td>
-<td align="left">Array to initialise (modified in-place)</td>
-</tr>
-<tr>
-<td align="left">value</td>
-<td align="left">float</td>
-<td align="left">(optional) Fill value. Default: <code>Empty</code></td>
-</tr>
-</table>
-<p><strong>Returns:</strong> float — <code>0</code> on success, <code>-1</code> on error (wrong argument types).</p>
-<p><strong>Notes:</strong></p>
-<li>Uses `memmove` doubling (O(log n) steps) for bulk filling.</li>
-<li>If the CPU supports AVX, a seed-and-AVX strategy is used for arrays ≥ 256 elements.</li>
-<li>The array is modified in-place; no new allocation is made.</li>
-<hr>
 <h3 id="sfisallocarrayinit">sfIsAllocArrayInit</h3>
 <p>Allocates a new array result via <code>AllocArrayResult</code> and immediately checks</p>
 <p>its initialisation state via <code>CheckArrayInit</code>. Useful for testing whether</p>
 <p>newly allocated arrays are pre-initialised.</p>
 <p><strong>Syntax:</strong> <code>sfIsAllocArrayInit()</code></p>
 <p><strong>Returns:</strong> string — Same as <code>CheckArrayInit</code> applied to a freshly allocated array.</p>
-<hr>
-<h3 id="sfemptyvalue">sfEmptyValue</h3>
-<p>Returns the <code>EMPTY_VAL</code> constant used by AmiBroker to represent missing data.</p>
-<p><strong>Syntax:</strong> <code>sfEmptyValue()</code></p>
-<p><strong>Returns:</strong> float — The <code>EMPTY_VAL</code> sentinel value.</p>
 <hr>
 <h3 id="sfequalvariables">sfEqualVariables</h3>
 <p>Checks whether two AFL variables refer to the <strong>same underlying object</strong></p>
@@ -181,30 +148,6 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> array — A new array initialised to <code>EMPTY_VAL</code>.</p>
 <hr>
-<h3 id="sfgetarraylength">sfGetArrayLength</h3>
-<p>Returns the length of the initialised (non-empty) prefix of an array</p>
-<p>using binary search. Useful for arrays that were allocated larger than</p>
-<p>the data they contain.</p>
-<p><strong>Syntax:</strong> <code>sfGetArrayLength( Array [, maxSize ] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array</td>
-<td align="left">array</td>
-<td align="left">The array to measure</td>
-</tr>
-<tr>
-<td align="left">maxSize</td>
-<td align="left">float</td>
-<td align="left">(optional) Maximum size to consider. Default: full array size</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> float — The number of leading non-<code>Empty</code> elements.</p>
-<hr>
 <h3 id="sfgetvariable">sfGetVariable</h3>
 <p>Retrieves an AFL variable by name via <code>gSite.GetVariable</code>.</p>
 <p><strong>Syntax:</strong> <code>sfGetVariable( name )</code></p>
@@ -265,55 +208,5 @@ a:hover{text-decoration:underline}
 </tr>
 </table>
 <p><strong>Returns:</strong> float — <code>1</code> on success.</p>
-<hr>
-<h3 id="sfarrayshiftleft">sfArrayShiftLeft</h3>
-<p>Shifts all non-empty elements of an array to the left, filling the vacated</p>
-<p>positions at the right with <code>EMPTY_VAL</code>.</p>
-<p><strong>Syntax:</strong> <code>sfArrayShiftLeft( Array )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array</td>
-<td align="left">array</td>
-<td align="left">Input array</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — A new array with elements shifted left.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// a = [Empty, 10, 20, 30, Empty];
-
-b = sfArrayShiftLeft(a);  // [10, 20, 30, Empty, Empty]
-
-</code></pre>
-<hr>
-<h3 id="sfarrayshiftright">sfArrayShiftRight</h3>
-<p>Shifts all non-empty elements of an array to the right, filling the vacated</p>
-<p>positions at the left with <code>EMPTY_VAL</code>.</p>
-<p><strong>Syntax:</strong> <code>sfArrayShiftRight( Array )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array</td>
-<td align="left">array</td>
-<td align="left">Input array</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — A new array with elements shifted right.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// a = [10, 20, 30, Empty, Empty];
-
-b = sfArrayShiftRight(a);  // [Empty, Empty, 10, 20, 30]
-
-</code></pre>
 </body>
 </html>

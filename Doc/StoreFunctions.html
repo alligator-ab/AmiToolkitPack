@@ -35,12 +35,12 @@ a:hover{text-decoration:underline}
 <hr>
 <h2>Store Functions</h2>
 <p>Key-value store — a map of named <code>AmiVar</code> values (float, string, or null),</p>
-<p>identified by a unique numeric ID. Created via <code>StoreCreate</code>, accessed</p>
-<p>by key, and destroyed via <code>StoreDestroy</code>.</p>
+<p>identified by a unique numeric ID. Created via <code>sfStoreCreate</code>, accessed</p>
+<p>by key, and destroyed via <code>sfStoreDestroy</code>.</p>
 <p>All functions return <code>Null</code> on invalid input (bad handle).</p>
-<h3>StoreCreate</h3>
+<h3 id="sfstorecreate">sfStoreCreate</h3>
 <p>Creates a new empty store.</p>
-<p><strong>Syntax:</strong> <code>StoreCreate( size )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreCreate( size )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -55,9 +55,9 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> float — The store ID.</p>
 <hr>
-<h3>StoreDestroy</h3>
+<h3 id="sfstoredestroy">sfStoreDestroy</h3>
 <p>Destroys a store and frees all associated memory.</p>
-<p><strong>Syntax:</strong> <code>StoreDestroy( id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreDestroy( id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -72,9 +72,9 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> Nothing</p>
 <hr>
-<h3>StoreSize</h3>
+<h3 id="sfstoresize">sfStoreSize</h3>
 <p>Returns the number of key-value pairs in the store.</p>
-<p><strong>Syntax:</strong> <code>StoreSize( id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreSize( id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -89,9 +89,9 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> float — The number of entries.</p>
 <hr>
-<h3>StoreGet</h3>
+<h3 id="sfstoreget">sfStoreGet</h3>
 <p>Retrieves the value at a given key.</p>
-<p><strong>Syntax:</strong> <code>StoreGet( key, id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreGet( key, id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -111,10 +111,10 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> AmiVar — The value (float, string, or null if not found).</p>
 <hr>
-<h3>StoreSet</h3>
-<p>Sets the value at a given key and returns the old value.</p>
+<h3 id="sfstoresetfloat">sfStoreSetFloat</h3>
+<p>Sets a float value at the given key and returns the old value.</p>
 <p>If the key does not exist, it is created and <code>Null</code> is returned.</p>
-<p><strong>Syntax:</strong> <code>StoreSet( key, value, id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreSetFloat( key, value, id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -128,8 +128,8 @@ a:hover{text-decoration:underline}
 </tr>
 <tr>
 <td align="left">value</td>
-<td align="left">AmiVar</td>
-<td align="left">The new value (float or string)</td>
+<td align="left">float</td>
+<td align="left">The new float value</td>
 </tr>
 <tr>
 <td align="left">id</td>
@@ -139,10 +139,10 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> AmiVar — The previous value, or null if the key was created.</p>
 <hr>
-<h3>StorePush</h3>
-<p>Sets the value at a given key and returns the old value.</p>
-<p>If the key does not exist, it is created and <code>Nothing</code> is returned.</p>
-<p><strong>Syntax:</strong> <code>StorePush( key, value, id )</code></p>
+<h3 id="sfstoresetstring">sfStoreSetString</h3>
+<p>Sets a string value at the given key and returns the old value.</p>
+<p>If the key does not exist, it is created and <code>Null</code> is returned.</p>
+<p><strong>Syntax:</strong> <code>sfStoreSetString( key, value, id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -156,38 +156,8 @@ a:hover{text-decoration:underline}
 </tr>
 <tr>
 <td align="left">value</td>
-<td align="left">AmiVar</td>
-<td align="left">The new value</td>
-</tr>
-<tr>
-<td align="left">id</td>
-<td align="left">float</td>
-<td align="left">Store ID</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> AmiVar — The previous value, or nothing if the key was created.</p>
-<hr>
-<h3>StorePushFloat</h3>
-<p>Alias for <code>StorePush</code> with a float value.</p>
-<p><strong>Syntax:</strong> <code>StorePushFloat( key, value, id )</code></p>
-<hr>
-<h3>StorePushString</h3>
-<p>Alias for <code>StorePush</code> with a string value.</p>
-<p><strong>Syntax:</strong> <code>StorePushString( key, value, id )</code></p>
-<hr>
-<h3>StoreRemove</h3>
-<p>Removes the value at the given key and returns it.</p>
-<p><strong>Syntax:</strong> <code>StoreRemove( key, id )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">key</td>
 <td align="left">string</td>
-<td align="left">The key to remove</td>
+<td align="left">The new string value</td>
 </tr>
 <tr>
 <td align="left">id</td>
@@ -195,11 +165,11 @@ a:hover{text-decoration:underline}
 <td align="left">Store ID</td>
 </tr>
 </table>
-<p><strong>Returns:</strong> AmiVar — The removed value, or null if the key did not exist.</p>
+<p><strong>Returns:</strong> AmiVar — The previous value, or null if the key was created.</p>
 <hr>
-<h3>StoreClear</h3>
+<h3 id="sfstoreclear">sfStoreClear</h3>
 <p>Removes all key-value pairs from the store.</p>
-<p><strong>Syntax:</strong> <code>StoreClear( id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreClear( id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -214,31 +184,9 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> Nothing</p>
 <hr>
-<h3>StoreExists</h3>
-<p>Checks whether a given key exists in the store.</p>
-<p><strong>Syntax:</strong> <code>StoreExists( key, id )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">key</td>
-<td align="left">string</td>
-<td align="left">The key to check</td>
-</tr>
-<tr>
-<td align="left">id</td>
-<td align="left">float</td>
-<td align="left">Store ID</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> float — <code>1</code> if the key exists, <code>0</code> otherwise.</p>
-<hr>
-<h3>StoreToString</h3>
+<h3 id="sfstoretostring">sfStoreToString</h3>
 <p>Serializes the store to a JSON-like string.</p>
-<p><strong>Syntax:</strong> <code>StoreToString( id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreToString( id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -253,11 +201,11 @@ a:hover{text-decoration:underline}
 </table>
 <p><strong>Returns:</strong> string — e.g. <code>{&quot;age&quot;:30,&quot;name&quot;:&quot;hello&quot;}</code>.</p>
 <hr>
-<h3>StoreFromString</h3>
+<h3 id="sfstorefromstring">sfStoreFromString</h3>
 <p>Parses a JSON-like string into the store. If <code>id</code> is <code>-1</code>, a new store is</p>
 <p>created. If <code>id</code> is a valid store ID, the existing store is cleared and</p>
 <p>reloaded.</p>
-<p><strong>Syntax:</strong> <code>StoreFromString( str, id )</code></p>
+<p><strong>Syntax:</strong> <code>sfStoreFromString( str, id )</code></p>
 <table class="doc-table">
 <tr>
 <th align="left">Arg</th>
@@ -281,605 +229,51 @@ a:hover{text-decoration:underline}
 <pre><code>
 // Create a store
 
-s = StoreCreate(0);
+s = sfStoreCreate(0);
 
 
 
 // Load data from string
 
-StoreFromString(&quot;{\&quot;name\&quot;:\&quot;AAPL\&quot;,\&quot;price\&quot;:150.25,\&quot;active\&quot;:null}&quot;, s);
+sfStoreFromString(&quot;{\&quot;name\&quot;:\&quot;AAPL\&quot;,\&quot;price\&quot;:150.25,\&quot;active\&quot;:null}&quot;, s);
 
 
 
 // Read values
 
-name = StoreGet(&quot;name&quot;, s);    // &quot;AAPL&quot;
+name = sfStoreGet(&quot;name&quot;, s);    // &quot;AAPL&quot;
 
-price = StoreGet(&quot;price&quot;, s);  // 150.25
+price = sfStoreGet(&quot;price&quot;, s);  // 150.25
 
-active = StoreGet(&quot;active&quot;, s); // null (IsNull(active) == 1)
-
-
-
-// Check if a key exists
-
-exists = StoreExists(&quot;price&quot;, s); // 1
-
-exists = StoreExists(&quot;volume&quot;, s); // 0
+active = sfStoreGet(&quot;active&quot;, s); // null (IsNull(active) == 1)
 
 
 
-// Set creates the key if it doesn&apos;t exist
+// SetFloat creates the key if it doesn&apos;t exist
 
-old = StoreSet(&quot;volume&quot;, 1000000, s); // Null (key was created)
+old = sfStoreSetFloat(&quot;volume&quot;, 1000000, s); // Null (key was created)
 
-old = StoreSet(&quot;price&quot;, 151.00, s);   // 150.25 (old value)
-
-
-
-// Push also creates keys and returns old value
-
-old = StorePush(&quot;sector&quot;, &quot;Technology&quot;, s); // Nothing (key was created)
-
-old = StorePush(&quot;price&quot;, 152.00, s);        // 151.00 (old value)
+old = sfStoreSetFloat(&quot;price&quot;, 151.00, s);   // 150.25 (old value)
 
 
 
-// Remove a key
+// SetString creates keys and returns old value
 
-removed = StoreRemove(&quot;active&quot;, s);
+old = sfStoreSetString(&quot;sector&quot;, &quot;Technology&quot;, s); // Null (key was created)
+
+old = sfStoreSetFloat(&quot;price&quot;, 152.00, s);        // 151.00 (old value)
 
 
 
 // Clear all
 
-StoreClear(s);
+sfStoreClear(s);
 
 
 
 // Destroy
 
-StoreDestroy(s);
-
-</code></pre>
-<hr>
-<p>Statistical functions that operate on multiple arrays.</p>
-<h3 id="sfmedianarrays">sfMedianArrays</h3>
-<p>Computes the median of values from multiple AFL arrays, bar by bar.</p>
-<p>The arrays are accessed by name using the pattern <code>prefix</code> + number</p>
-<p>(e.g. <code>prefix1</code>, <code>prefix2</code>, …).</p>
-<p>For bars where all input values are empty, the result is <code>Empty</code>.</p>
-<p>For an even number of non-empty values, the average of the two middle</p>
-<p>values is returned.</p>
-<p><strong>Syntax:</strong> <code>sfMedianArrays( prefix, count )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">prefix</td>
-<td align="left">string</td>
-<td align="left">Base name of the AFL arrays (e.g. <code>"MyArray"</code> for arrays <code>MyArray1</code>, <code>MyArray2</code>, …)</td>
-</tr>
-<tr>
-<td align="left">count</td>
-<td align="left">float</td>
-<td align="left">Number of arrays to read (1‑based). Must be ≥ 1</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Median of the input values at each bar.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// Assume MyArray1, MyArray2, MyArray3 exist
-
-Med = sfMedianArrays( &quot;MyArray&quot;, 3 );
-
-</code></pre>
-<hr>
-<h3 id="sfmedianarray2">sfMedianArray2</h3>
-<p>Optimized median of exactly 2 arrays. For each bar, returns the average</p>
-<p>of the two values, or the single non-empty value if one is empty,</p>
-<p>or <code>Empty</code> if both are empty.</p>
-<p><strong>Syntax:</strong> <code>sfMedianArray2( Array1, Array2 )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array1</td>
-<td align="left">array</td>
-<td align="left">First input array</td>
-</tr>
-<tr>
-<td align="left">Array2</td>
-<td align="left">array</td>
-<td align="left">Second input array</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Bar-by-bar median of the two arrays.</p>
-<hr>
-<h3 id="sfmedianarray4">sfMedianArray4</h3>
-<p>Optimized median of exactly 4 arrays.</p>
-<p><strong>Syntax:</strong> <code>sfMedianArray4( Array1, Array2, Array3, Array4 )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array1‑Array4</td>
-<td align="left">array</td>
-<td align="left">Four input arrays</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Bar-by-bar median. For an even number of non-empty</p>
-<p>values at a bar, the average of the two middle values is returned.</p>
-<hr>
-<h3 id="sfmedianarray6">sfMedianArray6</h3>
-<p>Optimized median of exactly 6 arrays.</p>
-<p><strong>Syntax:</strong> <code>sfMedianArray6( Array1, Array2, Array3, Array4, Array5, Array6 )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Array1‑Array6</td>
-<td align="left">array</td>
-<td align="left">Six input arrays</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Bar-by-bar median.</p>
-<hr>
-<h3 id="sfperiodicstat">sfPeriodicStat</h3>
-<p>Computes a sliding-window statistic (mean, cumulative sum, or median)</p>
-<p>per period group. Each bar belongs to a group indicated by <code>PeriodNumber</code></p>
-<p>(e.g. day of week 1–7, month 1–12, etc.). A separate sliding window of</p>
-<p>the last <code>n</code> values is maintained for each unique period number, and the</p>
-<p>chosen statistic is computed over that window.</p>
-<p><strong>Syntax:</strong> <code>sfPeriodicStat( Values, PeriodNumber, n, type )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Values</td>
-<td align="left">array</td>
-<td align="left">The input values</td>
-</tr>
-<tr>
-<td align="left">PeriodNumber</td>
-<td align="left">array</td>
-<td align="left">Period identifier for each bar (e.g. <code>DayOfWeek()</code>, <code>Month()</code>)</td>
-</tr>
-<tr>
-<td align="left">n</td>
-<td align="left">float</td>
-<td align="left">(optional) Sliding window size. Default: 20</td>
-</tr>
-<tr>
-<td align="left">type</td>
-<td align="left">float</td>
-<td align="left">(optional) Statistic type: 0 = mean, 1 = sum (cumul), 2 = median. Default: 0</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — The per-bar statistic for the group to which each bar</p>
-<p>belongs.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// Average volume for each weekday over the last 20 weeks
-
-AvgVol = sfPeriodicStat( Volume, DayOfWeek(), 20, 0 );
-
-</code></pre>
-<p>The first bar of each period group returns the average/sum/median of</p>
-<p>all values encountered so far (results are valid from the first occurrence).</p>
-<hr>
-<h3 id="sfregularize">sfRegularize</h3>
-<p>Fills gaps (<code>Empty</code> values) in a time series array to produce a</p>
-<p>regularized (gap‑free) series.</p>
-<p><strong>Syntax:</strong> <code>sfRegularize( A, opt )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">array</td>
-<td align="left">Input time series (may contain <code>Empty</code> gaps)</td>
-</tr>
-<tr>
-<td align="left">opt</td>
-<td align="left">float</td>
-<td align="left">(optional) Filling method. Default: 0</td>
-</tr>
-</table>
-<table class="doc-table">
-<tr>
-<th align="left">opt</th>
-<th align="left">Behavior</th>
-</tr>
-<tr>
-<td align="left"><code>0</code></td>
-<td align="left">**Forward‑fill** — copy the last valid value forward</td>
-</tr>
-<tr>
-<td align="left"><code>≥ 1</code></td>
-<td align="left">**EMA** — fill with an exponential moving average of the last <code>opt</code> valid values (α = 2/(opt+1))</td>
-</tr>
-<tr>
-<td align="left"><code>−1</code></td>
-<td align="left">**Median‑2** — fill with the median (average) of the two most recent valid values</td>
-</tr>
-<tr>
-<td align="left"><code>< −1</code></td>
-<td align="left">**Linear regression** — fill by extrapolating a straight line fitted to the last <code>−opt</code> valid values</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — The regularized series (same length as input).</p>
-<p><strong>Notes:</strong></p>
-<li>All filling methods require at least one prior valid value; bars before</li>
-<p>  the first valid value remain <code>Empty</code>.</p>
-<li>For `opt ≥ 1`, the minimum effective period is 2.</li>
-<li>For `opt < −1`, regression requires at least 2 valid points.</li>
-<hr>
-<h3 id="sffirstvalue">sfFirstValue</h3>
-<p>Returns the first non‑<code>Empty</code> value in the array.</p>
-<p><strong>Syntax:</strong> <code>sfFirstValue( A )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">array</td>
-<td align="left">Input array</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> float — The first valid value, or 0 if all values are empty.</p>
-<hr>
-<h3 id="sfdiff">sfDiff</h3>
-<p>Computes successive differences between array values. The first valid bar</p>
-<p>is set to 0. For <code>opt &gt; 1</code>, computes <code>A[n] − A[n − opt]</code>.</p>
-<p><strong>Syntax:</strong> <code>sfDiff( A, opt )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">array</td>
-<td align="left">Input array</td>
-</tr>
-<tr>
-<td align="left">opt</td>
-<td align="left">float</td>
-<td align="left">(optional) Lag. Default: 1 (consecutive bars)</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Differences. <code>Empty</code> where either value is missing.</p>
-<hr>
-<h3 id="sftestaverage">sfTestAverage</h3>
-<p>Sliding‑window one‑sample t‑test for the mean. At each bar <code>i</code>, tests</p>
-<p>the null hypothesis H₀ that the mean of the last <code>n</code> values of <code>X</code></p>
-<p>equals <code>A[i]</code>. The alternative depends on the <code>tail</code> parameter.</p>
-<p>The test statistic is <code>t = (x̄ − A[i]) / (s / √count)</code> where <code>x̄</code> is</p>
-<p>the sample mean, <code>s</code> the sample standard deviation, and <code>count</code> the</p>
-<p>number of non‑<code>Empty</code> values in the window. Under H₀, <code>t</code> follows a</p>
-<p>Student t‑distribution with <code>count‑1</code> degrees of freedom. The</p>
-<p>p‑value is computed via the regularized incomplete beta function</p>
-<p>(Lentz&apos;s continued fraction).</p>
-<p><strong>Syntax:</strong> <code>sfTestAverage( X, A [, n [, level [, tail ]]] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">X</td>
-<td align="left">array</td>
-<td align="left">Input values</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">array</td>
-<td align="left">Hypothesized mean (one value per bar)</td>
-</tr>
-<tr>
-<td align="left">n</td>
-<td align="left">float</td>
-<td align="left">(optional) Window size. Default: <code>50</code></td>
-</tr>
-<tr>
-<td align="left">level</td>
-<td align="left">float</td>
-<td align="left">(optional) Significance level α. Default: <code>0.05</code></td>
-</tr>
-<tr>
-<td align="left">tail</td>
-<td align="left">float</td>
-<td align="left">(optional) Test direction: <code>0</code> = two‑sided, <code>1</code> = one‑sided in observed direction. Default: <code>0</code></td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — <code>1.0</code> if H₀ is rejected at the given level,</p>
-<p><code>0.0</code> otherwise, <code>Empty</code> if the window is not yet full or fewer</p>
-<p>than 2 non‑<code>Empty</code> values are available.</p>
-<p><strong>Notes:</strong></p>
-<li>Two‑sided test (`tail=0`): rejects H₀ when the p‑value is less</li>
-<p>  than <code>level</code>. Equivalent to testing <code>x̄ ≠ A[i]</code>.</p>
-<li>One‑sided test (`tail=1`): tests in the direction of the observed</li>
-<p>  deviation (<code>x̄ &gt; A[i]</code> or <code>x̄ &lt; A[i]</code>). The one‑sided p‑value is</p>
-<p>  exactly half the two‑sided p‑value, so the one‑sided test has</p>
-<p>  greater power to detect a deviation in that direction.</p>
-<li>When all values in the window are equal (zero variance), H₀ is</li>
-<p>  rejected if <code>level &gt; 0</code> and the mean differs from <code>A[i]</code>.</p>
-<p><strong>Example (two‑sided):</strong></p>
-<pre><code>
-// Test if the 20‑bar rolling mean of Close differs from 50
-
-result = sfTestAverage( Close, 50, 20, 0.05, 0 );
-
-</code></pre>
-<p><strong>Example (one‑sided):</strong></p>
-<pre><code>
-// Test if the 20‑bar rolling mean of Close is significantly above 50
-
-result = sfTestAverage( Close, 50, 20, 0.05, 1 );
-
-</code></pre>
-<hr>
-<h3 id="sftestthreshold">sfTestThreshold</h3>
-<p>Sliding‑window binomial exact test for a proportion. At each bar <code>i</code>,</p>
-<p>tests whether the proportion of values in <code>X</code> exceeding <code>threshold</code></p>
-<p>over the last <code>n</code> bars is at least <code>p0</code>. The alternative depends on</p>
-<p>the <code>tail</code> parameter.</p>
-<p>The test uses the binomial distribution <code>Binom(m, p0)</code> where <code>m</code> is</p>
-<p>the number of non‑<code>Empty</code> values in the window and <code>k</code> the count</p>
-<p>that exceed <code>threshold</code>. The p‑value is computed via the regularized</p>
-<p>incomplete beta function (Lentz&apos;s continued fraction), which gives</p>
-<p>the exact binomial tail probability.</p>
-<p><strong>Syntax:</strong> <code>sfTestThreshold( X, threshold [, p0 [, n [, level [, tail ]]]] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">X</td>
-<td align="left">array</td>
-<td align="left">Input values</td>
-</tr>
-<tr>
-<td align="left">threshold</td>
-<td align="left">float</td>
-<td align="left">Cutoff value that defines "success" (X > threshold)</td>
-</tr>
-<tr>
-<td align="left">p0</td>
-<td align="left">float</td>
-<td align="left">(optional) Hypothesized proportion under H₀. Default: <code>0.5</code></td>
-</tr>
-<tr>
-<td align="left">n</td>
-<td align="left">float</td>
-<td align="left">(optional) Window size. Default: <code>50</code></td>
-</tr>
-<tr>
-<td align="left">level</td>
-<td align="left">float</td>
-<td align="left">(optional) Significance level α. Default: <code>0.05</code></td>
-</tr>
-<tr>
-<td align="left">tail</td>
-<td align="left">float</td>
-<td align="left">(optional) Test direction: <code>0</code> = lower‑tailed (proportion < p0), <code>1</code> = upper‑tailed (proportion > p0). Default: <code>1</code></td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — <code>1.0</code> if H₀ is rejected at the given level,</p>
-<p><code>0.0</code> otherwise, <code>Empty</code> if the window is not yet full or fewer</p>
-<p>than 1 non‑<code>Empty</code> value is available.</p>
-<p><strong>Notes:</strong></p>
-<li>Upper‑tailed test (`tail=1`): rejects H₀ when the proportion</li>
-<p>  of successes significantly exceeds <code>p0</code>.</p>
-<li>Lower‑tailed test (`tail=0`): rejects H₀ when the proportion</li>
-<p>  of successes is significantly below <code>p0</code>.</p>
-<li>The test is exact (not a normal approximation), so it works</li>
-<p>  reliably even for small windows and extreme proportions.</p>
-<li>Use `threshold=0.5` with binary signals (0/1 values) to test</li>
-<p>  if the win rate exceeds <code>p0</code>.</p>
-<p><strong>Example (upper‑tailed):</strong></p>
-<pre><code>
-// Test if the 20‑bar win rate exceeds 60%
-
-result = sfTestThreshold( BuySignal, 0.5, 0.6, 20, 0.05, 1 );
-
-</code></pre>
-<p><strong>Example (lower‑tailed):</strong></p>
-<pre><code>
-// Test if the 20‑bar win rate is below 40%
-
-result = sfTestThreshold( BuySignal, 0.5, 0.4, 20, 0.05, 0 );
-
-</code></pre>
-<hr>
-<h3 id="sfhitprobability">sfHitProbability</h3>
-<p>Sliding‑window probability that prices reach level A (upper target)</p>
-<p>before level B (lower target), based on a Brownian motion with drift</p>
-<p>estimated from recent log‑returns.</p>
-<p>Two methods are available:</p>
-<li>**method=0** (default): Analytical Brownian motion formula using</li>
-<p>  drift μ and volatility σ estimated from the last <code>n</code> log‑returns</p>
-<p>  of price <code>P</code>. The probability is:</p>
-<p>  <code>`</code>math</p>
-<p>  P(hit A before B) = (1 − exp(−θ·(log(P)−log(B)))) / (1 − exp(−θ·(log(A)−log(B))))</p>
-<p>  <code>`</code></p>
-<p>  where <code>θ = 2μ/σ²</code>. When the drift is near zero, this reduces to the</p>
-<p>  position‑only formula. When variance is negligible, the result is</p>
-<p>  driven entirely by the sign of the drift.</p>
-<li>**method=1**: Position‑only formula that ignores drift:</li>
-<p>  <code>`</code>math</p>
-<p>  P = (log(P) − log(B)) / (log(A) − log(B))</p>
-<p>  <code>`</code></p>
-<p><strong>Syntax:</strong> <code>sfHitProbability( P, A, B [, n [, method ]] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">P</td>
-<td align="left">array</td>
-<td align="left">Price series</td>
-</tr>
-<tr>
-<td align="left">A</td>
-<td align="left">array</td>
-<td align="left">Upper target level (take‑profit)</td>
-</tr>
-<tr>
-<td align="left">B</td>
-<td align="left">array</td>
-<td align="left">Lower target level (stop‑loss)</td>
-</tr>
-<tr>
-<td align="left">n</td>
-<td align="left">float</td>
-<td align="left">(optional) Window size for drift/vol estimation. Default: <code>50</code></td>
-</tr>
-<tr>
-<td align="left">method</td>
-<td align="left">float</td>
-<td align="left">(optional) <code>0</code> = analytical with drift, <code>1</code> = position‑only. Default: <code>0</code></td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — probability in <code>[0, 1]</code>, <code>Empty</code> if the window is</p>
-<p>not yet full or if <code>A[i] ≤ B[i]</code>.</p>
-<p><strong>Notes:</strong></p>
-<li>The formula assumes log‑prices follow a Brownian motion with</li>
-<p>  constant drift and volatility over the estimation window.</p>
-<li>`method=0` requires at least 3 bars of data (n ≥ 3) to estimate</li>
-<p>  both drift and variance.</p>
-<li>`method=1` works with any window size n ≥ 1 and does not require</li>
-<p>  return history.</p>
-<li>When `P[i] ≥ A[i]` the probability is `1.0` (already at or above</li>
-<p>  the upper target). When <code>P[i] ≤ B[i]</code> it is <code>0.0</code>.</p>
-<li>When `A[i] ≤ B[i]` the barriers are invalid and the result is</li>
-<p>  <code>Empty</code>.</p>
-<p><strong>Example (analytical):</strong></p>
-<pre><code>
-// Probability that Close reaches 110 before 90 (20‑bar window)
-
-result = sfHitProbability( Close, 110, 90, 20, 0 );
-
-</code></pre>
-<p><strong>Example (position‑only):</strong></p>
-<pre><code>
-// Simple position‑based probability
-
-result = sfHitProbability( Close, 110, 90, 20, 1 );
-
-</code></pre>
-<hr>
-<h3 id="sfhitlevel">sfHitLevel</h3>
-<p>Probability that prices reach or exceed a target level within a given horizon,</p>
-<p>using Brownian motion with drift estimated from a sliding window of log-returns.</p>
-<p><strong>Syntax:</strong> <code>sfHitLevel( Price, level [, est_n [, horizon ]] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Price</td>
-<td align="left">array</td>
-<td align="left">Price series</td>
-</tr>
-<tr>
-<td align="left">level</td>
-<td align="left">float</td>
-<td align="left">Target level</td>
-</tr>
-<tr>
-<td align="left">est_n</td>
-<td align="left">float</td>
-<td align="left">(optional) Estimation window for drift/vol (default <code>50</code>)</td>
-</tr>
-<tr>
-<td align="left">horizon</td>
-<td align="left">float</td>
-<td align="left">(optional) Forward horizon in bars (default = <code>est_n</code>)</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Probability for each bar (0–1), <code>EMPTY_VAL</code> until <code>est_n</code> bars of history are available.</p>
-<p><strong>Note:</strong> The formula uses the reflection principle for Brownian motion with drift:</p>
-<p><code>P(hit) = Φ((μ−σ²/2)·T − d)/(σ√T) + exp(2·(μ−σ²/2)·d/σ²)·Φ((−(μ−σ²/2)·T − d)/(σ√T))</code></p>
-<p>where <code>d = log(level/Price)</code>, <code>μ</code> and <code>σ</code> are estimated from the trailing window, and <code>T = horizon</code>. If <code>level ≤ Price</code>, probability is 1 immediately.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// Probability Close reaches 120 within 20 bars (est_n=50, horizon=20)
-
-prob = sfHitLevel( Close, 120, 50, 20 );
-
-</code></pre>
-<hr>
-<h3 id="sfhitmovingtarget">sfHitMovingTarget</h3>
-<p>Probability that prices reach or exceed a moving target level within a given</p>
-<p>horizon, using Brownian motion with drift estimated from a sliding window</p>
-<p>of log-returns. The target is an array, allowing bar-by-bar varying levels.</p>
-<p><strong>Syntax:</strong> <code>sfHitMovingTarget( Price, Target [, est_n [, horizon ]] )</code></p>
-<table class="doc-table">
-<tr>
-<th align="left">Arg</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-<tr>
-<td align="left">Price</td>
-<td align="left">array</td>
-<td align="left">Price series</td>
-</tr>
-<tr>
-<td align="left">Target</td>
-<td align="left">array</td>
-<td align="left">Target level (may vary per bar)</td>
-</tr>
-<tr>
-<td align="left">est_n</td>
-<td align="left">float</td>
-<td align="left">(optional) Estimation window for drift/vol (default <code>50</code>)</td>
-</tr>
-<tr>
-<td align="left">horizon</td>
-<td align="left">float</td>
-<td align="left">(optional) Forward horizon in bars (default = <code>est_n</code>)</td>
-</tr>
-</table>
-<p><strong>Returns:</strong> array — Probability for each bar (0–1), <code>EMPTY_VAL</code> until <code>est_n</code> bars of history are available, or when <code>Target</code> is empty.</p>
-<p><strong>Example:</strong></p>
-<pre><code>
-// Probability Close reaches 10-point trailing target within 20 bars
-
-target = Close + 10;
-
-prob = sfHitMovingTarget( Close, target, 50, 20 );
+sfStoreDestroy(s);
 
 </code></pre>
 <hr>
