@@ -52,7 +52,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <li><a href="IndicatorFunctions.html">Indicator Functions</a> (28 functions)</li>
 <li><a href="QuantFunctions.html">Quant Functions</a> (36 functions)</li>
 <li><a href="EhlersFunctions.html">Ehlers Functions</a> (13 functions)</li>
-<li><a href="UtilityFunctions.html">Utility Functions</a> (17 functions)</li>
+<li><a href="UtilityFunctions.html">Utility Functions</a> (21 functions)</li>
 <li><a href="DialogFunctions.html">Dialog Functions</a> (5 functions)</li>
 <li><a href="WebSocketFunctions.html">WebSocket Functions</a> (5 functions)</li>
 <li><a href="NamedPipeFunctionsIPC.html">Named Pipe Functions (IPC)</a> (6 functions)</li>
@@ -67,12 +67,11 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <li><a href="StatisticsFunctions.html">Statistics Functions</a> (13 functions)</li>
 <li><a href="BondFunctions.html">Bond Functions</a> (6 functions)</li>
 <li><a href="EquityValuationFunctions.html">Equity Valuation Functions</a> (2 functions)</li>
-<li><a href="OptionFunctions.html">Option Functions</a> (8 functions)</li>
+<li><a href="OptionFunctions.html">Option Functions</a> (26 functions)</li>
 <li><a href="TableFunctions.html">Table Functions</a> (20 functions)</li>
 <li><a href="PositionFunctions.html">Position Functions</a> (14 functions)</li>
 <li><a href="DetectFunctions.html">Detect Functions</a> (2 functions)</li>
 <li><a href="ESNFunctions.html">ESN Functions</a> (7 functions)</li>
-<li><a href="OtherFunctions.html">Other Functions</a> (10 functions)</li>
 </ul>
 
 <hr>
@@ -81,8 +80,10 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <h2>Glossary — All Functions</h2>
 <table class="doc-table"><tr><th>Function</th><th>Category</th></tr>
 <tr><td><a href="QuantFunctions.html#sfaddnoise">sfAddNoise</a></td><td>Quant Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfalloc">sfAlloc</a></td><td>Other Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfallocarrayresult">sfAllocArrayResult</a></td><td>Other Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfamericanimpliedvol">sfAmericanImpliedVol</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfamericanoptionprice">sfAmericanOptionPrice</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfamericansabrimpliedvol">sfAmericanSABRImpliedVol</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfamericansabroptionprice">sfAmericanSABROptionPrice</a></td><td>Option Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfarfima">sfARFIMA</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfarima">sfARIMA</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfarrayshiftleft">sfArrayShiftLeft</a></td><td>Utility Functions</td></tr>
@@ -92,6 +93,12 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sfbarssincetrough">sfBarsSinceTrough</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="CodecFunctions.html#sfbase64decode">sfBase64Decode</a></td><td>Codec Functions</td></tr>
 <tr><td><a href="CodecFunctions.html#sfbase64encode">sfBase64Encode</a></td><td>Codec Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbaw76call">sfBAW76Call</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbaw76impliedvol">sfBAW76ImpliedVol</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbaw76put">sfBAW76Put</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbawcall">sfBAWCall</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbawimpliedvol">sfBAWImpliedVol</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfbawput">sfBAWPut</a></td><td>Option Functions</td></tr>
 <tr><td><a href="BinaryFunctions.html#sfbinextract">sfBinExtract</a></td><td>Binary Functions</td></tr>
 <tr><td><a href="BinaryFunctions.html#sfbinfrombool">sfBinFromBool</a></td><td>Binary Functions</td></tr>
 <tr><td><a href="BinaryFunctions.html#sfbinfromfloat">sfBinFromFloat</a></td><td>Binary Functions</td></tr>
@@ -127,7 +134,6 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="CBORFunctions.html#sfcborsetstring">sfCBORSetString</a></td><td>CBOR Functions</td></tr>
 <tr><td><a href="CBORFunctions.html#sfcbortostring">sfCBORToString</a></td><td>CBOR Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfchaikinmoneyflow">sfChaikinMoneyFlow</a></td><td>Indicator Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfcheckarrayinit">sfCheckArrayInit</a></td><td>Other Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfcointegrate">sfCointegrate</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="CSVFunctions.html#sfcsvappendcol">sfCSVAppendCol</a></td><td>CSV Functions</td></tr>
 <tr><td><a href="CSVFunctions.html#sfcsvappendcolarray">sfCSVAppendColArray</a></td><td>CSV Functions</td></tr>
@@ -166,7 +172,6 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="PositionFunctions.html#sfdrawdowncurve">sfDrawdownCurve</a></td><td>Position Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfdynamiccycles">sfDynamicCycles</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfemptyvalue">sfEmptyValue</a></td><td>Utility Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfequalvariables">sfEqualVariables</a></td><td>Other Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sfequitycurve">sfEquityCurve</a></td><td>Position Functions</td></tr>
 <tr><td><a href="ESNFunctions.html#sfesncreate">sfESNCreate</a></td><td>ESN Functions</td></tr>
 <tr><td><a href="ESNFunctions.html#sfesndestroy">sfESNDestroy</a></td><td>ESN Functions</td></tr>
@@ -187,14 +192,12 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sffloorpivotscore">sfFloorPivotScore</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sffracdiff">sfFracDiff</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="EhlersFunctions.html#sfframa">sfFRAMA</a></td><td>Ehlers Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sffree">sfFree</a></td><td>Other Functions</td></tr>
 <tr><td><a href="BondFunctions.html#sffuturedv01">sfFutureDV01</a></td><td>Bond Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sffuturemarginestimate">sfFutureMarginEstimate</a></td><td>Position Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfgarch">sfGARCH</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfgetarraylength">sfGetArrayLength</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfgetchrono">sfGetChrono</a></td><td>Utility Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfgetplugininfo">sfGetPluginInfo</a></td><td>Other Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfgetvariable">sfGetVariable</a></td><td>Other Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfgetvariable">sfGetVariable</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfgoertzel">sfGoertzel</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfgoertzeldftspectrum">sfGoertzelDFTSpectrum</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfheikinashi">sfHeikinAshi</a></td><td>Indicator Functions</td></tr>
@@ -216,7 +219,6 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="UtilityFunctions.html#sfinitarray">sfInitArray</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfintradayslippageestimate">sfIntradaySlippageEstimate</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="EhlersFunctions.html#sfinvfisher">sfInvFisher</a></td><td>Ehlers Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfisallocarrayinit">sfIsAllocArrayInit</a></td><td>Other Functions</td></tr>
 <tr><td><a href="EhlersFunctions.html#sfitl">sfITL</a></td><td>Ehlers Functions</td></tr>
 <tr><td><a href="EhlersFunctions.html#sfitlx">sfITLX</a></td><td>Ehlers Functions</td></tr>
 <tr><td><a href="JSONFunctions.html#sfjsoncreate">sfJSONCreate</a></td><td>JSON Functions</td></tr>
@@ -253,6 +255,7 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="JStrFunctions.html#sfjstrstrip">sfJStrStrip</a></td><td>JStr Functions</td></tr>
 <tr><td><a href="JStrFunctions.html#sfjstrstrippair">sfJStrStripPair</a></td><td>JStr Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sfkama">sfKAMA</a></td><td>Indicator Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfkellycriterion">sfKellyCriterion</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="EhlersFunctions.html#sflaguerrersi">sfLaguerreRSI</a></td><td>Ehlers Functions</td></tr>
 <tr><td><a href="IndicatorFunctions.html#sflakeratio">sfLakeRatio</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sflimitjumps">sfLimitJumps</a></td><td>Utility Functions</td></tr>
@@ -323,10 +326,18 @@ quantitative functions and many other useful functions for AFL formulas.</p>
 <tr><td><a href="IndicatorFunctions.html#sfroundprice">sfRoundPrice</a></td><td>Indicator Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfroundquote">sfRoundQuote</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="UtilityFunctions.html#sfroundquotes">sfRoundQuotes</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabramerican76call">sfSABRAmerican76Call</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabramerican76put">sfSABRAmerican76Put</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabramericancall">sfSABRAmericanCall</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabramericanput">sfSABRAmericanPut</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabrcalibrate">sfSABRCalibrate</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabrcall">sfSABRCall</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabriv">sfSABRIV</a></td><td>Option Functions</td></tr>
+<tr><td><a href="OptionFunctions.html#sfsabrput">sfSABRPut</a></td><td>Option Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfsavefile">sfSaveFile</a></td><td>Dialog Functions</td></tr>
 <tr><td><a href="DialogFunctions.html#sfselectfile">sfSelectFile</a></td><td>Dialog Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfsetarray">sfSetArray</a></td><td>Other Functions</td></tr>
-<tr><td><a href="OtherFunctions.html#sfsetfloat">sfSetFloat</a></td><td>Other Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfsetarray">sfSetArray</a></td><td>Utility Functions</td></tr>
+<tr><td><a href="UtilityFunctions.html#sfsetfloat">sfSetFloat</a></td><td>Utility Functions</td></tr>
 <tr><td><a href="PositionFunctions.html#sfsignalsfromposition">sfSignalsFromPosition</a></td><td>Position Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfsimulatehurst">sfSimulateHurst</a></td><td>Quant Functions</td></tr>
 <tr><td><a href="QuantFunctions.html#sfsimulateprices">sfSimulatePrices</a></td><td>Quant Functions</td></tr>

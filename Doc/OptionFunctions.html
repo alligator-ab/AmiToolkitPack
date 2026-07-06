@@ -437,5 +437,1055 @@ iv2 = sfImpliedVol( 1, 0, 100, 100, 1, 0.05, 0, 8.91 );
 
 </code></pre>
 <hr>
+<h3 id="sfbawcall">sfBAWCall</h3>
+<p>Calculates the price of an American call option on a spot underlying using the Barone-Adesi &amp; Whaley (1987) quadratic approximation.</p>
+<p><strong>Syntax:</strong> <code>sfBAWCall( S, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American call option price. Returns <code>Null</code> if any required parameter is non-positive.</p>
+<p><strong>Notes:</strong></p>
+<li>When `q ≤ 0` (no dividends), early exercise is never optimal for an American call, so the price equals the European `sfBSCall` price.</li>
+<li>The BAW method uses a critical asset price `S*` that separates the hold and immediate-exercise regions, found via binary search.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+// ATM American call, 1 year, 5% rate, 2% dividend, 20% vol
+
+price = sfBAWCall( 100, 100, 1, 0.05, 0.02, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbawput">sfBAWPut</h3>
+<p>Calculates the price of an American put option on a spot underlying using the Barone-Adesi &amp; Whaley (1987) quadratic approximation.</p>
+<p><strong>Syntax:</strong> <code>sfBAWPut( S, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American put option price. Returns <code>Null</code> if any required parameter is non-positive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// ATM American put, 1 year, 5% rate, 2% dividend, 20% vol
+
+price = sfBAWPut( 100, 100, 1, 0.05, 0.02, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbaw76call">sfBAW76Call</h3>
+<p>Calculates the price of an American call option on a futures contract using the Barone-Adesi &amp; Whaley (1987) quadratic approximation adapted for the Black-76 model (spot = futures price, dividend yield = risk-free rate).</p>
+<p><strong>Syntax:</strong> <code>sfBAW76Call( F, K, T, r, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American call option price. Returns <code>Null</code> if any required parameter is non-positive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// ATM American futures call, 1 year, 5% rate, 20% vol
+
+price = sfBAW76Call( 100, 100, 1, 0.05, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbaw76put">sfBAW76Put</h3>
+<p>Calculates the price of an American put option on a futures contract using the Barone-Adesi &amp; Whaley (1987) quadratic approximation adapted for the Black-76 model.</p>
+<p><strong>Syntax:</strong> <code>sfBAW76Put( F, K, T, r, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American put option price. Returns <code>Null</code> if any required parameter is non-positive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// ATM American futures put, 1 year, 5% rate, 20% vol
+
+price = sfBAW76Put( 100, 100, 1, 0.05, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfbawimpliedvol">sfBAWImpliedVol</h3>
+<p>Computes the implied volatility of an American option using Brent&apos;s method on the Barone-Adesi &amp; Whaley (1987) model.</p>
+<p><strong>Syntax:</strong> <code>sfBAWImpliedVol( S, K, T, r, q, price, isCall )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters or if no solution exists in [1e-8, 5.0].</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+iv = sfBAWImpliedVol( 100, 100, 1, 0.05, 0.02, 10.50, 1 );
+
+</code></pre>
+<hr>
+<h3 id="sfbaw76impliedvol">sfBAW76ImpliedVol</h3>
+<p>Computes the implied volatility of an American option on a futures contract using Brent&apos;s method on the Barone-Adesi &amp; Whaley (1987) model adapted for Black-76.</p>
+<p><strong>Syntax:</strong> <code>sfBAW76ImpliedVol( F, K, T, r, price, isCall )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters or if no solution exists in [1e-8, 5.0].</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+iv = sfBAW76ImpliedVol( 100, 100, 1, 0.05, 9.00, 1 );
+
+</code></pre>
+<hr>
+<h3 id="sfamericanoptionprice">sfAmericanOptionPrice</h3>
+<p>Multi-asset dispatcher that prices American options by underlying type using the Barone-Adesi &amp; Whaley model (BAW for spot/FX, BAW76 for futures/rate futures).</p>
+<p><strong>Syntax:</strong> <code>sfAmericanOptionPrice( type, isCall, S_or_F, K, T, r, q, sigma )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot or futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX)</td>
+</tr>
+<tr>
+<td align="left">sigma</td>
+<td align="left">float</td>
+<td align="left">Volatility</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American option price. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// American equity call
+
+p1 = sfAmericanOptionPrice( 0, 1, 100, 100, 1, 0.05, 0.02, 0.20 );
+
+// American futures put
+
+p2 = sfAmericanOptionPrice( 1, 0, 100, 100, 1, 0.05, 0, 0.20 );
+
+</code></pre>
+<hr>
+<h3 id="sfamericanimpliedvol">sfAmericanImpliedVol</h3>
+<p>Multi-asset dispatcher that computes implied volatility for American options using Brent&apos;s method. Uses BAW for spot/FX and BAW76 for futures/rate futures.</p>
+<p><strong>Syntax:</strong> <code>sfAmericanImpliedVol( type, isCall, S_or_F, K, T, r, q, price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot or futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX)</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+// American equity call IV
+
+iv1 = sfAmericanImpliedVol( 0, 1, 100, 100, 1, 0.05, 0.02, 10.50 );
+
+// American futures put IV
+
+iv2 = sfAmericanImpliedVol( 1, 0, 100, 100, 1, 0.05, 0, 9.00 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabriv">sfSABRIV</h3>
+<p>Computes the SABR (Hagan et al. 2002) closed-form implied volatility for a given set of model parameters, forward, strike, and time to maturity.</p>
+<p><strong>Syntax:</strong> <code>sfSABRIV( alpha, beta, rho, nu, F, K, T )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter (α > 0)</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter (0 ≤ β ≤ 1)</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter (-1 ≤ ρ ≤ 1)</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter (ν ≥ 0)</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Forward price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — SABR implied volatility. Returns <code>Null</code> if any required parameter is invalid.</p>
+<p><strong>Notes:</strong></p>
+<li>Implements the Hagan et al. (2002) asymptotic expansion for the SABR implied volatility.</li>
+<li>The ATM case (F ≈ K) uses the simpler ATM formula; the general case uses the full expansion with the ζ/x(ζ) transformation.</li>
+<li>For ζ near zero a Taylor expansion is used to avoid division by zero.</li>
+<li>Parameter ranges are clamped: β → [0, 1], ρ → [−0.999, 0.999]; α and ν are floored at 1e-14.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Compute SABR IV for an ATM option
+
+iv = sfSABRIV( 0.2, 0.5, 0.0, 0.1, 100, 100, 1 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabrcall">sfSABRCall</h3>
+<p>Prices a European call option under the SABR model by feeding the SABR implied volatility into the Black-76 formula.</p>
+<p><strong>Syntax:</strong> <code>sfSABRCall( alpha, beta, rho, nu, F, K, T, r )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Forward price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Call option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfSABRCall( 0.2, 0.5, 0.0, 0.1, 100, 100, 1, 0.05 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabrput">sfSABRPut</h3>
+<p>Prices a European put option under the SABR model by feeding the SABR implied volatility into the Black-76 formula.</p>
+<p><strong>Syntax:</strong> <code>sfSABRPut( alpha, beta, rho, nu, F, K, T, r )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Forward price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Put option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfSABRPut( 0.2, 0.5, 0.0, 0.1, 100, 100, 1, 0.05 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabrcalibrate">sfSABRCalibrate</h3>
+<p>Calibrates the SABR model parameters (α, ρ, ν) to a set of market implied volatilities at different strikes via Nelder-Mead optimisation. The β parameter is fixed by the user.</p>
+<p><strong>Syntax:</strong> <code>sfSABRCalibrate( strikes[], ivs[], F, T, beta )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">strikes[]</td>
+<td align="left">array</td>
+<td align="left">Array of strike prices (must have at least 3 valid entries)</td>
+</tr>
+<tr>
+<td align="left">ivs[]</td>
+<td align="left">array</td>
+<td align="left">Array of market implied volatilities at corresponding strikes</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Forward price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">Fixed SABR shape parameter (0 ≤ β ≤ 1)</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> string — Comma-separated values <code>&quot;α,ρ,ν&quot;</code> on success, or <code>Null</code> if calibration fails (insufficient data, invalid parameters, or no convergence).</p>
+<p><strong>Notes:</strong></p>
+<li>The arrays `strikes[]` and `ivs[]` are read until the first empty value (EMPTY_VAL = −1e10). Elements where either strike or IV is non-positive are skipped.</li>
+<li>At least 3 valid (positive, non-empty) data points are required for calibration.</li>
+<li>The Nelder-Mead simplex search is bounded: α > 0, ρ ∈ [−1, 1], ν > 0.</li>
+<li>Use `StrExtract()` to parse the returned string.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+strikes = [ 90, 95, 100, 105, 110 ];
+
+ivs     = [ 0.28, 0.25, 0.22, 0.20, 0.19 ];
+
+result  = sfSABRCalibrate( strikes, ivs, 100, 1, 0.5 );
+
+alpha = StrExtract( result, 0 );
+
+rho   = StrExtract( result, 1 );
+
+nu    = StrExtract( result, 2 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabramericancall">sfSABRAmericanCall</h3>
+<p>Prices an American call option on a spot underlying by combining the SABR (Hagan et al. 2002) smile-adjusted implied volatility with the Barone-Adesi &amp; Whaley (1987) early exercise approximation.</p>
+<p><strong>Syntax:</strong> <code>sfSABRAmericanCall( alpha, beta, rho, nu, S, K, T, r, q )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter (α > 0)</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter (0 ≤ β ≤ 1)</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter (-1 ≤ ρ ≤ 1)</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter (ν ≥ 0)</td>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American call option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Notes:</strong></p>
+<li>The forward price F = S·exp((r−q)T) is used internally to compute the SABR IV σ_SABR via the Hagan formula; then the American price is obtained as BAW(S, K, T, r, q, σ_SABR).</li>
+<li>If q ≤ 0 the early exercise premium is negligible for calls and the price reduces to the European SABR call price.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+// ATM American call, 5% rate, 2% dividend, 20% base vol, β=0.5
+
+price = sfSABRAmericanCall( 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05, 0.02 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabramericanput">sfSABRAmericanPut</h3>
+<p>Prices an American put option on a spot underlying using the SABR + BAW model.</p>
+<p><strong>Syntax:</strong> <code>sfSABRAmericanPut( alpha, beta, rho, nu, S, K, T, r, q )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">S</td>
+<td align="left">float</td>
+<td align="left">Spot price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Continuous dividend yield</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American put option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfSABRAmericanPut( 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05, 0.02 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabramerican76call">sfSABRAmerican76Call</h3>
+<p>Prices an American call option on a futures/forward contract using the SABR + BAW76 model.</p>
+<p><strong>Syntax:</strong> <code>sfSABRAmerican76Call( alpha, beta, rho, nu, F, K, T, r )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American call option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfSABRAmerican76Call( 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05 );
+
+</code></pre>
+<hr>
+<h3 id="sfsabramerican76put">sfSABRAmerican76Put</h3>
+<p>Prices an American put option on a futures/forward contract using the SABR + BAW76 model.</p>
+<p><strong>Syntax:</strong> <code>sfSABRAmerican76Put( alpha, beta, rho, nu, F, K, T, r )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">F</td>
+<td align="left">float</td>
+<td align="left">Futures price</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American put option price. Returns <code>Null</code> on invalid input.</p>
+<p><strong>Example:</strong></p>
+<pre><code>
+price = sfSABRAmerican76Put( 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05 );
+
+</code></pre>
+<hr>
+<h3 id="sfamericansabroptionprice">sfAmericanSABROptionPrice</h3>
+<p>Multi-asset dispatcher for SABR + BAW American option pricing by underlying type.</p>
+<p><strong>Syntax:</strong> <code>sfAmericanSABROptionPrice( type, isCall, alpha, beta, rho, nu, S_or_F, K, T, r, q )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot price (type 0/2) or futures price (type 1/3)</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX); unused for futures</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — American option price. Returns <code>Null</code> on invalid parameters.</p>
+<p><strong>Notes:</strong></p>
+<li>For spot/FX (type 0, 2): forward F = S_or_F·exp((r−q)T) is computed internally for SABR IV, then BAW prices using spot.</li>
+<li>For futures (type 1, 3): S_or_F is used directly as the forward for SABR IV, then BAW76 prices.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+// American equity call with smile
+
+p1 = sfAmericanSABROptionPrice( 0, 1, 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05, 0.02 );
+
+// American futures put with smile
+
+p2 = sfAmericanSABROptionPrice( 1, 0, 0.25, 0.7, -0.2, 0.3, 100, 100, 1, 0.05, 0 );
+
+</code></pre>
+<hr>
+<h3 id="sfamericansabrimpliedvol">sfAmericanSABRImpliedVol</h3>
+<p>Multi-asset dispatcher that computes the Black-Scholes / Black-76 implied volatility for an American option priced under the SABR-BAW model.</p>
+<p><strong>Syntax:</strong> <code>sfAmericanSABRImpliedVol( type, isCall, alpha, beta, rho, nu, S_or_F, K, T, r, q, price )</code></p>
+<table class="doc-table">
+<tr>
+<th align="left">Arg</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+<tr>
+<td align="left">type</td>
+<td align="left">float</td>
+<td align="left">Underlying type: <code>0</code> = Spot Equity, <code>1</code> = Future, <code>2</code> = FX, <code>3</code> = Rate Future</td>
+</tr>
+<tr>
+<td align="left">isCall</td>
+<td align="left">float</td>
+<td align="left"><code>1</code> for call, <code>0</code> for put</td>
+</tr>
+<tr>
+<td align="left">alpha</td>
+<td align="left">float</td>
+<td align="left">SABR volatility parameter</td>
+</tr>
+<tr>
+<td align="left">beta</td>
+<td align="left">float</td>
+<td align="left">SABR shape parameter</td>
+</tr>
+<tr>
+<td align="left">rho</td>
+<td align="left">float</td>
+<td align="left">SABR correlation parameter</td>
+</tr>
+<tr>
+<td align="left">nu</td>
+<td align="left">float</td>
+<td align="left">SABR vol-of-vol parameter</td>
+</tr>
+<tr>
+<td align="left">S_or_F</td>
+<td align="left">float</td>
+<td align="left">Spot price (type 0/2) or futures price (type 1/3)</td>
+</tr>
+<tr>
+<td align="left">K</td>
+<td align="left">float</td>
+<td align="left">Strike price</td>
+</tr>
+<tr>
+<td align="left">T</td>
+<td align="left">float</td>
+<td align="left">Time to maturity (years)</td>
+</tr>
+<tr>
+<td align="left">r</td>
+<td align="left">float</td>
+<td align="left">Risk-free rate</td>
+</tr>
+<tr>
+<td align="left">q</td>
+<td align="left">float</td>
+<td align="left">Dividend yield (equity) or foreign rate (FX)</td>
+</tr>
+<tr>
+<td align="left">price</td>
+<td align="left">float</td>
+<td align="left">Market price of the option</td>
+</tr>
+</table>
+<p><strong>Returns:</strong> float — Implied volatility (Black-76 lognormal). Returns <code>Null</code> if parameters are invalid or if no solution exists in [1e-8, 5.0].</p>
+<p><strong>Notes:</strong></p>
+<li>Uses bisection to find σ such that BAW(S_or_F, K, T, r, q, σ) = price.</li>
+<li>This is the companion function to `sfAmericanSABROptionPrice`: the implied volatility returned is the Black-76 volatility that would reproduce the given price in the BAW model.</li>
+<p><strong>Example:</strong></p>
+<pre><code>
+// Recover implied vol from an American equity call price
+
+iv = sfAmericanSABRImpliedVol( 0, 1, 0.2, 0.5, 0, 0.1, 100, 100, 1, 0.05, 0.02, 8.5 );
+
+</code></pre>
+<hr>
 </body>
 </html>

@@ -268,11 +268,11 @@ a:hover{text-decoration:underline}
 <p><strong>Notes:</strong></p>
 <li>For most standard types, only `Price`, `type`, and `period` are needed.</li>
 <li>When `type = "JMA"`: `period` is used as the JMA lookback, `arg1` = phase (default 0),</li>
-<p>  <code>arg2</code> = power (default 2). See [JurikMA](#sfJurikMA) for details.</p>
+<p>  <code>arg2</code> = power (default 2). See [JurikMA] (#sfJurikMA) for details.</p>
 <li>When `type = "MAMA"`: `period` is used as `fastLimit` (default 0.5), `arg1` = `slowLimit`</li>
-<p>  (default 0.05). See [MAMA](#sfMAMA) for details.</p>
+<p>  (default 0.05). See [MAMA] (#sfMAMA) for details.</p>
 <li>When `type = "ITL"`: `period` and extras are ignored — ITL takes only the price array.</li>
-<li>When `type = "ITLX"`: `period` is used as the detrender window `n`. See [ITLX](#sfITLX) for details.</li>
+<li>When `type = "ITLX"`: `period` is used as the detrender window `n`. See [ITLX] (#sfITLX) for details.</li>
 <li>When `type = "ALMA"` with extra args: `period` = window, `arg1` = offset (default 0.85),</li>
 <p>  <code>arg2</code> = sigma_div (default 6.0). Without extras, ALMA uses the defaults via the standard path.</p>
 <hr>
